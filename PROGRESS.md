@@ -55,6 +55,9 @@
 - **What Phase 1 needs:** nothing from Milan. GitHub repo `milanbeherazyx.github.io` creation/settings will be needed to *deploy* the stub — Claude must ask before any account/repo action (gate).
 - **Next model (PRD §9):** Phase 1 Architecture → **Fable 5, HIGH effort / extended thinking**.
 
+### 🚩 LAUNCH BLOCKER — resume/LinkedIn alignment owed by Milan
+Two edits to the resume PDF + LinkedIn must land before launch so the site's claims match his public documents (partner list + policy-scale figure). **Specifics are in the git-ignored `content-pack/content_pack.md` §12 — deliberately not repeated here, because this file is public.** Do not launch (Phase 6) until Milan confirms both are done.
+
 ### New discrepancy found (flag for end of project)
 - Upwork engagement (Jan 2023 – Apr 2024, on LinkedIn) is **not on the final resume PDF**. Site may still show it (public on LinkedIn). Decide at Phase 6 whether to add to PDF (pack §8.6).
 
