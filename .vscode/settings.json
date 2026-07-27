@@ -1,0 +1,11 @@
+{
+  // Use the workspace TypeScript (see package.json devDependencies) so the
+  // editor reports exactly what `npm run build` reports. Without this, VS Code
+  // uses its own bundled TypeScript, which can drift from the version that
+  // actually gates commits.
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "files.associations": {
+    "*.css": "tailwindcss"
+  }
+}

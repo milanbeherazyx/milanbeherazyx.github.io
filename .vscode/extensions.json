@@ -1,0 +1,6 @@
+{
+  // VS Code offers these on first open. The Astro extension is the important
+  // one: without it .astro files (most of src/) get no syntax highlighting,
+  // no IntelliSense, and no diagnostics.
+  "recommendations": ["astro-build.astro-vscode", "bradlc.vscode-tailwindcss"]
+}
