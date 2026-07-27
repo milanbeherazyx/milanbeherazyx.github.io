@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Direction A — Underwriter's Memo</title>
+<!-- Mockup only: fonts via Fontshare CDN. Implementation self-hosts. -->
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&f[]=switzer@400,500,600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper: #f4f5f2;
+    --ink: #14161a;
+    --ultramarine: #2b3fd6;
+    --carmine: #b42318;
+    --graphite: #5a6069;
+    --line: #d9dcd6;
+    --display: 'Clash Display', sans-serif;
+    --body: 'Switzer', sans-serif;
+    --text-display: clamp(2.6rem, 1rem + 7.5vw, 7.25rem);
+    --text-h2: clamp(1.6rem, 1rem + 2.2vw, 2.6rem);
+    --text-lead: clamp(1.05rem, 1rem + 0.4vw, 1.35rem);
+    --section: clamp(5rem, 14vh, 9rem);
+  }
+  * { margin: 0; box-sizing: border-box; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: var(--body); font-size: 1.0625rem; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 72rem; margin-inline: auto; padding-inline: clamp(1.25rem, 4vw, 3rem); }
+  a { color: inherit; text-decoration: none; }
+  .label {
+    font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase;
+    font-weight: 600;
+  }
+  :focus-visible { outline: 2px solid var(--ultramarine); outline-offset: 3px; }
+
+  /* nav */
+  nav { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0.5rem 2rem; padding-block: 1.5rem; }
+  nav .links { display: flex; flex-wrap: wrap; gap: 1rem 1.75rem; }
+  .wordmark { white-space: nowrap; }
+  nav a { font-weight: 500; font-size: 0.95rem; }
+  nav .links a { border-bottom: 2px solid transparent; }
+  nav .links a:hover { border-bottom-color: var(--ink); }
+  .wordmark { font-family: var(--display); font-weight: 600; font-size: 1.05rem; }
+
+  /* hero */
+  .hero { padding-block: var(--section) calc(var(--section) * 0.6); }
+  .hero .label { color: var(--graphite); margin-bottom: 1.5rem; }
+  h1 {
+    font-family: var(--display); font-weight: 600;
+    font-size: var(--text-display); line-height: 0.92; letter-spacing: -0.025em;
+    max-width: 11ch;
+  }
+  h1 em { font-style: normal; color: var(--ultramarine); }
+  .hero p {
+    font-size: var(--text-lead); color: var(--graphite);
+    max-width: 34rem; margin-top: 2rem;
+  }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; margin-top: 2.5rem; align-items: center; }
+  .btn {
+    display: inline-block; background: var(--ultramarine); color: #fff;
+    font-weight: 600; padding: 0.9rem 1.6rem; border-radius: 999px;
+    transition: transform 0.2s;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .textlink { font-weight: 600; border-bottom: 2px solid var(--ink); padding-bottom: 2px; }
+  .textlink:hover { color: var(--ultramarine); border-color: var(--ultramarine); }
+
+  /* signature: funnel ledger */
+  .funnel { padding-block: calc(var(--section) * 0.5); border-top: 3px solid var(--ink); }
+  .funnel .label { margin-bottom: 2rem; color: var(--graphite); }
+  .stage { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 1rem; padding-block: 1.1rem; }
+  .stage + .stage { border-top: 1px solid var(--line); }
+  .stage .name { align-self: center; }
+  .bar { height: 10px; margin-top: 0.6rem; background: var(--ink); }
+  .stage.q .bar { background: var(--ultramarine); width: 43%; }
+  .stage.d .bar { background: var(--carmine); width: 57%; }
+  .fig {
+    font-family: var(--display); font-weight: 600; line-height: 1;
+    font-size: clamp(2.2rem, 1rem + 4vw, 4.5rem);
+    font-variant-numeric: tabular-nums;
+  }
+  .stage.d .fig { color: var(--carmine); }
+  .delta { font-size: 0.9rem; font-weight: 600; color: var(--ultramarine); }
+  .footnote { color: var(--graphite); font-size: 0.85rem; margin-top: 1.5rem; }
+
+  /* proof strip */
+  .proof { display: grid; gap: 2.5rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); padding-block: var(--section); }
+  .proof > div { border-top: 3px solid var(--ink); padding-top: 1.25rem; }
+  .proof .fig { font-size: clamp(2rem, 1rem + 2.6vw, 3.4rem); }
+  .proof p { color: var(--graphite); margin-top: 0.5rem; font-size: 0.95rem; }
+
+  /* case cards */
+  .work { padding-bottom: var(--section); }
+  .work > .label { color: var(--graphite); margin-bottom: 2rem; }
+  .cards { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr)); }
+  .card { border-top: 3px solid var(--ink); padding-top: 1.5rem; transition: transform 0.2s; }
+  .card:hover { transform: translateY(-2px); }
+  .tags { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; }
+  .tag { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; border: 1px solid var(--ink); padding: 0.25rem 0.6rem; }
+  .card h3 { font-family: var(--display); font-weight: 600; font-size: 1.65rem; line-height: 1.1; letter-spacing: -0.01em; max-width: 24ch; }
+  .card .metric { font-family: var(--display); font-weight: 600; font-size: 1.2rem; color: var(--ultramarine); margin-top: 1rem; font-variant-numeric: tabular-nums; }
+  .card p.sum { color: var(--graphite); margin-top: 0.75rem; font-size: 0.98rem; max-width: 38ch; }
+  .card .textlink { display: inline-block; margin-top: 1.25rem; font-size: 0.95rem; }
+
+  footer { border-top: 1px solid var(--line); padding-block: 2rem; display: flex; gap: 1.75rem; flex-wrap: wrap; font-size: 0.9rem; color: var(--graphite); }
+  footer a:hover { color: var(--ink); }
+
+  /* hero load-in (motion spec item 1) */
+  @media (prefers-reduced-motion: no-preference) {
+    .rise { opacity: 0; transform: translateY(16px); animation: rise 0.6s cubic-bezier(0.2, 0.6, 0.2, 1) forwards; }
+    .rise:nth-child(2) { animation-delay: 0.08s; }
+    .rise:nth-child(3) { animation-delay: 0.16s; }
+    .rise:nth-child(4) { animation-delay: 0.24s; }
+    @keyframes rise { to { opacity: 1; transform: none; } }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="wordmark" href="#">Milan Behera</a>
+    <div class="links">
+      <a href="#">Work</a><a href="#">Services</a><a href="#">About</a><a href="#">Contact</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <p class="label rise">Data analyst — lending &amp; credit risk</p>
+    <h1 class="rise">Messy data, turned into <em>decisions.</em></h1>
+    <p class="rise">Funnels, metrics, root causes, dashboards. Deepest in lending — the domain changes; the funnel math doesn't.</p>
+    <div class="cta-row rise">
+      <a class="btn" href="#">Book a call</a>
+      <a class="textlink" href="#">View case studies</a>
+    </div>
+  </header>
+
+  <section class="funnel">
+    <p class="label">Portfolio qualification, indexed per 100 applications</p>
+    <div class="stage">
+      <div class="name"><span class="label">Applied</span><div class="bar"></div></div>
+      <div class="fig">100</div>
+    </div>
+    <div class="stage q">
+      <div class="name"><span class="label" style="color:var(--ultramarine)">Qualified</span><div class="bar"></div></div>
+      <div><span class="delta">▲ from 30</span> <span class="fig" style="color:var(--ultramarine)">43</span></div>
+    </div>
+    <div class="stage d">
+      <div class="name"><span class="label" style="color:var(--carmine)">Dropped at rules</span><div class="bar"></div></div>
+      <div class="fig">57</div>
+    </div>
+    <p class="footnote">Six lenders, 100K+ monthly borrowers. How the lift happened → case study 01.</p>
+  </section>
+
+  <section class="proof">
+    <div><div class="fig">30→43%</div><p>portfolio qualification rate lifted across the lender stack</p></div>
+    <div><div class="fig">₹8–9B+</div><p>loan exposure monitored via executive dashboards</p></div>
+    <div><div class="fig">80%</div><p>of manual vendor risk reviews eliminated via API automation</p></div>
+  </section>
+
+  <section class="work">
+    <p class="label">Selected work</p>
+    <div class="cards">
+      <article class="card">
+        <div class="tags"><span class="tag">Funnel</span><span class="tag">SQL</span></div>
+        <h3>Lifting portfolio qualification 30% → 43% across six lenders</h3>
+        <div class="metric">+13 pts qualification</div>
+        <p class="sum">BRE funnel monitoring, drop-off and rejection-code analysis across the full lender stack.</p>
+        <a class="textlink" href="#">Read the memo →</a>
+      </article>
+      <article class="card">
+        <div class="tags"><span class="tag">Policy</span><span class="tag">SQL</span></div>
+        <h3>Benchmarking 70+ eligibility rules across three lenders</h3>
+        <div class="metric">5 policy paths mapped</div>
+        <p class="sum">Rule-by-rule policy comparison that shows exactly where each lender says no.</p>
+        <a class="textlink" href="#">Read the memo →</a>
+      </article>
+    </div>
+  </section>
+
+  <footer>
+    <a href="#">milanbeherazyx@gmail.com</a><a href="#">LinkedIn</a><a href="#">GitHub</a><a href="#">Resume (PDF)</a>
+  </footer>
+</div>
+</body>
+</html>

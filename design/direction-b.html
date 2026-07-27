@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Direction B — System of Record</title>
+<!-- Mockup only: fonts via Fontshare CDN; mono uses the system stack here.
+     Implementation self-hosts Cabinet Grotesk + General Sans + JetBrains Mono. -->
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800&f[]=general-sans@400,500,600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --console: #101319;
+    --bone: #e9e7e1;
+    --amber: #e8b04b;
+    --red: #e4574c;
+    --slate: #8b93a1;
+    --grid: #232833;
+    --display: 'Cabinet Grotesk', sans-serif;
+    --body: 'General Sans', sans-serif;
+    --mono: ui-monospace, 'SF Mono', Menlo, monospace;
+    --text-display: clamp(2.6rem, 1rem + 7.5vw, 7.25rem);
+    --text-lead: clamp(1.05rem, 1rem + 0.4vw, 1.35rem);
+    --section: clamp(5rem, 14vh, 9rem);
+  }
+  * { margin: 0; box-sizing: border-box; }
+  body {
+    background: var(--console); color: var(--bone);
+    font-family: var(--body); font-size: 1.0625rem; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 72rem; margin-inline: auto; padding-inline: clamp(1.25rem, 4vw, 3rem); }
+  a { color: inherit; text-decoration: none; }
+  .mono { font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.02em; }
+  :focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+
+  nav { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0.5rem 2rem; padding-block: 1.5rem; border-bottom: 1px solid var(--grid); }
+  nav .links { display: flex; flex-wrap: wrap; gap: 1rem 1.75rem; }
+  .wordmark { white-space: nowrap; }
+  nav a { font-weight: 500; font-size: 0.95rem; }
+  nav .links a:hover { color: var(--amber); }
+  .wordmark { font-family: var(--mono); font-weight: 600; }
+  .wordmark b { color: var(--amber); }
+
+  .hero { padding-block: var(--section) calc(var(--section) * 0.6); }
+  .eyebrow { font-family: var(--mono); color: var(--amber); font-size: 0.85rem; margin-bottom: 1.75rem; }
+  h1 {
+    font-family: var(--display); font-weight: 800;
+    font-size: var(--text-display); line-height: 0.92; letter-spacing: -0.02em;
+    max-width: 11ch;
+  }
+  h1 .dim { color: var(--slate); }
+  .hero p.lead { font-size: var(--text-lead); color: var(--slate); max-width: 34rem; margin-top: 2rem; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; margin-top: 2.5rem; align-items: center; }
+  .btn {
+    display: inline-block; background: var(--amber); color: #16130a;
+    font-weight: 600; padding: 0.9rem 1.6rem; border-radius: 4px;
+    transition: transform 0.2s;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .textlink { font-weight: 600; border-bottom: 2px solid var(--slate); padding-bottom: 2px; }
+  .textlink:hover { color: var(--amber); border-color: var(--amber); }
+
+  /* signature: funnel ledger as terminal table */
+  .funnel { border: 1px solid var(--grid); border-radius: 6px; overflow: hidden; margin-block: calc(var(--section) * 0.5); }
+  .funnel .head { font-family: var(--mono); font-size: 0.8rem; color: var(--slate); padding: 0.8rem 1.25rem; border-bottom: 1px solid var(--grid); }
+  .row { display: grid; grid-template-columns: minmax(7rem, 14rem) 1fr auto; gap: 1rem; align-items: center; padding: 1.1rem 1.25rem; }
+  .row + .row { border-top: 1px solid var(--grid); }
+  .row .stage { font-family: var(--mono); font-size: 0.85rem; color: var(--slate); }
+  .row .bar { height: 8px; background: var(--bone); border-radius: 2px; }
+  .row.q .bar { background: var(--amber); width: 43%; }
+  .row.d .bar { background: var(--red); width: 57%; }
+  .fig {
+    font-family: var(--display); font-weight: 800; line-height: 1;
+    font-size: clamp(1.9rem, 1rem + 3vw, 3.4rem);
+    font-variant-numeric: tabular-nums; text-align: right;
+  }
+  .row.q .fig { color: var(--amber); }
+  .row.d .fig { color: var(--red); }
+  .row .delta { font-family: var(--mono); font-size: 0.75rem; color: var(--amber); display: block; text-align: right; margin-top: 0.3rem; }
+  .funnel .foot { font-family: var(--mono); font-size: 0.75rem; color: var(--slate); padding: 0.8rem 1.25rem; border-top: 1px solid var(--grid); }
+  @media (max-width: 40rem) {
+    .row { grid-template-columns: 1fr auto; row-gap: 0.7rem; }
+    .row .stage { grid-column: 1; grid-row: 1; align-self: center; }
+    .row > :last-child { grid-column: 2; grid-row: 1; }
+    .row .bar { grid-column: 1 / -1; grid-row: 2; }
+  }
+
+  .proof { display: grid; gap: 1px; background: var(--grid); border: 1px solid var(--grid); border-radius: 6px; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); margin-bottom: var(--section); }
+  .proof div { background: var(--console); padding: 1.75rem 1.5rem; }
+  .proof .fig { text-align: left; font-size: clamp(1.9rem, 1rem + 2.4vw, 3rem); }
+  .proof div:first-child .fig { color: var(--amber); }
+  .proof p { color: var(--slate); margin-top: 0.6rem; font-size: 0.92rem; }
+
+  .work { padding-bottom: var(--section); }
+  .work > .mono { color: var(--slate); display: block; margin-bottom: 1.5rem; }
+  .cards { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr)); }
+  .card { border: 1px solid var(--grid); border-radius: 6px; padding: 1.5rem; transition: transform 0.2s, border-color 0.2s; }
+  .card:hover { transform: translateY(-2px); border-color: var(--slate); }
+  .card .tags { font-family: var(--mono); font-size: 0.75rem; color: var(--slate); margin-bottom: 1.1rem; }
+  .card .tags b { color: var(--amber); font-weight: 500; }
+  .card h3 { font-family: var(--display); font-weight: 700; font-size: 1.6rem; line-height: 1.12; letter-spacing: -0.01em; }
+  .card .metric { font-family: var(--mono); color: var(--amber); font-size: 0.9rem; margin-top: 1rem; }
+  .card p.sum { color: var(--slate); margin-top: 0.75rem; font-size: 0.95rem; max-width: 40ch; }
+  .card .textlink { display: inline-block; margin-top: 1.25rem; font-size: 0.92rem; }
+
+  footer { border-top: 1px solid var(--grid); padding-block: 2rem; display: flex; gap: 1.75rem; flex-wrap: wrap; font-size: 0.9rem; color: var(--slate); }
+  footer a:hover { color: var(--bone); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .rise { opacity: 0; transform: translateY(16px); animation: rise 0.6s cubic-bezier(0.2, 0.6, 0.2, 1) forwards; }
+    .rise:nth-child(2) { animation-delay: 0.08s; }
+    .rise:nth-child(3) { animation-delay: 0.16s; }
+    .rise:nth-child(4) { animation-delay: 0.24s; }
+    @keyframes rise { to { opacity: 1; transform: none; } }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="wordmark" href="#">milan<b>·</b>behera</a>
+    <div class="links">
+      <a href="#">Work</a><a href="#">Services</a><a href="#">About</a><a href="#">Contact</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <p class="eyebrow rise">-- early_warning: funnel_leakage · refreshed monthly</p>
+    <h1 class="rise">Messy data, turned into <span class="dim">decisions.</span></h1>
+    <p class="lead rise">Funnels, metrics, root causes, dashboards. Deepest in lending — the domain changes; the funnel math doesn't.</p>
+    <div class="cta-row rise">
+      <a class="btn" href="#">Book a call</a>
+      <a class="textlink" href="#">View case studies</a>
+    </div>
+  </header>
+
+  <section class="funnel">
+    <div class="head">portfolio_qualification — indexed per 100 applications · 6 lenders · 100K+ monthly borrowers</div>
+    <div class="row">
+      <span class="stage">applied</span>
+      <div class="bar"></div>
+      <span class="fig">100</span>
+    </div>
+    <div class="row q">
+      <span class="stage">qualified</span>
+      <div class="bar"></div>
+      <span><span class="fig">43</span><span class="delta">▲ +13 pts from 30</span></span>
+    </div>
+    <div class="row d">
+      <span class="stage">dropped_at_rules</span>
+      <div class="bar"></div>
+      <span class="fig">57</span>
+    </div>
+    <div class="foot">how the lift happened → case_study/01</div>
+  </section>
+
+  <section class="proof">
+    <div><div class="fig">30→43%</div><p>portfolio qualification rate lifted across the lender stack</p></div>
+    <div><div class="fig">₹8–9B+</div><p>loan exposure monitored via executive dashboards</p></div>
+    <div><div class="fig">80%</div><p>of manual vendor risk reviews eliminated via API automation</p></div>
+  </section>
+
+  <section class="work">
+    <span class="mono">selected_work/</span>
+    <div class="cards">
+      <article class="card">
+        <div class="tags"><b>FUNNEL</b> · SQL</div>
+        <h3>Lifting portfolio qualification 30% → 43% across six lenders</h3>
+        <div class="metric">+13 pts qualification</div>
+        <p class="sum">BRE funnel monitoring, drop-off and rejection-code analysis across the full lender stack.</p>
+        <a class="textlink" href="#">Open the analysis →</a>
+      </article>
+      <article class="card">
+        <div class="tags"><b>POLICY</b> · SQL</div>
+        <h3>Benchmarking 70+ eligibility rules across three lenders</h3>
+        <div class="metric">5 policy paths mapped</div>
+        <p class="sum">Rule-by-rule policy comparison that shows exactly where each lender says no.</p>
+        <a class="textlink" href="#">Open the analysis →</a>
+      </article>
+    </div>
+  </section>
+
+  <footer>
+    <a href="#">milanbeherazyx@gmail.com</a><a href="#">LinkedIn</a><a href="#">GitHub</a><a href="#">Resume (PDF)</a>
+  </footer>
+</div>
+</body>
+</html>

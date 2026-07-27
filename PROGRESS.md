@@ -1,6 +1,6 @@
 # PROGRESS
 
-## Current phase: 2 (Design system) — not started. Phase 1 COMPLETE (built + deployed).
+## Current phase: 2 (Design system) — deliverables built; BLOCKED on Milan's direction pick (exit gate).
 
 ## Phase checklist (from PRD §8)
 
@@ -64,3 +64,12 @@
 - **Deploy completed 2026-07-28:** Milan created the repo + signed `gh` into `milanbeherazyx` (machine SSH key belongs to `milanbehera-ai` work account → repo uses HTTPS remote with gh credential helper). Both commits' author rewritten from work identity to `Milan Behera <milanbeherazyx@gmail.com>` before first push; repo-local git identity set to personal. Pages `build_type` switched from legacy branch mode to `workflow` via API. Stub verified live (200, correct title).
 - **What Phase 2 needs:** Milan's font-direction preference (optional, PRD §12.4); everything else is on disk. Deliverable: tokens + font pair + motion spec + signature element + 2 mockup directions; Milan picks one.
 - **Next model (PRD §9):** Phase 2 Design system → **Fable 5 or Opus 4.8, MEDIUM–HIGH effort**.
+
+### 2026-07-28 — Phase 2 (Design system) deliverables built
+- **Done:** `design/DESIGN.md` (shared foundations: fluid type scale, spacing, motion spec, signature element "the Funnel Ledger") + two static mockups of hero/proof/case-cards, screenshot-verified at 1440px and 390px (3 responsive bugs found & fixed via screenshots):
+  - **Direction A — "Underwriter's Memo"** (`design/direction-a.html`): light editorial; cool document white / ink / ultramarine (stamp ink) / carmine (red pen, data-only); Clash Display + Switzer.
+  - **Direction B — "System of Record"** (`design/direction-b.html`): dark terminal-calm; console blue-black / bone / EWI amber / signal red (data-only); Cabinet Grotesk + General Sans + mono data voice (JetBrains Mono when self-hosted).
+- **Signature element (shared):** qualification funnel as typographic ledger — stage rows, oversized tabular figures, proportional bars, delta annotations; red strictly = drop-off/rejection semantics.
+- **BLOCKED: waiting on Milan's pick (A or B)** — the pick locks palette + font pair + surface treatment. On pick: write tokens into `src/styles/global.css` `@theme`, self-host fonts (zero third-party requests), archive the other direction. Mockups use Fontshare CDN for preview only.
+- **What Phase 3 needs:** the pick above; then build-out is transcription of PRD §3 + DESIGN.md + chosen mockup.
+- **Next model (PRD §9):** Phase 3 Build-out → **Sonnet 4.6, standard effort**.
