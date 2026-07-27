@@ -9,7 +9,9 @@ order: 1
 draft: false
 ---
 
-- Designed and owned BRE performance frameworks covering 7+ lender-specific eligibility policies across underwriting partners (Jupiter, Lendbox, Cashtree, Caprion, Kinara, GetVantage), tracking approval funnels, drop-offs, and rejection reason codes for 100K–125K monthly borrowers; lifted the overall portfolio qualification rate from 30% to 43% across the lender stack.
-- Built executive lending dashboards monitoring ₹8B–₹9B+ portfolio exposure with Early Warning Indicator (EWI) delinquency tracking across 100K+ active loans and 15+ DPD stages, enabling proactive collections and portfolio risk strategy.
-- Onboarded new lending partners onto the BRE stack, mapping input payload gaps against required bureau tradeline variables and validating policy configuration in Snowflake ahead of production rollout.
-- Ran root-cause analysis on incremental lender additions, quantifying net-new qualified users, and automated recurring SQL-driven KPI reporting for Risk, Product, Lending, and Collections teams with UAT validation and sanity-check coverage.
+- Own business-rules-engine analytics across six lending partners (Cashtree, Caprion, Lendbox, Jupiter, Slice, Western Cap), tracking approval funnels, drop-offs and rejection reason codes for 100K–125K monthly borrowers; lifted portfolio qualification from 30% to 43% across the lender stack.
+- Configured and maintain 200+ lender-specific policy variants built from 112 distinct decision rules across 119 decision variables — translating joint credit policy documents into executable rule configuration, segment routing and versioned SQL configuration.
+- Built a multi-partner UAT harness that replays borrower profiles against every lender before deploy and explains each pass or fail in policy language rather than rule identifiers.
+- Built executive lending dashboards monitoring ₹8B–₹9B+ portfolio exposure with Early Warning Indicator delinquency tracking across 100K+ active loans and 15+ DPD stages, enabling proactive collections and portfolio risk strategy.
+- Ran root-cause analysis on incremental lender additions, quantifying net-new qualified users, and automated recurring SQL-driven KPI reporting on Snowflake for Risk, Product, Lending and Collections teams with UAT and sanity-check coverage.
+- Built PolicyLens, an internal tool that renders rule-engine policies as readable boolean logic, diffs them order-insensitively, and round-trips edits back into deployable configuration (Python, 118 tests).

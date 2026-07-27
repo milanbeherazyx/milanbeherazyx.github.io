@@ -7,7 +7,7 @@ import CaseStudyCard from '../../components/CaseStudyCard.astro';
 const studies = (await getCollection('work', ({ data }) => !data.draft)).sort(
   (a, b) => a.data.order - b.data.order,
 );
-const allTags = ['SQL', 'Funnel', 'Policy', 'Dashboard'] as const;
+const allTags = ['Funnel', 'Policy', 'Risk', 'Dashboard', 'SQL', 'Tooling'] as const;
 const usedTags = allTags.filter((t) => studies.some((s) => s.data.tags.includes(t)));
 ---
 

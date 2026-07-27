@@ -18,7 +18,7 @@ const work = defineCollection({
   schema: z.object({
     title: z.string().max(120),
     summary: z.string().max(300),
-    tags: z.array(z.enum(['SQL', 'Funnel', 'Policy', 'Dashboard'])).min(1),
+    tags: z.array(z.enum(['SQL', 'Funnel', 'Policy', 'Dashboard', 'Risk', 'Tooling'])).min(1),
     featured: z.boolean().default(false), // featured cards on Home (2–3 max)
     order: z.number().int(), // index-page sort, ascending
     draft: z.boolean().default(false),

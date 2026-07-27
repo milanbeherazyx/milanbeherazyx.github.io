@@ -1,11 +1,14 @@
 ---
 // Services (PRD §3.3). Domain-agnostic offers + "how I ramp on a new
 // domain" block (directly answers the versatility claim with a process).
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const offers = (await getCollection('services', ({ data }) => !data.draft)).sort(
+const entries = (await getCollection('services', ({ data }) => !data.draft)).sort(
   (a, b) => a.data.order - b.data.order,
+);
+const offers = await Promise.all(
+  entries.map(async (o) => ({ data: o.data, Content: (await render(o)).Content })),
 );
 
 const RAMP_STEPS = [
@@ -26,11 +29,14 @@ const RAMP_STEPS = [
 
     {
       offers.length > 0 && (
-        <div class="mt-12 grid gap-8 sm:grid-cols-2">
-          {offers.map((o) => (
+        <div class="mt-12 grid gap-10 lg:grid-cols-2">
+          {offers.map(({ data, Content }) => (
             <article data-reveal class="rounded-2xl border-t-[3px] border-fg pt-6">
-              <h2 class="font-display text-xl font-semibold">{o.data.title}</h2>
-              <p class="mt-3 text-muted">{o.data.summary}</p>
+              <h2 class="font-display text-xl font-semibold">{data.title}</h2>
+              <p class="mt-3 font-medium text-muted">{data.summary}</p>
+              <div class="service-body mt-4">
+                <Content />
+              </div>
             </article>
           ))}
         </div>
@@ -65,3 +71,18 @@ const RAMP_STEPS = [
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .service-body :global(p) {
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 0.85rem;
+    font-size: 0.97rem;
+  }
+  .service-body :global(strong) {
+    color: var(--fg);
+  }
+  .service-body :global(em) {
+    font-style: italic;
+  }
+</style>

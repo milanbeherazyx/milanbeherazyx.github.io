@@ -1,6 +1,6 @@
 # PROGRESS
 
-## Current phase: 4 (Content & copy) — not started. Phase 3 COMPLETE (all pages built, responsive-verified).
+## Current phase: 5 (Ops & docs) — not started. Phase 4 COMPLETE (all copy written, sanitization passed).
 
 ## Phase checklist (from PRD §8)
 
@@ -17,9 +17,9 @@
 - [x] **Phase 3 — Build-out** — COMPLETE 2026-07-28
   - Deliverable: All pages/components per PRD §3, responsive per §5.1 device matrix, motion implemented, blog structure wired ✅
   - Exit criteria: Every page renders with placeholder content at all §5.1 widths with no horizontal scroll ✅ (verified 360/390/768/1024/1440/1920 × light+dark, zero overflow); Lighthouse (mobile) ≥ 90 all categories ⏳ not yet run — no Lighthouse CI tooling installed yet (that's Phase 5); dist is 672KB total across 12 pages so there's no obvious red flag, but this should be spot-checked before Phase 6 launch gate
-- [ ] **Phase 4 — Content & copy**
-  - Deliverable: Case studies written, bio, services copy, metadata/OG, resume page
-  - Exit criteria: All placeholder text gone; sanitization checklist passed
+- [x] **Phase 4 — Content & copy** — COMPLETE 2026-07-28
+  - Deliverable: Case studies written, bio, services copy, metadata/OG, resume page ✅
+  - Exit criteria: All placeholder text gone ✅; sanitization checklist passed ✅ (automated term audit over `src/` and `dist/`, all clean)
 - [ ] **Phase 5 — Ops & docs**
   - Deliverable: Finished `AGENTS.md` + all skill files, Lighthouse CI budgets, sitemap/robots/JSON-LD, analytics wired, 404 page
   - Exit criteria: Local-LLM acceptance test (PRD §6) passes
@@ -92,3 +92,21 @@ Two edits to the resume PDF + LinkedIn must land before launch so the site's cla
 - **Not done (explicitly deferred, not a gap):** Lighthouse mobile-score run (needs Phase 5 tooling); OG images/JSON-LD (Phase 5); final copy (Phase 4); Cal.com/Web3Forms real integration (owner-approved deferral, guides owed when Milan is ready).
 - **What Phase 4 needs:** Milan should supply raw bio notes (About page currently has a factual-but-generic placeholder bio, explicitly flagged) — not a blocker, just improves the first draft. Otherwise Phase 4 is straightforward: replace the 4 case-study bodies + 4 service bodies with full prose from content_pack.md, resolve the CS1 "how the 5-month lift happened credibly" discrepancy-log item (pack §8.4), finalize OG metadata copy.
 - **Next model (PRD §9):** Phase 4 Content & copy → **Opus 4.8, medium effort**.
+
+### 2026-07-28 — Phase 4 (Content & copy) complete
+- **Source research:** Milan granted read access to his Khatabook work artifacts (rule-engine policy configs, a SQL config migration, a Java offer generator, a Python UAT notebook, an internal tool repo, and an OKR workbook). Explored at structural level to write credibly; **none of it is in this repo and none may ever be.** Findings live in conversation + the git-ignored pack only.
+- **Numbers corrected before publishing.** An earlier draft claim of "5,000+ decision rules" was wrong — that counted rule *instances*. Milan challenged it; recomputed distinct `(field, operator, threshold)` triples: **112 distinct rules in his files (5,463 instances), 233 distinct repo-wide (12,919 instances)**. Published figure is now **112 distinct rules composed into 200+ policy variants across 119 decision variables** — a composition/reuse story that is both honest and more interesting. Lesson worth keeping: aggregate counts over config files inflate badly; always de-duplicate before publishing.
+- **Case studies: 4 → 6**, all written in full (Context → Problem → Approach → What I built → Outcome → Tools → Where else this applies):
+  1. Lifting portfolio qualification 30% → 43% *(featured)*
+  2. Policy as code: 112 rules, 200+ variants, six lenders *(featured, replaces the old "73 rules" stub)*
+  3. PolicyLens — internal tooling story *(new)*
+  4. Cohort & vintage delinquency for Axos Bank *(new — concurrent vs ever delinquency, vintage curves)* *(featured)*
+  5. Removing 80% of manual vendor risk reviews *(stack corrected: Python ETL → SQL Server → Tableau)*
+  6. Bootstrapping a bakery on SKU-margin analytics
+- **Also written:** all 4 service offers in full prose (each with a lending worked example), a real About bio replacing the placeholder, and improved site title/description. Resume timeline entry for Khatabook rewritten to the new six-partner list and new scale figures.
+- **Schema/UI changes:** added `Risk` and `Tooling` to the work tag enum; Services page now renders full markdown bodies; **fixed a rendering bug** where markdown bullet lists in case studies collapsed into run-on paragraphs (`.case-content` styled `p` but not `ul`/`li`) — now rendered with accent dash markers.
+- **Sanitization:** automated audit over `src/` and `dist/` for every restricted term — internal service/table names, proprietary signal names, internal pipeline acronyms, unauthorized partner names, dev hosts, session tokens, phone number. All clean. The audit **caught a real miss**: the Khatabook resume entry still carried the superseded partner list and "7+ policies" figure from Phase 3; corrected.
+- **Owner decisions logged:** publish six partners by name (Cashtree, Caprion, Lendbox, Jupiter, Slice, Western Cap); name Axos Bank (corroborated by a public LinkedIn recommendation); PolicyLens described but never linked or open-sourced (it encodes the policy schema); OKR workbook used for vocabulary only — no figure from it is published, as it is employer business performance and contains colleagues' names.
+- **Verified:** `npm run build` green (14 pages), zero horizontal overflow, both colour schemes checked.
+- **What Phase 5 needs:** nothing from Milan. Deliverables are `AGENTS.md` + the 8 skill files, Lighthouse CI budgets, sitemap/robots/JSON-LD, analytics, 404 polish. **Open decision needed by Phase 5:** analytics choice — Umami Cloud vs GoatCounter (PRD §12.2).
+- **Next model (PRD §9):** Phase 5 Ops & docs → **Sonnet (docs) + Haiku (config), LOW effort**.

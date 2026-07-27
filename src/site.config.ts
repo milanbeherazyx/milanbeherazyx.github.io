@@ -8,9 +8,9 @@
  */
 export const SITE = {
   name: 'Milan Behera',
-  title: 'Milan Behera — Data Analyst',
+  title: 'Milan Behera — Data Analyst | Lending & Credit Risk',
   description:
-    'Data analyst. Funnels, metrics, root causes, dashboards — deepest in lending & credit risk; the method transfers to any domain.',
+    'Data analyst turning messy operational data into decisions — funnels, metric definitions, root causes, dashboards. Deepest in lending and credit risk; the domain changes, the method does not.',
   url: 'https://milanbeherazyx.github.io',
   email: 'milanbeherazyx@gmail.com',
   socials: {
