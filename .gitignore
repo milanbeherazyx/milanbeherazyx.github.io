@@ -10,8 +10,8 @@ dist
 # discrepancy log — working notes about mismatches in Milan's own public
 # record, which would damage credibility if published.
 # See content-pack/README.md for how to restore it on a new machine.
-content_pack.md
-/content-pack/content_pack.md
+# content_pack.md
+# /content-pack/content_pack.md
 
 # ── Employer artifacts — NEVER commit, in any form ──
 # Guards against accidentally dropping source material into the repo.
