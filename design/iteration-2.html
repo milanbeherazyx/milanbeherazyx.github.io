@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Iteration 2 — Hybrid light/dark + funnel options</title>
+<!-- Mockup only: fonts via Fontshare CDN; implementation self-hosts. -->
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&f[]=switzer@400,500,600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f4f5f2;
+    --fg: #14161a;
+    --muted: #5a6069;
+    --accent: #2b3fd6;
+    --accent-contrast: #ffffff;
+    --data-red: #b42318;
+    --line: #d9dcd6;
+    --card: #ffffff;
+    --display: 'Clash Display', sans-serif;
+    --body: 'Switzer', sans-serif;
+    --mono: ui-monospace, 'SF Mono', Menlo, monospace;
+  }
+  [data-theme='dark'] {
+    --bg: #101319;
+    --fg: #e9e7e1;
+    --muted: #8b93a1;
+    --accent: #e8b04b;
+    --accent-contrast: #16130a;
+    --data-red: #e4574c;
+    --line: #232833;
+    --card: #151a22;
+  }
+  * { margin: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--fg);
+    font-family: var(--body); font-size: 1.0625rem; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; transition: background 0.25s, color 0.25s;
+  }
+  .wrap { max-width: 72rem; margin-inline: auto; padding: 0 clamp(1.25rem, 4vw, 3rem) 6rem; }
+  a { color: inherit; text-decoration: none; }
+  .label { font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; }
+  .mono { font-family: var(--mono); font-size: 0.8rem; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  .toolbar {
+    position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center;
+    gap: 1rem; padding: 0.9rem clamp(1.25rem, 4vw, 3rem); background: var(--bg); border-bottom: 1px solid var(--line);
+  }
+  .toolbar .mono { color: var(--muted); }
+  .toggle {
+    font: inherit; font-weight: 600; font-size: 0.9rem; cursor: pointer;
+    background: var(--accent); color: var(--accent-contrast); border: 0; border-radius: 999px; padding: 0.55rem 1.1rem;
+  }
+
+  .opt { margin-top: 5rem; }
+  .opt-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.75rem 1.25rem; margin-bottom: 0.5rem; }
+  .opt-head h2 { font-family: var(--display); font-weight: 600; font-size: 1.8rem; letter-spacing: -0.01em; }
+  .pick { font-family: var(--mono); font-size: 0.75rem; color: var(--accent-contrast); background: var(--accent); padding: 0.2rem 0.6rem; border-radius: 4px; font-weight: 600; }
+  .opt > p.note { color: var(--muted); max-width: 46rem; margin-bottom: 2rem; font-size: 0.95rem; }
+
+  /* hero sample */
+  .hero { padding-top: 4rem; }
+  .hero .label { color: var(--muted); margin-bottom: 1.25rem; }
+  h1 {
+    font-family: var(--display); font-weight: 600;
+    font-size: clamp(2.4rem, 1rem + 6vw, 5.5rem); line-height: 0.94; letter-spacing: -0.025em; max-width: 12ch;
+  }
+  h1 em { font-style: normal; color: var(--accent); }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; margin-top: 2rem; align-items: center; }
+  .btn { display: inline-block; background: var(--accent); color: var(--accent-contrast); font-weight: 600; padding: 0.85rem 1.5rem; border-radius: 999px; }
+  .textlink { font-weight: 600; border-bottom: 2px solid var(--fg); padding-bottom: 2px; }
+
+  .fig { font-family: var(--display); font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
+
+  /* F1 ledger */
+  .ledger { border-top: 3px solid var(--fg); }
+  .stage { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 1rem; padding-block: 1.1rem; }
+  .stage + .stage { border-top: 1px solid var(--line); }
+  .stage .bar { height: 10px; margin-top: 0.55rem; background: var(--fg); }
+  .stage.q .bar { background: var(--accent); width: 43%; }
+  .stage.d .bar { background: var(--data-red); width: 57%; }
+  .stage .fig { font-size: clamp(2rem, 1rem + 3.4vw, 4rem); }
+  .stage.q .fig { color: var(--accent); }
+  .stage.d .fig { color: var(--data-red); }
+  .sub { font-size: 0.85rem; color: var(--muted); margin-top: 0.35rem; }
+  .chip { display: inline-block; font-family: var(--mono); font-size: 0.75rem; font-weight: 600; color: var(--accent); border: 1px solid var(--accent); border-radius: 999px; padding: 0.15rem 0.6rem; }
+
+  /* F2 steps */
+  .steps { display: grid; gap: 1rem; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: stretch; }
+  .step { border: 1px solid var(--line); background: var(--card); border-radius: 8px; padding: 1.4rem; display: flex; flex-direction: column; gap: 0.5rem; }
+  .step .label { color: var(--muted); }
+  .step .fig { font-size: clamp(2.2rem, 1rem + 3vw, 3.6rem); }
+  .step.mid { border-style: dashed; }
+  .step.mid .mono { color: var(--muted); line-height: 1.7; }
+  .step.last .fig { color: var(--accent); }
+  .arrow { align-self: center; font-size: 1.6rem; color: var(--muted); }
+  .step .drop { font-size: 0.85rem; color: var(--data-red); font-weight: 500; }
+  @media (max-width: 44rem) {
+    .steps { grid-template-columns: 1fr; }
+    .arrow { transform: rotate(90deg); justify-self: center; }
+  }
+
+  /* F3 before/after */
+  .ba { display: grid; gap: 1.75rem; }
+  .ba .row { display: grid; gap: 0.5rem; }
+  .ba .head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+  .ba .track { background: var(--line); border-radius: 4px; height: 44px; position: relative; overflow: hidden; }
+  .ba .fill { position: absolute; inset: 0 auto 0 0; background: var(--muted); border-radius: 4px 0 0 4px; }
+  .ba .after .fill { background: var(--accent); }
+  .ba .fill .mono { position: absolute; right: 0.7rem; top: 50%; transform: translateY(-50%); color: var(--bg); font-weight: 600; }
+  .ba .fig { font-size: clamp(1.8rem, 1rem + 2vw, 2.6rem); }
+  .ba .after .fig { color: var(--accent); }
+  .stamp {
+    justify-self: start; font-family: var(--display); font-weight: 700; font-size: 1.3rem; color: var(--accent);
+    border: 3px solid var(--accent); border-radius: 8px; padding: 0.4rem 1rem; transform: rotate(-2deg); margin-top: 0.5rem;
+  }
+
+  /* F4 split bar */
+  .split .bigfig { font-size: clamp(3rem, 1rem + 6vw, 6rem); color: var(--accent); }
+  .split .bigfig small { font-size: 0.35em; color: var(--muted); font-weight: 500; font-family: var(--body); letter-spacing: 0; }
+  .split .track { display: flex; height: 52px; border-radius: 6px; overflow: hidden; margin-top: 1.5rem; }
+  .split .track .qq { width: 43%; background: var(--accent); }
+  .split .track .dd { width: 57%; background: var(--data-red); opacity: 0.85; }
+  .legend { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 1rem; font-size: 0.9rem; color: var(--muted); }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 0.45rem; }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <span class="mono">preview only — real site follows the visitor's system light/dark setting automatically</span>
+  <button class="toggle" id="t">Switch to dark</button>
+</div>
+<div class="wrap">
+
+  <section class="hero opt">
+    <div class="opt-head"><h2>Hybrid identity — one voice, two palettes</h2></div>
+    <p class="note">Direction A's typography (Clash Display + Switzer) with B's monospace data-labels. Light = ultramarine (stamp ink). Dark = EWI amber. Use the button above to compare.</p>
+    <p class="label">Data analyst — lending &amp; credit risk</p>
+    <h1>Messy data, turned into <em>decisions.</em></h1>
+    <div class="cta-row"><a class="btn" href="#">Book a call</a><a class="textlink" href="#">View case studies</a></div>
+  </section>
+
+  <section class="opt">
+    <div class="opt-head"><span class="pick">FUNNEL 1</span><h2>Ledger rows — clarified</h2></div>
+    <p class="note">The Phase 2 original, relabeled so the 43/57 relationship is explicit: one cohort of 100, split into qualified vs dropped.</p>
+    <div class="ledger">
+      <div class="stage">
+        <div><span class="label">Applications in</span><div class="bar"></div><p class="sub">every 100 that enter the lender stack</p></div>
+        <span class="fig">100</span>
+      </div>
+      <div class="stage q">
+        <div><span class="label" style="color:var(--accent)">Qualified</span><div class="bar"></div><p class="sub">after rule fixes &amp; funnel monitoring <span class="chip">▲ was 30</span></p></div>
+        <span class="fig">43</span>
+      </div>
+      <div class="stage d">
+        <div><span class="label" style="color:var(--data-red)">Dropped at rules</span><div class="bar"></div><p class="sub">every rejection code analyzed — that's where the +13 came from</p></div>
+        <span class="fig">57</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="opt">
+    <div class="opt-head"><span class="pick">FUNNEL 2</span><h2>Steps — application → rules → qualified</h2></div>
+    <p class="note">A true left-to-right pipeline. The middle step shows the mechanism (the BRE), which answers "how did the lift happen" at a glance. Stacks vertically on phones.</p>
+    <div class="steps">
+      <div class="step">
+        <span class="label">1 · Applied</span>
+        <span class="fig">100</span>
+        <span class="sub">applications enter</span>
+      </div>
+      <span class="arrow">→</span>
+      <div class="step mid">
+        <span class="label">2 · BRE rules engine</span>
+        <span class="mono">7+ lender policies · 6 lenders<br />drop-offs &amp; rejection codes<br />monitored, benchmarked, fixed</span>
+        <span class="drop">57 dropped — every code analyzed</span>
+      </div>
+      <span class="arrow">→</span>
+      <div class="step last">
+        <span class="label">3 · Qualified</span>
+        <span class="fig">43</span>
+        <span class="sub"><span class="chip">▲ was 30 before</span></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="opt">
+    <div class="opt-head"><span class="pick">FUNNEL 3</span><h2>Before / after — the lift itself</h2></div>
+    <p class="note">Skips funnel anatomy entirely and shows the achievement: same 100 applications, two outcomes. Clearest for non-analyst visitors.</p>
+    <div class="ba">
+      <div class="row">
+        <div class="head"><span class="label" style="color:var(--muted)">Before — rules as first configured</span><span class="fig">30<small>/100</small></span></div>
+        <div class="track"><div class="fill" style="width:30%"><span class="mono">30</span></div></div>
+      </div>
+      <div class="row after">
+        <div class="head"><span class="label" style="color:var(--accent)">After — rules benchmarked, fixed &amp; monitored</span><span class="fig">43<small>/100</small></span></div>
+        <div class="track"><div class="fill" style="width:43%"><span class="mono">43</span></div></div>
+      </div>
+      <span class="stamp">+13 pts</span>
+    </div>
+  </section>
+
+  <section class="opt split">
+    <div class="opt-head"><span class="pick">FUNNEL 4</span><h2>Split bar — one figure, one bar</h2></div>
+    <p class="note">Most compact: the headline number carries it, the bar shows the split. Quietest option — works well if the hero type should dominate.</p>
+    <div class="bigfig fig">43% <small>qualified · was 30%</small></div>
+    <div class="track"><div class="qq"></div><div class="dd"></div></div>
+    <div class="legend">
+      <span><span class="dot" style="background:var(--accent)"></span>43 qualified</span>
+      <span><span class="dot" style="background:var(--data-red)"></span>57 dropped at rules → rejection codes analyzed</span>
+    </div>
+  </section>
+
+</div>
+<script>
+  const root = document.documentElement, btn = document.getElementById('t');
+  const apply = (d) => { root.dataset.theme = d ? 'dark' : 'light'; btn.textContent = d ? 'Switch to light' : 'Switch to dark'; };
+  apply(matchMedia('(prefers-color-scheme: dark)').matches);
+  btn.onclick = () => apply(root.dataset.theme !== 'dark');
+</script>
+</body>
+</html>
