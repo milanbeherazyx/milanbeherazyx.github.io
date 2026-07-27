@@ -1,0 +1,55 @@
+---
+/**
+ * Signature element — "Before / After" (Phase 2 pick, option 3).
+ * design/iteration-2.html FUNNEL 3 is the reference. Numbers are props so
+ * this stays reusable without ever inventing data (PRD §7).
+ */
+interface Props {
+  beforeValue: number;
+  afterValue: number;
+  of: number;
+  beforeLabel: string;
+  afterLabel: string;
+  deltaLabel: string;
+  footnote?: string;
+}
+
+const { beforeValue, afterValue, of, beforeLabel, afterLabel, deltaLabel, footnote } = Astro.props;
+const beforePct = (beforeValue / of) * 100;
+const afterPct = (afterValue / of) * 100;
+---
+
+<div data-reveal class="rounded-2xl border border-line bg-surface p-6 sm:p-8">
+  <div class="flex flex-col gap-6">
+    <div>
+      <div class="flex flex-wrap items-baseline justify-between gap-2">
+        <span class="text-label text-muted">{beforeLabel}</span>
+        <span class="font-display text-2xl font-semibold tabular sm:text-3xl">{beforeValue}<span class="text-muted">/{of}</span></span>
+      </div>
+      <div class="mt-2 h-11 overflow-hidden rounded-md bg-line">
+        <div class="flex h-full items-center justify-end bg-muted px-3" style={`width:${beforePct}%`}>
+          <span class="font-mono text-xs font-semibold text-bg">{beforeValue}</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="flex flex-wrap items-baseline justify-between gap-2">
+        <span class="text-label text-accent">{afterLabel}</span>
+        <span class="font-display text-2xl font-semibold tabular text-accent sm:text-3xl">{afterValue}<span class="text-muted">/{of}</span></span>
+      </div>
+      <div class="mt-2 h-11 overflow-hidden rounded-md bg-line">
+        <div class="flex h-full items-center justify-end bg-accent px-3" style={`width:${afterPct}%`}>
+          <span class="font-mono text-xs font-semibold text-accent-contrast">{afterValue}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <span class="inline-block rounded-lg border-2 border-accent px-3 py-1.5 font-display text-lg font-bold text-accent">
+        {deltaLabel}
+      </span>
+      {footnote && <p class="text-sm text-muted">{footnote}</p>}
+    </div>
+  </div>
+</div>

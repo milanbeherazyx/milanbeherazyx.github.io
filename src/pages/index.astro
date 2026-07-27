@@ -1,25 +1,107 @@
 ---
-// Home (PRD §3.1) — STUB. Phase 3 builds the real hero/proof strip/cards.
+// Home (PRD §3.1). Hero → funnel signature → proof strip → featured case
+// studies → services teaser. Placeholder-tolerant: renders correctly with
+// however many content entries exist.
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { PROOF_METRICS, SITE } from '../site.config';
+import FunnelBeforeAfter from '../components/FunnelBeforeAfter.astro';
+import ProofStrip from '../components/ProofStrip.astro';
+import CaseStudyCard from '../components/CaseStudyCard.astro';
+import { getCollection } from 'astro:content';
+
+const featured = (await getCollection('work', ({ data }) => !data.draft && data.featured)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const services = (await getCollection('services', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
 ---
 
 <BaseLayout>
-  <h1 class="text-4xl font-bold">Milan Behera — Data Analyst</h1>
-  <p class="mt-4 max-w-prose">
-    Funnels, metrics, root causes, dashboards. Deepest in lending &amp; credit risk — the method
-    transfers to any domain. Full site launching soon.
-  </p>
-  <ul class="mt-8 space-y-2">
-    {
-      PROOF_METRICS.map((m) => (
-        <li>
-          <strong>{m.value}</strong> {m.label}
-        </li>
-      ))
-    }
-  </ul>
-  <p class="mt-8">
-    <a href={`mailto:${SITE.email}`} class="underline">Get in touch</a>
-  </p>
+  <section class="mx-auto max-w-6xl px-5 pb-16 pt-14 sm:px-8 sm:pt-20 lg:pt-28">
+    <p data-rise style="--rise-i:0" class="text-label text-muted">Data analyst — lending &amp; credit risk</p>
+    <h1 data-rise style="--rise-i:1" class="mt-5 max-w-[13ch] text-display">
+      Messy data, turned into <span class="text-accent">decisions.</span>
+    </h1>
+    <p data-rise style="--rise-i:2" class="mt-6 max-w-[36rem] text-lead text-muted">
+      Funnels, metrics, root causes, dashboards. Deepest in lending &amp; credit risk — the domain
+      changes; the funnel math doesn't.
+    </p>
+    <p data-rise style="--rise-i:2" class="mt-3 font-mono text-sm text-muted">
+      Deepest in: Lending &amp; Credit Risk · SQL/Snowflake · Funnels &amp; RCA
+    </p>
+    <div data-rise style="--rise-i:3" class="mt-8 flex flex-wrap items-center gap-4 sm:gap-6">
+      <a
+        href="/contact/"
+        class="inline-block rounded-full bg-accent px-7 py-3.5 text-base font-semibold text-accent-contrast transition-transform duration-200 hover:-translate-y-0.5"
+      >
+        Book a call
+      </a>
+      <a href="/work/" class="border-b-2 border-fg pb-1 text-base font-semibold hover:border-accent hover:text-accent">
+        View case studies
+      </a>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-5 py-section sm:px-8">
+    <p data-reveal class="text-label mb-6 text-muted">
+      Portfolio qualification — indexed per 100 applications, six lenders, 100K+ monthly borrowers
+    </p>
+    <div class="max-w-2xl">
+      <FunnelBeforeAfter
+        beforeValue={30}
+        afterValue={43}
+        of={100}
+        beforeLabel="Before — rules as first configured"
+        afterLabel="After — rules benchmarked, fixed &amp; monitored"
+        deltaLabel="+13 pts"
+        footnote="How the lift happened → case study 01."
+      />
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-5 py-section sm:px-8">
+    <ProofStrip />
+  </section>
+
+  {
+    featured.length > 0 && (
+      <section class="mx-auto max-w-6xl px-5 py-section sm:px-8">
+        <p data-reveal class="text-label mb-8 text-muted">Selected work</p>
+        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {featured.map((cs) => (
+            <CaseStudyCard
+              href={`/work/${cs.id}/`}
+              title={cs.data.title}
+              summary={cs.data.summary}
+              tags={cs.data.tags}
+              metric={cs.data.metrics?.[0]}
+            />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    services.length > 0 && (
+      <section class="mx-auto max-w-6xl px-5 py-section sm:px-8">
+        <p data-reveal class="text-label mb-8 text-muted">Services</p>
+        <div class="grid gap-6 sm:grid-cols-3">
+          {services.slice(0, 3).map((s) => (
+            <a
+              href="/services/"
+              data-reveal
+              class="block rounded-2xl border border-line p-6 transition-transform duration-200 hover:-translate-y-1"
+            >
+              <h3 class="font-display text-lg font-semibold">{s.data.title}</h3>
+              <p class="mt-2 text-sm text-muted">{s.data.summary}</p>
+            </a>
+          ))}
+        </div>
+        <a href="/services/" class="mt-8 inline-block border-b-2 border-fg pb-1 text-sm font-semibold hover:border-accent hover:text-accent">
+          See all services →
+        </a>
+      </section>
+    )
+  }
 </BaseLayout>

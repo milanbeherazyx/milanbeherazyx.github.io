@@ -1,15 +1,85 @@
 ---
-// Contact (PRD §3.6) — STUB. Cal.com embed + Web3Forms form land in Phase 3
-// once Milan sets up both accounts (owner-approved deferral). Until then the
-// page degrades to a mailto link, controlled by site.config.ts values.
+// Contact (PRD §3.6). Cal.com inline embed (primary) + Web3Forms fallback +
+// direct email. Both integrations are owner-approved deferrals (PROGRESS.md)
+// — SITE.calcom / SITE.web3formsKey are empty until Milan sets them up, so
+// this page degrades gracefully to a mailto CTA with zero code changes
+// needed later (fill the two config values in site.config.ts to go live).
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { SITE } from '../../site.config';
+
+const hasCalcom = SITE.calcom.length > 0;
+const hasForm = SITE.web3formsKey.length > 0;
+const calcomSrc = hasCalcom ? `https://cal.com/${SITE.calcom}?embed=true` : '';
 ---
 
-<BaseLayout title="Contact — Milan Behera">
-  <h1 class="text-3xl font-bold">Contact</h1>
-  <p class="mt-4">
-    Email <a href={`mailto:${SITE.email}`} class="underline">{SITE.email}</a> — booking and a
-    contact form are coming soon.
-  </p>
+<BaseLayout title="Contact — Milan Behera" description="Book a call or send a message — data analytics consulting for lending, credit risk, and any data-generating business.">
+  <section class="mx-auto max-w-4xl px-5 py-14 sm:px-8 sm:py-20">
+    <h1 data-rise style="--rise-i:0" class="text-h2 font-display">Let's talk</h1>
+    <p data-rise style="--rise-i:1" class="mt-4 max-w-[46ch] text-lead text-muted">
+      Book a 30-minute intro call, or send a message with a bit of context — I read everything
+      myself.
+    </p>
+
+    <div class="mt-section grid gap-10 lg:grid-cols-2">
+      <div data-reveal>
+        <p class="text-label mb-4 text-muted">Book a call</p>
+        {
+          hasCalcom ? (
+            <iframe
+              src={calcomSrc}
+              class="h-[36rem] w-full rounded-2xl border border-line"
+              title="Book a call with Milan Behera"
+              loading="lazy"
+            />
+          ) : (
+            <div class="rounded-2xl border border-dashed border-line p-8 text-center">
+              <p class="text-muted">Online booking is being set up.</p>
+              <a
+                href={`mailto:${SITE.email}?subject=Intro call`}
+                class="mt-4 inline-block rounded-full bg-accent px-6 py-3 font-semibold text-accent-contrast"
+              >
+                Email to schedule a call
+              </a>
+            </div>
+          )
+        }
+      </div>
+
+      <div data-reveal>
+        <p class="text-label mb-4 text-muted">Send a message</p>
+        {
+          hasForm ? (
+            <form action="https://api.web3forms.com/submit" method="POST" class="space-y-4">
+              <input type="hidden" name="access_key" value={SITE.web3formsKey} />
+              <div>
+                <label for="name" class="text-sm font-medium">Name</label>
+                <input id="name" name="name" type="text" required class="mt-1 w-full rounded-lg border border-line bg-surface px-4 py-3" />
+              </div>
+              <div>
+                <label for="email" class="text-sm font-medium">Email</label>
+                <input id="email" name="email" type="email" required class="mt-1 w-full rounded-lg border border-line bg-surface px-4 py-3" />
+              </div>
+              <div>
+                <label for="message" class="text-sm font-medium">Message</label>
+                <textarea id="message" name="message" rows={5} required class="mt-1 w-full rounded-lg border border-line bg-surface px-4 py-3" />
+              </div>
+              <button type="submit" class="rounded-full bg-accent px-6 py-3 font-semibold text-accent-contrast">
+                Send
+              </button>
+            </form>
+          ) : (
+            <div class="rounded-2xl border border-dashed border-line p-8 text-center">
+              <p class="text-muted">The contact form is being set up.</p>
+              <a
+                href={`mailto:${SITE.email}`}
+                class="mt-4 inline-block break-all rounded-full bg-accent px-6 py-3 font-semibold text-accent-contrast"
+              >
+                {SITE.email}
+              </a>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
 </BaseLayout>

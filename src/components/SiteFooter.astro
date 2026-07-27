@@ -1,0 +1,23 @@
+---
+import { SITE } from '../site.config';
+---
+
+<footer class="border-t border-line">
+  <div class="mx-auto max-w-6xl px-5 py-12 sm:px-8">
+    <div class="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <p class="font-display text-xl font-semibold">{SITE.name}</p>
+        <p class="mt-2 max-w-sm text-sm text-muted">{SITE.description}</p>
+      </div>
+      <div class="flex flex-wrap gap-x-8 gap-y-3 text-sm">
+        <a href={`mailto:${SITE.email}`} class="min-h-11 py-2 hover:text-accent">Email</a>
+        <a href={SITE.socials.linkedin} class="min-h-11 py-2 hover:text-accent">LinkedIn</a>
+        <a href={SITE.socials.github} class="min-h-11 py-2 hover:text-accent">GitHub</a>
+        <a href={SITE.resumePdf} class="min-h-11 py-2 hover:text-accent">Resume (PDF)</a>
+      </div>
+    </div>
+    <p class="mt-10 font-mono text-xs text-muted">
+      © {new Date().getFullYear()} {SITE.name}. Built with Astro.
+    </p>
+  </div>
+</footer>

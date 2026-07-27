@@ -1,0 +1,14 @@
+---
+import { PROOF_METRICS } from '../site.config';
+---
+
+<ul class="grid gap-8 sm:grid-cols-3">
+  {
+    PROOF_METRICS.map((m, i) => (
+      <li data-reveal style={`transition-delay:${i * 80}ms`} class="border-t-2 border-fg pt-5">
+        <p class="font-display text-3xl font-semibold tabular sm:text-4xl">{m.value}</p>
+        <p class="mt-2 text-sm text-muted">{m.label}</p>
+      </li>
+    ))
+  }
+</ul>

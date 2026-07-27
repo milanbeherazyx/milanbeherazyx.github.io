@@ -1,8 +1,11 @@
 ---
-// Case-study detail (PRD §3.2) — STUB template. Phase 3 builds the real
-// memo-style layout enforcing the section order.
+// Case-study detail (PRD §3.2) — memo layout. Body markdown supplies the
+// strict section order (Context → Problem → Approach → What I built →
+// Outcome → Tools); frontmatter supplies header metrics + the closing
+// "Where else this applies" note (never invented — content_pack.md only).
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Tag from '../../components/Tag.astro';
 
 export async function getStaticPaths() {
   const studies = await getCollection('work', ({ data }) => !data.draft);
@@ -14,11 +17,69 @@ const { Content } = await render(study);
 ---
 
 <BaseLayout title={`${study.data.title} — Milan Behera`} description={study.data.summary}>
-  <article class="prose max-w-prose">
-    <h1>{study.data.title}</h1>
-    <p>{study.data.summary}</p>
-    <Content />
-    <h2>Where else this applies</h2>
-    <p>{study.data.whereElseThisApplies}</p>
+  <article class="mx-auto max-w-3xl px-5 py-14 sm:px-8 sm:py-20">
+    <a href="/work/" class="text-sm font-semibold text-muted hover:text-accent">← All case studies</a>
+
+    <div class="mt-6 flex flex-wrap gap-2">
+      {study.data.tags.map((t) => <Tag label={t} />)}
+    </div>
+
+    <h1 class="mt-5 max-w-[20ch] text-h2 font-display">{study.data.title}</h1>
+    <p class="mt-4 text-lead text-muted">{study.data.summary}</p>
+
+    {
+      study.data.metrics && study.data.metrics.length > 0 && (
+        <div class="mt-8 flex flex-wrap gap-8 border-t-2 border-fg pt-6">
+          {study.data.metrics.map((m) => (
+            <div>
+              <p class="font-display text-2xl font-semibold tabular text-accent">{m.value}</p>
+              <p class="mt-1 text-sm text-muted">{m.label}</p>
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    <div class="case-content mt-10">
+      <Content />
+    </div>
+
+    <div class="mt-12 rounded-2xl border border-line p-6">
+      <p class="text-label text-muted">Where else this applies</p>
+      <p class="mt-2 text-fg">{study.data.whereElseThisApplies}</p>
+    </div>
+
+    <div class="mt-8 flex flex-wrap gap-2">
+      {study.data.tools.map((t) => <Tag label={t} />)}
+    </div>
+
+    <a href="/contact/" class="mt-12 inline-block rounded-full bg-accent px-6 py-3 font-semibold text-accent-contrast">
+      Discuss a similar problem →
+    </a>
   </article>
 </BaseLayout>
+
+<style>
+  .case-content :global(h2) {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.4rem;
+    margin-top: 2.25rem;
+    margin-bottom: 0.75rem;
+  }
+  .case-content :global(h2:first-child) {
+    margin-top: 0;
+  }
+  .case-content :global(p) {
+    color: var(--fg);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+  .case-content :global(em) {
+    color: var(--muted);
+  }
+  .case-content :global(a) {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+</style>

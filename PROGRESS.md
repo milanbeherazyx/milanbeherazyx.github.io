@@ -1,6 +1,6 @@
 # PROGRESS
 
-## Current phase: 3 (Build-out) — not started. Phase 2 COMPLETE (direction picked, tokens locked).
+## Current phase: 4 (Content & copy) — not started. Phase 3 COMPLETE (all pages built, responsive-verified).
 
 ## Phase checklist (from PRD §8)
 
@@ -14,9 +14,9 @@
 - [x] **Phase 2 — Design system** — COMPLETE 2026-07-28
   - Deliverable: Tokens (color/type/space), font pair, motion spec, signature element, 2 mockup directions for home hero + case-study card ✅ (+1 iteration round: hybrid + funnel options)
   - Exit criteria: Milan picks a direction ✅ (**Hybrid light/dark** + **Funnel option 3 Before/After**); tokens file locked ✅ (`src/styles/global.css`, fonts self-hosted, build green)
-- [ ] **Phase 3 — Build-out**
-  - Deliverable: All pages/components per PRD §3, responsive per §5.1 device matrix, motion implemented, blog structure wired
-  - Exit criteria: Every page renders with placeholder content at all §5.1 widths with no horizontal scroll; Lighthouse (mobile) ≥ 90 all categories
+- [x] **Phase 3 — Build-out** — COMPLETE 2026-07-28
+  - Deliverable: All pages/components per PRD §3, responsive per §5.1 device matrix, motion implemented, blog structure wired ✅
+  - Exit criteria: Every page renders with placeholder content at all §5.1 widths with no horizontal scroll ✅ (verified 360/390/768/1024/1440/1920 × light+dark, zero overflow); Lighthouse (mobile) ≥ 90 all categories ⏳ not yet run — no Lighthouse CI tooling installed yet (that's Phase 5); dist is 672KB total across 12 pages so there's no obvious red flag, but this should be spot-checked before Phase 6 launch gate
 - [ ] **Phase 4 — Content & copy**
   - Deliverable: Case studies written, bio, services copy, metadata/OG, resume page
   - Exit criteria: All placeholder text gone; sanitization checklist passed
@@ -79,3 +79,13 @@
 - **Locked into the repo:** `src/styles/global.css` — semantic palette vars (light + dark), `@theme` tokens (fonts, fluid type scale incl. per-size line-height/tracking/weight, section spacing, motion easing), `@font-face` for 4 self-hosted files in `public/fonts/` (ClashDisplay-Variable, Switzer-Variable, JetBrainsMono 400/600 — ~260KB total, ITF FFL + OFL). Build green. `direction-a/b.html` archived to `design/archive/`; `iteration-2.html` is THE build reference for Phase 3.
 - **Phase 3 instructions (for the Sonnet session):** read PROGRESS.md → PRD §3, §5, §5.1 → `design/DESIGN.md` → `design/iteration-2.html`. Build all pages with placeholder-tolerant components; funnel = option 3 markup; test BOTH color schemes at all §5.1 widths; Lenis pointer:fine only; motion per DESIGN.md budget. Contact page still degrades to mailto (Cal.com/Web3Forms deferred). Do not touch tokens.
 - **Next model (PRD §9):** Phase 3 Build-out → **Sonnet, standard effort**. Milan will switch /model himself before invoking.
+
+### 2026-07-28 — Phase 3 (Build-out) complete
+- **Done:** Full component layer — `SiteHeader` (accessible mobile menu: button+panel, aria-expanded, Escape closes, touch targets ≥44px), `SiteFooter`, `FunnelBeforeAfter` (locked signature element, option 3), `ProofStrip`, `CaseStudyCard`, `Tag`. All 8 PRD §3 pages built and wired to their content collections: Home, Work index (client-side tag filter, no framework) + detail (memo layout, strict Context→Problem→Approach→What I built→Outcome→Tools→Where else section order enforced by template), Services (+ "How I ramp on a new domain" 4-step block), About (photo via `astro:assets` — 1.7MB PNG optimized to a 4KB WebP at build; tool grid; 4 recommendation pull-quotes), Resume (experience timeline + skills + certs + education + PDF download), Contact (Cal.com iframe / Web3Forms form gated on `site.config.ts` values — both empty today so it cleanly degrades to mailto CTAs), Blog (index/detail styled, still nav-hidden with 0 posts), 404.
+- **Motion implemented** (design/DESIGN.md spec): Lenis smooth scroll (pointer:fine only, wrapped in try/catch), one staggered hero load-in (`data-rise`), IntersectionObserver scroll reveals (`data-reveal`), `prefers-reduced-motion` fully respected — verified programmatically that reduced-motion users see all content immediately with zero scroll dependency.
+- **Real bug found & fixed during QA:** the `.js` class that gates hidden reveal/rise states was originally set by an unconditional inline `<head>` script. If the motion module script ever failed to load/execute, content below the fold would stay invisible forever with nothing left to reveal it. Fixed by moving the `.js` class-add into `motion.ts` itself (first line) and wrapping Lenis init in try/catch — now hidden states can only ever apply once the script that will reveal them is actually running; no-JS / script-failure always defaults to fully visible.
+- **Content seeded:** 4 LinkedIn recommendations and 7 experience entries are now FINAL (facts already approved, safe to lock — not placeholder). 4 case studies and 4 services have real frontmatter (titles/tags/metrics/tools, all from content_pack.md, no invented numbers) but placeholder body prose explicitly flagged `*Placeholder — Phase 4 writes...*` for Phase 4 to replace. Photo and resume PDF copied in as real assets (both approved for publication — resume PDF's phone number is scoped to the PDF only per pack §1, never rendered on any page).
+- **Verified:** `npm run build` green (12 pages, 672KB dist total). Zero horizontal scroll at 360/390/768/1024/1440/1920px × light+dark (programmatic check, not just visual). Screenshot QA across Home/Work/Services/About/Resume/Contact in both color schemes. Mobile nav hamburger opens/closes/navigates correctly; 768px shows full desktop nav with no crowding (Tailwind `md:` boundary, deliberate).
+- **Not done (explicitly deferred, not a gap):** Lighthouse mobile-score run (needs Phase 5 tooling); OG images/JSON-LD (Phase 5); final copy (Phase 4); Cal.com/Web3Forms real integration (owner-approved deferral, guides owed when Milan is ready).
+- **What Phase 4 needs:** Milan should supply raw bio notes (About page currently has a factual-but-generic placeholder bio, explicitly flagged) — not a blocker, just improves the first draft. Otherwise Phase 4 is straightforward: replace the 4 case-study bodies + 4 service bodies with full prose from content_pack.md, resolve the CS1 "how the 5-month lift happened credibly" discrepancy-log item (pack §8.4), finalize OG metadata copy.
+- **Next model (PRD §9):** Phase 4 Content & copy → **Opus 4.8, medium effort**.

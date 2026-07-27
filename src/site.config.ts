@@ -17,9 +17,9 @@ export const SITE = {
     linkedin: 'https://www.linkedin.com/in/milanbeherazyx',
     github: 'https://github.com/milanbeherazyx',
   },
-  /** Cal.com booking link — DEFERRED: filled when Milan creates the account
-   *  (owner-approved deferral, see PROGRESS.md). Empty string = CTA renders
-   *  as mailto fallback. */
+  /** Cal.com username/event slug, e.g. "milanbeherazyx/intro-call" — DEFERRED:
+   *  filled when Milan creates the account (owner-approved deferral, see
+   *  PROGRESS.md). Empty string = contact page shows a mailto fallback. */
   calcom: '',
   /** Web3Forms access key — DEFERRED, same as above. Empty = form hidden,
    *  mailto shown. Public key by design (Web3Forms model), still filled only

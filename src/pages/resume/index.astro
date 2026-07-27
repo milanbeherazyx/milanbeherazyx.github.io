@@ -1,5 +1,7 @@
 ---
-// Resume (PRD §3.5) — STUB. 60-second scannable timeline in Phase 3/4.
+// Resume (PRD §3.5) — recruiter-optimized, scannable in ~60s. Timeline from
+// the `experience` collection (facts from content_pack.md §4, resolved per
+// the "resume PDF is truth" rule — see PROGRESS.md).
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { SITE } from '../../site.config';
@@ -7,23 +9,90 @@ import { SITE } from '../../site.config';
 const roles = (await getCollection('experience', ({ data }) => !data.draft)).sort(
   (a, b) => a.data.order - b.data.order,
 );
+
+const SKILLS = ['SQL', 'Python', 'Snowflake', 'Tableau', 'Power BI', 'Advanced Excel', 'dbt', 'AWS', 'Git/GitHub'];
+
+const EDUCATION = [
+  { degree: 'B.Tech., Civil Engineering (BPUT), CGPA 8.05', school: 'Einstein Academy of Technology & Management', years: '2018 – 2021' },
+  { degree: 'Diploma, Civil Engineering (SCTE&VT Odisha)', school: 'Hi-Tech Institute of Engineering & Management', years: '2010 – 2013' },
+];
+
+const CERTIFICATIONS = [
+  'IBM: Machine Learning with Python',
+  'IBM: Data Analysis with Python',
+  'IBM: Data Science 101',
+  'IBM: Statistics 101',
+  'Microsoft: Excel (Advanced)',
+];
 ---
 
-<BaseLayout title="Resume — Milan Behera">
-  <h1 class="text-3xl font-bold">Resume</h1>
-  {
-    roles.length === 0 ? (
-      <p class="mt-4">
-        Full resume page coming soon. <a href={SITE.resumePdf} class="underline">Download the PDF</a>.
-      </p>
-    ) : (
-      <ul class="mt-6 space-y-4">
-        {roles.map((r) => (
-          <li>
-            <strong>{r.data.role}</strong> — {r.data.company} ({r.data.start} – {r.data.end})
-          </li>
-        ))}
-      </ul>
-    )
-  }
+<BaseLayout title="Resume — Milan Behera" description="Experience timeline, skills, and education — data analyst specializing in lending and credit-risk analytics.">
+  <section class="mx-auto max-w-4xl px-5 py-14 sm:px-8 sm:py-20">
+    <div class="flex flex-wrap items-start justify-between gap-4">
+      <div data-rise style="--rise-i:0">
+        <h1 class="text-h2 font-display">Resume</h1>
+        <p class="mt-3 max-w-[42ch] text-muted">Data Analyst — BRE Analytics &amp; Risk Cohorts. SQL, Python, Tableau.</p>
+      </div>
+      <a
+        href={SITE.resumePdf}
+        data-rise
+        style="--rise-i:1"
+        class="inline-block rounded-full bg-accent px-6 py-3 font-semibold text-accent-contrast transition-transform duration-200 hover:-translate-y-0.5"
+      >
+        Download PDF
+      </a>
+    </div>
+
+    <div class="mt-section">
+      <p data-reveal class="text-label mb-8 text-muted">Experience</p>
+      <ol class="space-y-10 border-l border-line pl-6 sm:pl-8">
+        {
+          roles.map((r) => (
+            <li data-reveal class="relative">
+              <span class="absolute -left-[calc(1.5rem+3px)] top-1.5 h-2.5 w-2.5 rounded-full bg-accent sm:-left-[calc(2rem+3px)]" />
+              <div class="flex flex-wrap items-baseline justify-between gap-2">
+                <h2 class="font-display text-lg font-semibold">{r.data.role} · {r.data.company}</h2>
+                <span class="font-mono text-xs text-muted">{r.data.start} – {r.data.end}</span>
+              </div>
+              {r.data.location && <p class="mt-0.5 text-sm text-muted">{r.data.location}</p>}
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+
+    <div class="mt-section grid gap-10 sm:grid-cols-2">
+      <div data-reveal>
+        <p class="text-label mb-6 text-muted">Skills</p>
+        <div class="flex flex-wrap gap-2">
+          {SKILLS.map((s) => (
+            <span class="rounded-full border border-line px-3 py-1.5 font-mono text-xs">{s}</span>
+          ))}
+        </div>
+      </div>
+      <div data-reveal>
+        <p class="text-label mb-6 text-muted">Certifications</p>
+        <ul class="space-y-1.5 text-sm text-muted">
+          {CERTIFICATIONS.map((c) => <li>{c}</li>)}
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-section">
+      <p data-reveal class="text-label mb-6 text-muted">Education</p>
+      <div class="space-y-4">
+        {
+          EDUCATION.map((e) => (
+            <div data-reveal class="flex flex-wrap items-baseline justify-between gap-2 border-t border-line pt-4">
+              <div>
+                <p class="font-medium">{e.degree}</p>
+                <p class="text-sm text-muted">{e.school}</p>
+              </div>
+              <span class="font-mono text-xs text-muted">{e.years}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
 </BaseLayout>

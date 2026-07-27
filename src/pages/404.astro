@@ -1,9 +1,19 @@
 ---
-// 404 — styled properly in Phase 5.
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Not found — Milan Behera">
-  <h1 class="text-3xl font-bold">Page not found</h1>
-  <p class="mt-4"><a href="/" class="underline">Back to the homepage</a></p>
+<BaseLayout title="Page not found — Milan Behera">
+  <section class="mx-auto flex max-w-2xl flex-col items-start px-5 py-24 sm:px-8 sm:py-32">
+    <p class="font-mono text-sm text-muted">404 — dropped at rules</p>
+    <h1 class="mt-4 text-h2 font-display">That page doesn't qualify.</h1>
+    <p class="mt-4 max-w-[42ch] text-muted">
+      The page you're looking for moved, or never existed. Here's where to go instead.
+    </p>
+    <a
+      href="/"
+      class="mt-8 inline-block rounded-full bg-accent px-6 py-3 font-semibold text-accent-contrast"
+    >
+      Back to the homepage
+    </a>
+  </section>
 </BaseLayout>

@@ -138,3 +138,48 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/*
+ * Motion primitives (design/DESIGN.md §Motion spec).
+ * Content is visible by default (no-JS / reduced-motion safe). The `.js`
+ * class is added by an inline head script only when JS runs, so hidden
+ * states never apply without a script able to reveal them.
+ */
+[data-reveal],
+[data-rise] {
+  opacity: 1;
+  transform: none;
+}
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.5s var(--ease-rise),
+    transform 0.5s var(--ease-rise);
+}
+.js [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+/* One orchestrated hero load-in — staggered via data-rise index, ≤900ms total */
+.js [data-rise] {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: rise 0.6s var(--ease-rise) forwards;
+  animation-delay: calc(var(--rise-i, 0) * 80ms);
+}
+@keyframes rise {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal],
+  .js [data-rise] {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}
