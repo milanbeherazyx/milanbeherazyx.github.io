@@ -1,0 +1,29 @@
+---
+// Case-study index (PRD §3.2) — STUB. Tag filtering lands in Phase 3.
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const studies = (await getCollection('work', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<BaseLayout title="Case studies — Milan Behera">
+  <h1 class="text-3xl font-bold">Case studies</h1>
+  {
+    studies.length === 0 ? (
+      <p class="mt-4">Case studies are being written — check back soon.</p>
+    ) : (
+      <ul class="mt-6 space-y-4">
+        {studies.map((s) => (
+          <li>
+            <a href={`/work/${s.id}/`} class="underline">
+              {s.data.title}
+            </a>
+            <p>{s.data.summary}</p>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</BaseLayout>

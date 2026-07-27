@@ -1,6 +1,8 @@
 content_pack.md
+/content-pack/
 node_modules
 dist
+.astro
 .DS_Store
 
 # Raw local assets — never commit; deliberate copies go to /public in later phases

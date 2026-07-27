@@ -1,6 +1,6 @@
 # PROGRESS
 
-## Current phase: 1 (Architecture) — not started. Phase 0 complete (2 items deferred by owner, see below).
+## Current phase: 2 (Design system) — not started. Phase 1 built; its deploy exit-criterion is BLOCKED on GitHub repo creation (see 2026-07-28 Phase 1 log).
 
 ## Phase checklist (from PRD §8)
 
@@ -8,9 +8,9 @@
   - Deliverable: Content pack complete: assets checklist (pack §9) done, discrepancy log (pack §8) resolved
   - Exit criteria: All ⚠️ flags resolved; photo, recommendations, resume PDF, Cal.com & Web3Forms keys in hand
   - **Owner-approved deferrals:** Cal.com account + Web3Forms key deferred to the contact-page build (Phase 3/4); Claude provides setup guides then. Not blockers for Phases 1–2.
-- [ ] **Phase 1 — Architecture**
-  - Deliverable: Repo scaffold: Astro 5 + Tailwind v4 + TS strict, content collections with Zod schemas, CI workflow, `AGENTS.md` + `/skills/` skeletons, empty page routes
-  - Exit criteria: `npm run build` green; deploys to `milanbeherazyx.github.io` showing a stub
+- [x] **Phase 1 — Architecture** — built 2026-07-28; deploy pending repo creation
+  - Deliverable: Repo scaffold: Astro 5 + Tailwind v4 + TS strict, content collections with Zod schemas, CI workflow, `AGENTS.md` + `/skills/` skeletons, empty page routes ✅
+  - Exit criteria: `npm run build` green ✅ (`astro check` + build, 8 pages); deploys to `milanbeherazyx.github.io` showing a stub ⏳ **BLOCKED: waiting on Milan — GitHub repo `milanbeherazyx.github.io` must exist + Pages set to "GitHub Actions" + push authorized**
 - [ ] **Phase 2 — Design system**
   - Deliverable: Tokens (color/type/space), font pair, motion spec, signature element, 2 mockup directions for home hero + case-study card
   - Exit criteria: Milan picks a direction; tokens file locked
@@ -57,3 +57,10 @@
 
 ### New discrepancy found (flag for end of project)
 - Upwork engagement (Jan 2023 – Apr 2024, on LinkedIn) is **not on the final resume PDF**. Site may still show it (public on LinkedIn). Decide at Phase 6 whether to add to PDF (pack §8.6).
+
+### 2026-07-28 — Phase 1 (Architecture) built
+- **Done:** Hand-written Astro 5 scaffold at repo root — Tailwind v4 (`@tailwindcss/vite` + `@theme` placeholder tokens), TS strict, `astro check` in the build. Five content collections with Zod schemas (`work`, `services`, `blog`, `recommendations`, `experience`) each with an ignored `_example.md` template. All §3 routes as stubs: `/`, `/work/` + `[slug]`, `/services/`, `/about/`, `/resume/`, `/contact/`, `/blog/` + `[slug]` + RSS, `404`. Blog auto-appears in nav at ≥1 published post. `site.config.ts` holds identity/nav/proof-strip (Cal.com + Web3Forms keys empty → mailto fallback). `AGENTS.md` (working skeleton), `README.md`, 8 `skills/*.md` stubs. CI: build on PR, build+deploy to Pages on main. Content pack copied to `/content-pack/` (verified git-ignored). `npm run build` **green**, 8 pages.
+- **Decisions made (PRD left open):** collection for resume timeline named `experience` (md-per-role, display-string dates); recommendations as md-per-quote collection; empty-collection builds emit warnings (accepted until Phase 4 adds content); `astro check` included in `npm run build` so type errors also fail loudly; workflow runs plain `npm ci && npm run build` instead of `withastro/action` (transparent, same result).
+- **BLOCKED: waiting on GitHub repo creation** — exit criterion "deploys showing a stub" needs: (1) Milan creates public repo `milanbeherazyx/milanbeherazyx.github.io` (or authorizes `gh repo create`), (2) repo Settings → Pages → Source = "GitHub Actions", (3) authorize push of `main`.
+- **What Phase 2 needs:** Milan's font-direction preference (optional, PRD §12.4); everything else is on disk. Deliverable: tokens + font pair + motion spec + signature element + 2 mockup directions; Milan picks one.
+- **Next model (PRD §9):** Phase 2 Design system → **Fable 5 or Opus 4.8, MEDIUM–HIGH effort**.

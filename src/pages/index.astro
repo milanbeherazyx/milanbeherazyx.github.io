@@ -1,0 +1,25 @@
+---
+// Home (PRD §3.1) — STUB. Phase 3 builds the real hero/proof strip/cards.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { PROOF_METRICS, SITE } from '../site.config';
+---
+
+<BaseLayout>
+  <h1 class="text-4xl font-bold">Milan Behera — Data Analyst</h1>
+  <p class="mt-4 max-w-prose">
+    Funnels, metrics, root causes, dashboards. Deepest in lending &amp; credit risk — the method
+    transfers to any domain. Full site launching soon.
+  </p>
+  <ul class="mt-8 space-y-2">
+    {
+      PROOF_METRICS.map((m) => (
+        <li>
+          <strong>{m.value}</strong> {m.label}
+        </li>
+      ))
+    }
+  </ul>
+  <p class="mt-8">
+    <a href={`mailto:${SITE.email}`} class="underline">Get in touch</a>
+  </p>
+</BaseLayout>

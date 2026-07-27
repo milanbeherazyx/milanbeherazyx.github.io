@@ -1,0 +1,15 @@
+---
+// Contact (PRD §3.6) — STUB. Cal.com embed + Web3Forms form land in Phase 3
+// once Milan sets up both accounts (owner-approved deferral). Until then the
+// page degrades to a mailto link, controlled by site.config.ts values.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE } from '../../site.config';
+---
+
+<BaseLayout title="Contact — Milan Behera">
+  <h1 class="text-3xl font-bold">Contact</h1>
+  <p class="mt-4">
+    Email <a href={`mailto:${SITE.email}`} class="underline">{SITE.email}</a> — booking and a
+    contact form are coming soon.
+  </p>
+</BaseLayout>

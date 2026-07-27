@@ -1,0 +1,15 @@
+---
+// About (PRD §3.4) — STUB. Bio, photo, tools grid, recommendations in Phase 3/4.
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const recs = (await getCollection('recommendations', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<BaseLayout title="About — Milan Behera">
+  <h1 class="text-3xl font-bold">About</h1>
+  <p class="mt-4">Bio coming soon.</p>
+  {recs.length > 0 && <p class="mt-4">{recs.length} recommendation(s) loaded.</p>}
+</BaseLayout>

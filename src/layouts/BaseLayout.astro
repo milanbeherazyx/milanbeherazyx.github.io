@@ -1,0 +1,53 @@
+---
+import '../styles/global.css';
+import { getCollection } from 'astro:content';
+import { SITE, NAV } from '../site.config';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = SITE.title, description = SITE.description } = Astro.props;
+
+// Blog nav item appears automatically once ≥1 published post exists (PRD §3.7)
+const publishedPosts = await getCollection('blog', ({ data }) => !data.draft);
+const nav = publishedPosts.length > 0 ? [...NAV, { href: '/blog/', label: 'Blog' }] : [...NAV];
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <!-- Full SEO wiring (OG images, JSON-LD) lands in Phase 5 -->
+  </head>
+  <body class="min-h-dvh font-body antialiased">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-white focus:p-3"
+    >
+      Skip to content
+    </a>
+
+    <header>
+      <nav aria-label="Main" class="flex flex-wrap items-center gap-6 p-6">
+        <a href="/" class="font-semibold">{SITE.name}</a>
+        {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+      </nav>
+    </header>
+
+    <main id="main" class="p-6">
+      <slot />
+    </main>
+
+    <footer class="flex flex-wrap gap-6 p-6 text-sm">
+      <a href={`mailto:${SITE.email}`}>Email</a>
+      <a href={SITE.socials.linkedin}>LinkedIn</a>
+      <a href={SITE.socials.github}>GitHub</a>
+      <a href={SITE.resumePdf}>Resume (PDF)</a>
+    </footer>
+  </body>
+</html>

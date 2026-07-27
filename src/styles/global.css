@@ -1,0 +1,32 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens — Tailwind v4 `@theme` layer.
+ * ⚠️ Phase 2 locks these values (palette, type scale, spacing, fonts).
+ * Placeholders below exist only so the stub builds; every value here is
+ * provisional until the Phase 2 tokens file is approved by Milan.
+ * Content editors: NEVER edit this file (see AGENTS.md forbidden zones).
+ */
+@theme {
+  /* type — final pair chosen in Phase 2 (self-hosted, no third-party requests) */
+  --font-display: ui-sans-serif, system-ui, sans-serif;
+  --font-body: ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Quality floor (PRD §5): visible keyboard focus everywhere */
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Motion is opt-in; Phase 3 adds reveals. Reduced motion kills all of it. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
