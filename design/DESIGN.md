@@ -1,4 +1,21 @@
-# Phase 2 — Design system proposal
+# Phase 2 — Design system ✅ LOCKED (Milan, 2026-07-28)
+
+**Final decisions:**
+- **Identity: Hybrid** — one voice, two palettes. Typography from Direction A
+  (Clash Display + Switzer) + JetBrains Mono data-labels from Direction B.
+  Light mode = A's palette (ultramarine); dark mode = B's palette (EWI amber).
+  Mode follows `prefers-color-scheme` — NO manual toggle (PRD §4 excludes
+  localStorage). Reference mock: `iteration-2.html` (has a preview-only toggle).
+- **Funnel treatment: Option 3 "Before/After"** — two bars (30/100 → 43/100)
+  with a "+13 pts" stamp. Build exactly as in `iteration-2.html` FUNNEL 3.
+- **Tokens locked** in `src/styles/global.css` (`@theme` + semantic vars with
+  dark overrides). Fonts self-hosted in `/public/fonts/` (Fontshare ITF FFL +
+  OFL), zero third-party requests.
+- Originals `direction-a.html` / `direction-b.html` archived in `archive/`.
+
+Everything below is the original proposal, kept for rationale.
+
+---
 
 Two directions, both built from the subject (lending data), sharing one
 skeleton: same type scale, spacing, motion budget and signature element —

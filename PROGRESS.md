@@ -1,6 +1,6 @@
 # PROGRESS
 
-## Current phase: 2 (Design system) — deliverables built; BLOCKED on Milan's direction pick (exit gate).
+## Current phase: 3 (Build-out) — not started. Phase 2 COMPLETE (direction picked, tokens locked).
 
 ## Phase checklist (from PRD §8)
 
@@ -11,9 +11,9 @@
 - [x] **Phase 1 — Architecture** — built 2026-07-28; deploy pending repo creation
   - Deliverable: Repo scaffold: Astro 5 + Tailwind v4 + TS strict, content collections with Zod schemas, CI workflow, `AGENTS.md` + `/skills/` skeletons, empty page routes ✅
   - Exit criteria: `npm run build` green ✅ (`astro check` + build, 8 pages); deploys to `milanbeherazyx.github.io` showing a stub ✅ (live 2026-07-28, HTTP 200, Actions workflow green)
-- [ ] **Phase 2 — Design system**
-  - Deliverable: Tokens (color/type/space), font pair, motion spec, signature element, 2 mockup directions for home hero + case-study card
-  - Exit criteria: Milan picks a direction; tokens file locked
+- [x] **Phase 2 — Design system** — COMPLETE 2026-07-28
+  - Deliverable: Tokens (color/type/space), font pair, motion spec, signature element, 2 mockup directions for home hero + case-study card ✅ (+1 iteration round: hybrid + funnel options)
+  - Exit criteria: Milan picks a direction ✅ (**Hybrid light/dark** + **Funnel option 3 Before/After**); tokens file locked ✅ (`src/styles/global.css`, fonts self-hosted, build green)
 - [ ] **Phase 3 — Build-out**
   - Deliverable: All pages/components per PRD §3, responsive per §5.1 device matrix, motion implemented, blog structure wired
   - Exit criteria: Every page renders with placeholder content at all §5.1 widths with no horizontal scroll; Lighthouse (mobile) ≥ 90 all categories
@@ -73,3 +73,9 @@
 - **BLOCKED: waiting on Milan's pick (A or B)** — the pick locks palette + font pair + surface treatment. On pick: write tokens into `src/styles/global.css` `@theme`, self-host fonts (zero third-party requests), archive the other direction. Mockups use Fontshare CDN for preview only.
 - **What Phase 3 needs:** the pick above; then build-out is transcription of PRD §3 + DESIGN.md + chosen mockup.
 - **Next model (PRD §9):** Phase 3 Build-out → **Sonnet 4.6, standard effort**.
+
+### 2026-07-28 — Phase 2 LOCKED
+- **Milan's picks:** (1) Hybrid light/dark — one identity (Clash Display + Switzer + JetBrains Mono data-labels), light = ultramarine "memo" palette, dark = EWI-amber "console" palette, switching via `prefers-color-scheme` only (no toggle — PRD §4 localStorage exclusion). (2) Funnel treatment = **option 3 "Before/After"** (30/100 → 43/100 bars + "+13 pts" stamp), per `design/iteration-2.html`.
+- **Locked into the repo:** `src/styles/global.css` — semantic palette vars (light + dark), `@theme` tokens (fonts, fluid type scale incl. per-size line-height/tracking/weight, section spacing, motion easing), `@font-face` for 4 self-hosted files in `public/fonts/` (ClashDisplay-Variable, Switzer-Variable, JetBrainsMono 400/600 — ~260KB total, ITF FFL + OFL). Build green. `direction-a/b.html` archived to `design/archive/`; `iteration-2.html` is THE build reference for Phase 3.
+- **Phase 3 instructions (for the Sonnet session):** read PROGRESS.md → PRD §3, §5, §5.1 → `design/DESIGN.md` → `design/iteration-2.html`. Build all pages with placeholder-tolerant components; funnel = option 3 markup; test BOTH color schemes at all §5.1 widths; Lenis pointer:fine only; motion per DESIGN.md budget. Contact page still degrades to mailto (Cal.com/Web3Forms deferred). Do not touch tokens.
+- **Next model (PRD §9):** Phase 3 Build-out → **Sonnet, standard effort**. Milan will switch /model himself before invoking.

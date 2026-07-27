@@ -1,25 +1,133 @@
 @import 'tailwindcss';
 
 /*
- * Design tokens — Tailwind v4 `@theme` layer.
- * ⚠️ Phase 2 locks these values (palette, type scale, spacing, fonts).
- * Placeholders below exist only so the stub builds; every value here is
- * provisional until the Phase 2 tokens file is approved by Milan.
- * Content editors: NEVER edit this file (see AGENTS.md forbidden zones).
+ * ─── DESIGN TOKENS — LOCKED (Phase 2, approved by Milan 2026-07-28) ───
+ * Identity: "Hybrid" — Underwriter's Memo typography, two palettes:
+ *   light = document white + ultramarine (stamp ink)
+ *   dark  = console blue-black + EWI amber
+ * Mode follows the visitor's system preference (prefers-color-scheme).
+ * No manual toggle (PRD §4 excludes localStorage-dependent features).
+ * Funnel treatment: option 3 "Before/After" (design/iteration-2.html).
+ * Red is data semantics ONLY (drop-off / rejection) — never decoration.
+ * Content editors: NEVER edit this file (AGENTS.md forbidden zones).
  */
+
+/* Self-hosted fonts — zero third-party requests (PRD §4).
+   Clash Display & Switzer: Fontshare (ITF Free Font License).
+   JetBrains Mono: OFL. Files in /public/fonts/. */
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/ClashDisplay-Variable.woff2') format('woff2');
+  font-weight: 200 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Switzer';
+  src: url('/fonts/Switzer-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+
+/* Semantic palette — light (default) and dark via system preference. */
+:root {
+  --bg: #f4f5f2; /* document white */
+  --surface: #ffffff; /* cards */
+  --fg: #14161a; /* ink */
+  --muted: #5a6069; /* secondary text (graphite) */
+  --accent: #2b3fd6; /* ultramarine stamp ink — CTA, links, positive deltas */
+  --accent-contrast: #ffffff; /* text on accent */
+  --data-red: #b42318; /* underwriter's red pen — drop-off data ONLY */
+  --line: #d9dcd6; /* borders */
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #101319; /* console blue-black */
+    --surface: #151a22;
+    --fg: #e9e7e1; /* bone */
+    --muted: #8b93a1; /* slate */
+    --accent: #e8b04b; /* EWI amber */
+    --accent-contrast: #16130a;
+    --data-red: #e4574c;
+    --line: #232833;
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  /* colors → utilities: bg-bg, bg-surface, text-fg, text-muted, text-accent,
+     text-data-red, border-line, bg-accent, text-accent-contrast */
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-data-red: var(--data-red);
+  --color-line: var(--line);
+}
+
 @theme {
-  /* type — final pair chosen in Phase 2 (self-hosted, no third-party requests) */
-  --font-display: ui-sans-serif, system-ui, sans-serif;
-  --font-body: ui-sans-serif, system-ui, sans-serif;
+  /* type — utilities: font-display, font-body, font-mono */
+  --font-display: 'Clash Display', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Switzer', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* fluid type scale — utilities: text-display, text-h2, text-lead, text-label */
+  --text-display: clamp(2.6rem, 1rem + 7.5vw, 7.25rem);
+  --text-display--line-height: 0.92;
+  --text-display--letter-spacing: -0.025em;
+  --text-display--font-weight: 600;
+  --text-h2: clamp(1.6rem, 1rem + 2.2vw, 2.6rem);
+  --text-h2--line-height: 1.1;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h2--font-weight: 600;
+  --text-lead: clamp(1.05rem, 1rem + 0.4vw, 1.35rem);
+  --text-lead--line-height: 1.5;
+  --text-label: 0.78rem;
+  --text-label--line-height: 1.4;
+  --text-label--letter-spacing: 0.08em;
+  --text-label--font-weight: 600;
+
+  /* spacing — utilities: py-section etc. */
+  --spacing-section: clamp(5rem, 14vh, 9rem);
+
+  /* motion (spec in design/DESIGN.md): one hero load-in ≤900ms total,
+     scroll reveals 500ms once, micro 150–200ms; Lenis on pointer:fine only */
+  --ease-rise: cubic-bezier(0.2, 0.6, 0.2, 1);
 }
 
-/* Quality floor (PRD §5): visible keyboard focus everywhere */
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Ledger figures everywhere numbers carry meaning */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Quality floor (PRD §5): visible keyboard focus */
 :focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 2px;
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
-/* Motion is opt-in; Phase 3 adds reveals. Reduced motion kills all of it. */
+/* Motion is opt-in; reduced motion kills all of it (PRD §5). */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
