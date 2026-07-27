@@ -1,12 +1,26 @@
-content_pack.md
-/content-pack/
+# ── Build artifacts (regenerate with `npm install && npm run build`) ──
 node_modules
 dist
 .astro
 .DS_Store
 
-# Raw local assets — never commit; deliberate copies go to /public in later phases
-LinkedIn recommendation Screenshots/
-Professional photo Square 1-1.png
-Professional photo Story 9-16.png
-Milan_Behera_DataAnalyst.pdf
+# ── Content pack: source of truth for all site copy ──
+# NEVER commit. This repo is public, and the pack contains ⛔ items (phone
+# number, home-address reference, unauthorised lender names) plus the
+# discrepancy log — working notes about mismatches in Milan's own public
+# record, which would damage credibility if published.
+# See content-pack/README.md for how to restore it on a new machine.
+content_pack.md
+/content-pack/content_pack.md
+
+# ── Employer artifacts — NEVER commit, in any form ──
+# Guards against accidentally dropping source material into the repo.
+# Real examples seen during Phase 4 research: a UAT notebook containing an
+# admin token and session cookie; policy configs with live thresholds; an
+# OKR workbook with colleagues' names and business volumes.
+*.ipynb
+*.xlsx
+*.docx
+/policies/
+uat*.py
+**/all_lender_responses.json

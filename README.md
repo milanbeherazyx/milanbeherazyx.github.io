@@ -12,18 +12,42 @@ npm run build    # type-check + production build (must pass before commit)
 npm run preview  # serve the production build locally
 ```
 
+Node 20+ required.
+
+## Fresh clone on a new machine
+
+Everything needed to build, edit and deploy the site is in this repo —
+including the `.claude/skills/` used by AI sessions, the design system in
+`design/`, and the task guides in `skills/`. After cloning:
+
+```sh
+npm install && npm run build   # should pass
+```
+
+**One file is deliberately missing:** `content-pack/content_pack.md`, the source
+of truth for site facts. It cannot live in a public repo — see
+[`content-pack/README.md`](content-pack/README.md) for why and how to restore
+it. The site builds fine without it; restore it before doing content work.
+
+Raw source assets not needed by the build (recommendation screenshots, spare
+photo crops) are kept outside the repo in `../Portfolio-private-assets/`.
+
 ## Deploy
 
 Push to `main` → GitHub Actions builds and deploys to Pages. No manual steps.
 
 ## Editing content
 
-Read `AGENTS.md` first — it maps every content task to the exact file and a
-step-by-step skill file in `skills/`. Components and config are off-limits for
-content changes.
+Read [`AGENTS.md`](AGENTS.md) first — it maps every content task to the exact
+file and a step-by-step guide in [`skills/`](skills/). Components and config are
+off-limits for content changes.
 
 ## Project docs
 
-- `PRD_portfolio_website.md` — binding requirements
-- `PROGRESS.md` — phase status + session log
-- `CLAUDE.md` — working rules for AI sessions
+| File | What it is |
+|---|---|
+| [`PRD_portfolio_website.md`](PRD_portfolio_website.md) | Binding requirements |
+| [`PROGRESS.md`](PROGRESS.md) | Phase status + session log |
+| [`CLAUDE.md`](CLAUDE.md) | Working rules for AI sessions |
+| [`AGENTS.md`](AGENTS.md) | Repo map, edit-X→file-Y table, forbidden zones |
+| [`design/DESIGN.md`](design/DESIGN.md) | Locked design system, tokens, motion spec |
