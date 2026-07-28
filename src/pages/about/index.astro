@@ -19,9 +19,19 @@ const TOOL_GROUPS = [
   { label: 'Analytics', tools: ['BRE policy logic', 'Approval-rate monitoring', 'Funnel analysis', 'A/B testing', 'Risk cohort analysis', 'EWI tracking', 'RCA'] },
   { label: 'Workflow', tools: ['BRE policy configuration', 'REST API integration', 'UAT & sanity checks', 'BRD review', 'Agile / Scrum'] },
 ] as const;
+
+const profileSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  mainEntity: { '@id': `${SITE.url}/#person` },
+};
 ---
 
-<BaseLayout title="About — Milan Behera" description="Data analyst, 4+ years in BFSI credit risk and lending analytics with cross-domain range.">
+<BaseLayout
+  title="About — Milan Kumar Behera"
+  description="Data analyst, 4+ years in BFSI credit risk and lending analytics with cross-domain range."
+  extraSchema={profileSchema}
+>
   <section class="mx-auto max-w-6xl px-5 py-14 sm:px-8 sm:py-20">
     <div class="grid gap-10 sm:grid-cols-[minmax(0,1fr)_16rem] sm:items-start">
       <div data-rise style="--rise-i:0">
@@ -62,7 +72,7 @@ const TOOL_GROUPS = [
       </div>
       <Image
         src={photo}
-        alt="Milan Behera"
+        alt="Milan Kumar Behera"
         width={320}
         height={320}
         class="aspect-square w-full rounded-2xl object-cover"

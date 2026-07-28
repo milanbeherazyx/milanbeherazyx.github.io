@@ -10,26 +10,80 @@ interface Props {
   /** Path under /public for a page-specific OG image. Falls back to the
    *  shared default (public/og-default.jpg) when omitted. */
   image?: string;
+  /** Optional page-specific JSON-LD (e.g. Article + breadcrumbs on case
+   *  studies, ProfilePage on About). Rendered as a second ld+json script. */
+  extraSchema?: Record<string, unknown>;
 }
 
-const { title = SITE.title, description = SITE.description, image = '/og-default.jpg' } = Astro.props;
+const {
+  title = SITE.title,
+  description = SITE.description,
+  image = '/og-default.jpg',
+  extraSchema,
+} = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, SITE.url).toString();
 const imageURL = new URL(image, SITE.url).toString();
 
-// JSON-LD: Person + ProfilePage, on every page (PRD §4 SEO row).
-const personSchema = {
+/**
+ * Site-wide JSON-LD graph (PRD §4 SEO row): Person + WebSite with stable
+ * @ids so page-level schemas (Article, ProfilePage) can reference the same
+ * entity instead of redefining it. Every fact here is ✅ PUBLIC per
+ * content-pack §1/§4/§6/§7 (city-level location only, no phone/address).
+ */
+const PERSON_ID = `${SITE.url}/#person`;
+const siteGraph = {
   '@context': 'https://schema.org',
-  '@type': 'ProfilePage',
-  mainEntity: {
-    '@type': 'Person',
-    name: SITE.name,
-    url: SITE.url,
-    email: `mailto:${SITE.email}`,
-    jobTitle: 'Data Analyst',
-    sameAs: [SITE.socials.linkedin, SITE.socials.github],
-    description: SITE.description,
-  },
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': PERSON_ID,
+      name: 'Milan Kumar Behera',
+      alternateName: ['Milan Behera', 'milanbeherazyx'],
+      url: SITE.url,
+      image: imageURL,
+      email: `mailto:${SITE.email}`,
+      jobTitle: 'Data Analyst',
+      description: SITE.description,
+      worksFor: { '@type': 'Organization', name: 'Khatabook' },
+      alumniOf: {
+        '@type': 'CollegeOrUniversity',
+        name: 'Einstein Academy of Technology & Management (BPUT)',
+      },
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Bengaluru',
+        addressRegion: 'Karnataka',
+        addressCountry: 'IN',
+      },
+      knowsAbout: [
+        'Data Analytics',
+        'Lending & Credit Risk Analytics',
+        'Business Rules Engine (BRE) Policy Analytics',
+        'Credit Underwriting Policy Configuration',
+        'Approval Funnel Analysis',
+        'Root-Cause Analysis',
+        'Risk Cohort & Vintage Analysis',
+        'Delinquency Monitoring & Early Warning Indicators',
+        'SQL',
+        'Snowflake',
+        'Tableau',
+        'Python',
+        'ETL Pipelines & REST API Integration',
+        'Regulatory & Compliance Reporting',
+      ],
+      sameAs: [SITE.socials.linkedin, SITE.socials.github, SITE.socials.x],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${SITE.url}/#website`,
+      url: SITE.url,
+      name: SITE.title,
+      description: SITE.description,
+      inLanguage: 'en',
+      publisher: { '@id': PERSON_ID },
+    },
+  ],
 };
 ---
 
@@ -39,31 +93,45 @@ const personSchema = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="author" content="Milan Kumar Behera" />
     <link rel="canonical" href={canonicalURL} />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="theme-color" content="#f4f5f2" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#101319" media="(prefers-color-scheme: dark)" />
+    {
+      SITE.googleSiteVerification && (
+        <meta name="google-site-verification" content={SITE.googleSiteVerification} />
+      )
+    }
+
+    <!-- Self-hosted display/body fonts: preload so hero text (the LCP
+         element) paints without a font-fetch waterfall. -->
+    <link rel="preload" href="/fonts/ClashDisplay-Variable.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Switzer-Variable.woff2" as="font" type="font/woff2" crossorigin />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:site_name" content="Milan Kumar Behera" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={imageURL} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
 
-    <!-- Twitter -->
+    <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content={SITE.xHandle} />
+    <meta name="twitter:creator" content={SITE.xHandle} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={imageURL} />
 
-    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(siteGraph)} />
+    {extraSchema && <script type="application/ld+json" set:html={JSON.stringify(extraSchema)} />}
 
-    <!-- Umami Cloud analytics (PRD §12.2) — DEFERRED until Milan signs up;
-         site.config.ts `umamiWebsiteId` empty = no script renders at all. -->
+    <!-- Umami Cloud analytics (PRD §12.2) -->
     {
       SITE.umamiWebsiteId && (
         <script

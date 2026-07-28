@@ -1,6 +1,6 @@
 # milanbeherazyx.github.io
 
-Milan Behera's portfolio & freelance lead-gen site. Astro 5 + Tailwind v4,
+Milan Kumar Behera's portfolio & freelance lead-gen site. Astro 5 + Tailwind v4,
 statically built, deployed to GitHub Pages via Actions.
 
 ## Run

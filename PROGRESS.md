@@ -128,3 +128,10 @@ Before Phase 5 started, Milan manually uploaded `content_pack.md` to the public 
 - **Verified:** `npm run build` green (14 pages). Lighthouse CI dry run green on all 7 sampled pages.
 - **What Phase 6 needs from Milan:** nothing procedural. Still outstanding whenever he's ready: Cal.com + Web3Forms setup (guides owed), Umami Cloud signup, and the resume/LinkedIn launch-blocker from Phase 4 (content-pack §12).
 - **Next model (PRD §9):** Phase 6 QA & launch → **Sonnet, low–standard effort**.
+
+### 2026-07-29 — Phase 5 addendum (Milan's four pre-Phase-6 requests)
+- **Umami live:** website ID `d0163c1b-…` set in `site.config.ts`; script verified rendering in built HTML.
+- **X profile added** (x.com/milanbeherazyx): footer link, `twitter:site`/`twitter:creator` cards, JSON-LD `sameAs`.
+- **Full-name rename:** "Milan Behera" → **"Milan Kumar Behera"** across all of `src/`, README, page titles, photo alt, and the **regenerated OG image**. Header verified no-overflow at 360/390/768/1024 with the longer name.
+- **Advanced SEO:** site-wide JSON-LD `@graph` (rich `Person` with `knowsAbout`, `worksFor`, `alumniOf`, city-level address + `WebSite`, stable `@id`s) · per-page schemas via a new `extraSchema` layout prop — `Article`+`BreadcrumbList` on every case study, `ProfilePage` on About · `twitter:creator` · `meta author` · `og:locale` · font preloads for the LCP hero (home mobile perf **94 → 95**, now meets PRD §1) · Google Search Console verification slot in config (empty until Milan registers).
+- **SEO actions only Milan can do (the part that actually determines ranking):** (1) register at search.google.com/search-console → URL-prefix property `https://milanbeherazyx.github.io/` → HTML-tag method → paste token into `SITE.googleSiteVerification` → after deploy, verify + submit `sitemap-index.xml`; (2) put the site URL on his LinkedIn profile (website field + featured section), GitHub profile, and X bio — profile backlinks are the strongest signal for name-query ranking; (3) after launch, replace the old gamma.site link everywhere (pack §1 flag); (4) Bing Webmaster Tools (imports from GSC, one click).

@@ -14,9 +14,41 @@ export async function getStaticPaths() {
 
 const { study } = Astro.props;
 const { Content } = await render(study);
+
+import { SITE } from '../../site.config';
+const pageURL = `${SITE.url}/work/${study.id}/`;
+const caseStudySchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      headline: study.data.title,
+      description: study.data.summary,
+      url: pageURL,
+      mainEntityOfPage: pageURL,
+      image: `${SITE.url}/og-default.jpg`,
+      author: { '@id': `${SITE.url}/#person` },
+      publisher: { '@id': `${SITE.url}/#person` },
+      keywords: [...study.data.tags, ...study.data.tools].join(', '),
+      inLanguage: 'en',
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: SITE.url },
+        { '@type': 'ListItem', position: 2, name: 'Case studies', item: `${SITE.url}/work/` },
+        { '@type': 'ListItem', position: 3, name: study.data.title, item: pageURL },
+      ],
+    },
+  ],
+};
 ---
 
-<BaseLayout title={`${study.data.title} — Milan Behera`} description={study.data.summary}>
+<BaseLayout
+  title={`${study.data.title} — Milan Kumar Behera`}
+  description={study.data.summary}
+  extraSchema={caseStudySchema}
+>
   <article class="mx-auto max-w-3xl px-5 py-14 sm:px-8 sm:py-20">
     <a href="/work/" class="text-sm font-semibold text-muted hover:text-accent">← All case studies</a>
 

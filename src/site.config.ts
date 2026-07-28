@@ -7,8 +7,8 @@
  * no home address, no internal artifacts — ever.
  */
 export const SITE = {
-  name: 'Milan Behera',
-  title: 'Milan Behera — Data Analyst | Lending & Credit Risk',
+  name: 'Milan Kumar Behera',
+  title: 'Milan Kumar Behera — Data Analyst | Lending & Credit Risk',
   description:
     'Data analyst turning messy operational data into decisions — funnels, metric definitions, root causes, dashboards. Deepest in lending and credit risk; the domain changes, the method does not.',
   url: 'https://milanbeherazyx.github.io',
@@ -16,7 +16,10 @@ export const SITE = {
   socials: {
     linkedin: 'https://www.linkedin.com/in/milanbeherazyx',
     github: 'https://github.com/milanbeherazyx',
+    x: 'https://x.com/milanbeherazyx',
   },
+  /** X handle for twitter:creator/site cards */
+  xHandle: '@milanbeherazyx',
   /** Cal.com username/event slug, e.g. "milanbeherazyx/intro-call" — DEFERRED:
    *  filled when Milan creates the account (owner-approved deferral, see
    *  PROGRESS.md). Empty string = contact page shows a mailto fallback. */
@@ -27,11 +30,13 @@ export const SITE = {
   web3formsKey: '',
   /** Resume PDF path under /public — replaced via skills/replace-resume-pdf.md */
   resumePdf: '/resume.pdf',
-  /** Umami Cloud website ID (PRD §12.2, decided 2026-07-28) — DEFERRED:
-   *  Milan signs up at cloud.umami.is, creates a website entry for
-   *  milanbeherazyx.github.io, and pastes the generated website ID here.
+  /** Umami Cloud website ID (PRD §12.2). Set by Milan 2026-07-29.
    *  Empty string = no analytics script renders at all. */
-  umamiWebsiteId: '',
+  umamiWebsiteId: 'd0163c1b-39d9-4e0a-88d2-cf2cf9472553',
+  /** Google Search Console verification token — paste the content value of
+   *  the meta-tag verification method here when Milan registers the site
+   *  (see PROGRESS.md Phase 5 log → SEO action items). Empty = tag omitted. */
+  googleSiteVerification: '',
 } as const;
 
 /** Homepage proof strip (PRD §3.1) — exactly 3, from content_pack §3 bank.
