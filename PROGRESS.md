@@ -1,6 +1,6 @@
 # PROGRESS
 
-## Current phase: LAUNCH-READY. All 6 phases complete. Remaining items are owner actions only (see below) — no more Claude-side phases.
+## Status: 🚀 **v1.0.0 RELEASED — LIVE** (2026-07-29, tag `v1.0.0`). All 6 PRD phases complete. Remaining items are owner actions only (resume/LinkedIn alignment, Search Console, profile links) — tracked below and in content-pack §12.
 
 ## Phase checklist (from PRD §8)
 
