@@ -243,3 +243,18 @@ this is the release summary.
   posts (the empty blog is the biggest organic gap); note that current
   Umami "visitors" skew heavily to US datacenter regions (likely
   crawlers), so conversion analysis should discount those.
+
+### 2026-07-29 — v2.1.0 "SEO content sprint" shipped
+- Blog live: upgraded engine (BlogPosting/breadcrumb schema, code panels,
+  reading progress, end-of-post conversion CTA) + four owner-reviewed
+  method posts (funnel-drop SQL, dashboard QA, Python/API automation,
+  policy-as-code). Shiki theme github-dark → dark-plus (default comment
+  color fails WCAG AA at 3.04:1 — caught by axe).
+- FAQ on Services (6) & Contact (2): native <details>, FAQPage JSON-LD,
+  owner-picked timezone answer ("flexible overlap windows").
+- Google Search Console verification tag live (owner-supplied token);
+  Milan clicks Verify to unlock query data.
+- CI: Lighthouse asserts on median of 3 runs after two confirmed
+  single-sample false failures (0.83/0.76 on shared runners vs 94–95
+  locally, identical builds).
+- Releases: PRs #19–#25, tags on main; all live-verified post-deploy.

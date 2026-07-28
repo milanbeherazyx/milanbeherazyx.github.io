@@ -146,7 +146,7 @@ next phase. No phase begins on its own.
       perf 94–96 / a11y 98–100 / bp 100 / seo 100 on all 7 budgeted URLs.
       `develop` → `main` merged by owner approval; tagged v2.0.0.
 
-## Next: v2.1 — SEO content sprint (owner decision 2026-07-28)
+## v2.1 — SEO content sprint — SHIPPED 2026-07-29 (tag v2.1.0)
 
 Long-tail blog posts written from real work (the empty blog is the
 biggest organic-search gap), targeting service-intent queries
