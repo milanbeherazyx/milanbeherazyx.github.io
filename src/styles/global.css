@@ -273,6 +273,23 @@ body::after {
     transform: translateY(-4px);
   }
 
+  /* Rule draw-in — a gradient hairline that scales in from the left on
+   * reveal. Used as a safe alternative to digit count-up wherever the
+   * adjacent number is an approved compound string (e.g. "30% -> 43%",
+   * "200+") that shouldn't be parsed and re-rendered digit-by-digit. */
+  .rule-draw {
+    transform: scaleX(0);
+    transition: transform 0.9s var(--ease-rise);
+  }
+  .js [data-reveal].is-revealed .rule-draw {
+    transform: scaleX(1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rule-draw {
+      transform: scaleX(1) !important;
+    }
+  }
+
   /* Pausable marquee — tools/keyword strip. The one looping motion allowed
    * by the PRD §5 budget; pauses on hover/focus, and is fully static under
    * reduced-motion (rule below). */

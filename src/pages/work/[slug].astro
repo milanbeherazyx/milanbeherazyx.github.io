@@ -99,19 +99,6 @@ const caseStudySchema = {
 </BaseLayout>
 
 <style>
-  .rule-draw {
-    transform: scaleX(0);
-    transition: transform 0.9s var(--ease-rise);
-  }
-  .js [data-reveal].is-revealed .rule-draw {
-    transform: scaleX(1);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .rule-draw {
-      transform: scaleX(1) !important;
-    }
-  }
-
   .case-content :global(h2) {
     font-family: var(--font-display);
     font-weight: 700;
