@@ -64,9 +64,19 @@ next phase. No phase begins on its own.
       found, not fixed here:** 17 pre-existing npm audit vulnerabilities in
       `astro`/`@lhci/cli`; fixing needs a major Astro 5→7 upgrade, too big
       for a foundations phase — separate deliberate decision later.
-- [ ] **G2 — Design direction v2** — no longer blocked; will produce a
-      polish-only mockup plus 1–2 alternate-look mockups (see above).
-- [ ] **G3 — Implementation**
+- [x] **G2 — Design direction v2** — done 2026-07-29. Three built mockups
+      (`design/v2/`): A "Refined" (polish-only), B "Private Ledger" (serif
+      editorial), C "Signal" (dark dev-tool luxe). **Milan picked C.**
+      3 real bugs found and fixed via screenshot testing before showing
+      Milan: unclipped glow causing mobile overflow, non-wrapping navs at
+      narrow widths, illegible gradient-on-gradient CTA band in dark mode.
+- [ ] **G3 — Implementation** — in progress. Direction C tokens (dark-led:
+      console `#0b0c10`, indigo/violet gradient `#6366f1→#a855f7`, cyan
+      `#22d3ee` secondary accent, General Sans + Switzer + JetBrains Mono)
+      replace Direction A's tokens in `src/styles/global.css` — this is a
+      real identity change, not additive. Sub-PRs: (1) tokens/fonts +
+      shared components (header/footer/funnel/proof/cards) + Home, (2)
+      Work index + case study detail, (3) remaining pages + polish.
 - [ ] **G4 — QA, merge, release (tag v2.0.0)**
 
 ## Where the detail lives
