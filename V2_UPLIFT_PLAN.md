@@ -106,7 +106,55 @@ next phase. No phase begins on its own.
         confirmed runner variance, not a real regression (no changes to
         `index.astro` in this PR); worth a second look in G4's full pass
         since the measured baseline (94) leaves less headroom than assumed.
-- [ ] **G4 — QA, merge, release (tag v2.0.0)**
+  - [x] **G3-4** — owner-audit polish pass. Merged (PR #14). Root-caused a
+        whole class of silently-broken animations: Astro scopes component
+        styles by suffixing every selector part with [data-astro-cid-*],
+        so rules starting from the html-level `.js` class never matched —
+        funnel bars stuck at width 0 + invisible delta chip, resume spine
+        never drew, hero dot never pulsed. Fixed with `:global(.js)`.
+        Mock-fidelity: translucent dark glass (`--panel`), mock-accurate
+        funnel (indigo before-bar, violet bloom, no in-bar numbers), 10px
+        buttons, mono+uppercase eyebrows site-wide, snake_case
+        micro-links + `.textlink`, single mono index line on cards with
+        bottom-pinned CTA + Home feature treatment, bordered proof grid,
+        vignette-blended About photo, 17px body, darker light-mode muted.
+        New verification tier added: 11 animation END-STATE assertions
+        (fill widths, chip opacity, spine scale…) — the earlier suites
+        only checked overflow/axe/console, which is how the broken
+        animations slipped through G3-1..3.
+  - [x] **G3-5** — Home feature-card visual. Merged (PR #15). First
+        attempt (generic lift curve) rejected by Milan; five concept
+        mocks built from the case study's real mechanism (owner-supplied:
+        sub-50K-offer rejects recovered via the low_and_grow 10K–40K
+        policy + overrules + ABB/EDI relaxation); **Milan picked
+        "the_reroute"** — node-flow diagram where the dead-ended
+        `offer < 50K → rejected` branch gets a cyan low_and_grow path
+        drawn back to funded while the old branch ghosts out.
+  - [x] **G3-6** — pre-G4 owner changes. Merged (PR #16). Hero: stacked
+        role line ("Data Analyst — Lending & Credit Risk") +
+        `open_to_freelance_&_remote_roles` eyebrow (owner picked layout);
+        "Deepest in" strip gains Python/Tableau/ML; About tools gain
+        Machine Learning. SEO: freelance/remote/worldwide intent in
+        title/description, Person.makesOffer (4 services, areaServed
+        Worldwide), services-page OfferCatalog JSON-LD.
+- [x] **G4 — QA, merge, release (tag v2.0.0)** — done 2026-07-28. All on
+      the production build: 180-combo overflow matrix — 0 failures; 30
+      axe scans — 0 violations (one test-harness fix: axe must run after
+      reveal transitions settle, or it measures blended mid-fade colors
+      and reports phantom contrast failures); console/network sweep — 0;
+      17/17 toggle assertions; 11/11 end-state assertions; Lighthouse
+      perf 94–96 / a11y 98–100 / bp 100 / seo 100 on all 7 budgeted URLs.
+      `develop` → `main` merged by owner approval; tagged v2.0.0.
+
+## Next: v2.1 — SEO content sprint (owner decision 2026-07-28)
+
+Long-tail blog posts written from real work (the empty blog is the
+biggest organic-search gap), targeting service-intent queries
+(funnel diagnostics, Tableau/Power BI dashboards, Python tooling) across
+all geos. Also: current Umami "visitors" skew to US datacenter regions
+(Virginia 27% etc. — likely crawlers); discount those in conversion
+analysis. `googleSiteVerification` in site.config is still empty — verify
+Search Console to see real query data.
 
 ## Where the detail lives
 

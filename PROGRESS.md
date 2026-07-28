@@ -209,3 +209,37 @@ with a hard stop for his approval.
   runs on every PR. It is NOT a required status check (only `build` is) —
   flagging its existence for Milan's awareness, not blocking on it.
 - **Next model (per the phase table):** G1 Foundations → **Sonnet, standard effort**.
+
+### 2026-07-28 — G1→G4 (v2 uplift) complete, v2.0.0 shipped
+Full log lives in V2_UPLIFT_PLAN.md (per-phase status with bug details);
+this is the release summary.
+- **G1 Foundations**: `motion` installed; `ui-ux-pro-max` skill vetted &
+  installed (6 unrequested bundled skills removed after owner approval);
+  reduced-motion-safe wrapper `src/scripts/motion-lib.ts`.
+- **G2 Design direction**: three built mockups (design/v2/) — Milan picked
+  **C "Signal"** (dark dev-tool luxe: console `#0b0c10`, indigo→violet
+  gradient, cyan `#22d3ee` second accent, General Sans display).
+- **G3 Implementation** (6 sub-PRs, #9–#16): tokens/fonts/shared
+  components/Home → Work index + case-study detail → remaining pages →
+  audit/polish pass (fixed a whole class of broken animations: Astro
+  scopes component styles per-selector-part, so html-level `.js` rules
+  never matched — funnel bars, resume spine, hero pulse; plus
+  mock-fidelity: translucent glass panels, mono uppercase eyebrows,
+  snake_case micro-links, aligned cards, blended About photo, 17px body,
+  WCAG-checked palette tweaks) → owner-picked "reroute" flow visual in
+  the Home feature card → hero role/availability lines + freelance-intent
+  SEO (Person.makesOffer worldwide, services OfferCatalog).
+- **G4 regression battery** (all on the production build):
+  180-combo overflow matrix (15 pages × 6 widths × 2 themes) — 0 failures;
+  30 axe scans (wcag2a/2aa/21a/21aa, both themes) — 0 violations
+  (after fixing a test-harness flaw: axe must run *after* reveal
+  transitions settle or it measures blended mid-fade colors);
+  console/pageerror/requestfailed sweep — 0;
+  17/17 theme-toggle assertions; 11/11 animation end-state assertions;
+  Lighthouse: perf 94–96 · a11y 98–100 · best-practices 100 · seo 100
+  across all 7 budgeted URLs.
+- Merged `develop` → `main` via reviewed PR, tagged **v2.0.0**.
+- **Next (owner decision): v2.1 "SEO content sprint"** — long-tail blog
+  posts (the empty blog is the biggest organic gap); note that current
+  Umami "visitors" skew heavily to US datacenter regions (likely
+  crawlers), so conversion analysis should discount those.
