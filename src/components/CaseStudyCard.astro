@@ -44,6 +44,44 @@ const idxLine = [index ? String(index).padStart(2, '0') : null, ...tags].filter(
     )
   }
   <p class:list={['mt-3 text-muted', featured ? 'max-w-[52ch] text-base' : 'max-w-[44ch] text-[0.95rem]']}>{summary}</p>
+  {
+    featured && (
+      <div class="chart-wrap my-4 flex min-h-0 flex-1 items-center" aria-hidden="true">
+        {/* Decorative lift curve — fills the feature card's extra grid
+            height with the shape of the story (low → high). Deliberately
+            abstract: no axis values or data points beyond the two
+            endpoints, so it illustrates without inventing numbers
+            (PRD §7); the real figures sit in the metric line above. */}
+        <svg class="lift-chart w-full" viewBox="0 0 440 200" fill="none">
+          <defs>
+            <linearGradient id="lc-stroke" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0" stop-color="#6366f1" />
+              <stop offset="1" stop-color="#a855f7" />
+            </linearGradient>
+            <linearGradient id="lc-fill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="rgba(124, 93, 250, 0.30)" />
+              <stop offset="1" stop-color="rgba(124, 93, 250, 0)" />
+            </linearGradient>
+          </defs>
+          <line x1="20" y1="52" x2="420" y2="52" class="grid-line" />
+          <line x1="20" y1="108" x2="420" y2="108" class="grid-line" />
+          <line x1="20" y1="164" x2="420" y2="164" class="grid-line" />
+          <path class="area" d="M20 164 C150 158, 280 128, 420 52 L420 200 L20 200 Z" fill="url(#lc-fill)" />
+          <path
+            class="curve"
+            d="M20 164 C150 158, 280 128, 420 52"
+            stroke="url(#lc-stroke)"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            pathLength="600"
+          />
+          <circle cx="20" cy="164" r="3.5" class="dot-start" />
+          <circle cx="420" cy="52" r="4.5" class="dot-end" />
+          <circle cx="420" cy="52" r="9" class="dot-halo" />
+        </svg>
+      </div>
+    )
+  }
   <span class="go mt-auto inline-flex items-center gap-2 pt-5 font-mono text-sm font-semibold group-hover:text-accent-2">
     read_case_study
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" class="transition-transform duration-200 group-hover:translate-x-1">
@@ -73,6 +111,72 @@ const idxLine = [index ? String(index).padStart(2, '0') : null, ...tags].filter(
   }
   .case-card:hover::before {
     opacity: 1;
+  }
+
+  /* Lift-curve choreography: gridlines first, then the stroke draws in,
+   * then the area + endpoint bloom. All state lives on the card's own
+   * [data-reveal]; `.js` needs :global() (see the G3 scoped-selector bug). */
+  .grid-line {
+    stroke: var(--line);
+    stroke-dasharray: 3 6;
+  }
+  .dot-start {
+    fill: var(--muted);
+    opacity: 0.7;
+  }
+  .dot-end {
+    fill: var(--accent-2);
+  }
+  .dot-halo {
+    fill: none;
+    stroke: var(--accent-2);
+    stroke-width: 1;
+    opacity: 0.45;
+  }
+  .curve {
+    stroke-dasharray: 600;
+    stroke-dashoffset: 600;
+    transition: stroke-dashoffset 1.4s var(--ease-rise) 0.35s;
+  }
+  .area,
+  .dot-end,
+  .dot-halo {
+    opacity: 0;
+    transition: opacity 0.7s ease 1.3s;
+  }
+  .dot-start {
+    transition: opacity 0.4s ease 0.35s;
+    opacity: 0;
+  }
+  :global(.js) [data-reveal].is-revealed .curve {
+    stroke-dashoffset: 0;
+  }
+  :global(.js) [data-reveal].is-revealed .area {
+    opacity: 1;
+  }
+  :global(.js) [data-reveal].is-revealed .dot-start {
+    opacity: 0.7;
+  }
+  :global(.js) [data-reveal].is-revealed .dot-end {
+    opacity: 1;
+  }
+  :global(.js) [data-reveal].is-revealed .dot-halo {
+    opacity: 0.45;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .curve {
+      stroke-dashoffset: 0 !important;
+    }
+    .area,
+    .dot-end {
+      opacity: 1 !important;
+    }
+    .dot-start {
+      opacity: 0.7 !important;
+    }
+    .dot-halo {
+      opacity: 0.45 !important;
+    }
   }
 </style>
 
