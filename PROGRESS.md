@@ -160,3 +160,52 @@ Ran every check for real against the built site (preview server + Playwright + r
 - **DNS plan documented:** new `DNS.md` — the exact GitHub Pages `A`/`CNAME` records, the repo-settings steps, and the one line that actually needs to change in code (`SITE.url` — everything else, canonical tags, OG images, JSON-LD, sitemap, derives from it). Written for when Milan buys a domain; nothing is active yet, per PRD's "custom domain deferred to post-launch."
 - **Owner actions still outstanding** (all previously logged, not new): the resume/LinkedIn launch-blocker (content-pack §12 — Kinara/GetVantage → Slice/Western Cap, policy count), Google Search Console registration, linking the site from LinkedIn/GitHub/X profiles, removing the old gamma.site link.
 - **All 6 phases of the PRD are now complete.** No further Claude-side phase remains — what's left is entirely Milan's to do on his own schedule (owner actions above) whenever he chooses to formally "launch" (make the repo/site public-facing in his outbound communication, submit to Search Console, etc.). The site has been continuously live at `milanbeherazyx.github.io` since Phase 1.
+
+## v2 uplift — "make it look like a $10k site" (motion + design refresh)
+
+New multi-phase plan on top of the shipped v1.0.0, approved 2026-07-29. Adds
+`npm install motion`, the `ui-ux-pro-max` design-guidance skill, and 21st.dev
+as a pattern reference (re-implemented natively in Astro — **PRD §4's
+zero-React target stays intact**; 21st.dev is used for inspiration, not
+copy-pasted React). Both `motion` and a manual light/dark toggle amend PRD §4
+(localStorage exclusion) — logged, owner-approved.
+
+**Binding from here on — new git model (2026-07-29, permanent):**
+`main` (protected, deploys) ← `develop` (protected, integration, no deploy)
+← `feature/*` (disposable, PR into develop). No direct pushes to main or
+develop, ever again — enforced by GitHub branch protection, not just
+convention (verified by testing a direct push get rejected — see G0 below).
+
+Phases: **G0** Git workflow → **G1** Foundations (motion + ui-ux-pro-max
+install) → **G2** Design direction v2 (taste phase, Milan picks a mockup) →
+**G3** Implementation (feature PRs) → **G4** QA, merge to main, tag v2.0.0.
+Model/effort per phase in the phase table given to Milan; each phase ends
+with a hard stop for his approval.
+
+### 2026-07-29 — G0 (Git workflow) complete
+- Created `develop` from `main` (identical at branch time).
+- CI (`.github/workflows/deploy.yml`) now runs the build + Lighthouse budget
+  check on PRs/pushes to `develop` too; the `deploy` job stays
+  `if: github.ref == 'refs/heads/main'`, unchanged — develop never deploys.
+- Documented the branching model in README.md ("Branching" section),
+  AGENTS.md, and CLAUDE.md. Also fixed two stale CLAUDE.md claims found in
+  passing (short name instead of full name; content_pack.md git-ignore
+  status, stale since the Phase 5 addendum).
+- Opened PR #1 (`feature/git-workflow-g0` → `develop`), let CI run for
+  real (build passed, 7m4s), then applied GitHub branch protection to
+  **both** `main` and `develop`: PR required, `build` status check
+  required, `enforce_admins: true` (so the rule holds even for the repo
+  owner), 0 required approving reviews (solo-maintainer friendly — PR is
+  mandatory, a second reviewer is not). **Proved it actually works**, not
+  just configured it: attempted a direct empty-commit push to `develop`
+  and got `GH006: Protected branch update failed` / "Changes must be made
+  through a pull request" — exactly the intended behavior. Cleaned up the
+  rejected local test commit, then merged PR #1 into `develop` through the
+  proper path. Confirmed after merge: `main` is untouched (still exactly
+  `v1.0.0`), `develop` has the new docs — the two-tier model is live.
+- **Found, not configured by me:** a third-party **GitGuardian Security
+  Checks** app is already installed on the GitHub account/repo (likely
+  GitHub's automatic secret-scanning partner program for public repos) and
+  runs on every PR. It is NOT a required status check (only `build` is) —
+  flagging its existence for Milan's awareness, not blocking on it.
+- **Next model (per the phase table):** G1 Foundations → **Sonnet, standard effort**.
