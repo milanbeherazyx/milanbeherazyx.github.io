@@ -54,8 +54,16 @@ next phase. No phase begins on its own.
 - [x] **G0 — Git workflow** — done 2026-07-29. `develop` created, branch
       protection proven (a direct push was tested and correctly rejected),
       flow documented in README/AGENTS.md/CLAUDE.md.
-- [ ] **G1 — Foundations** — next. Waiting on Milan to say go (and switch
-      model if desired — Sonnet/STANDARD is already active).
+- [x] **G1 — Foundations** — done 2026-07-29. `motion` installed (zero new
+      vulnerabilities). `ui-ux-pro-max` skill installed and vetted — the
+      installer bundled 6 unrequested skills (one calling the Gemini API,
+      one shadcn/React-oriented), all removed after flagging to Milan and
+      getting his go-ahead to keep only `ui-ux-pro-max`. Thin reduced-
+      motion-safe `motion` wrapper added at `src/scripts/motion-lib.ts`,
+      **not wired into any page yet** — zero visual change. **Backlog item
+      found, not fixed here:** 17 pre-existing npm audit vulnerabilities in
+      `astro`/`@lhci/cli`; fixing needs a major Astro 5→7 upgrade, too big
+      for a foundations phase — separate deliberate decision later.
 - [ ] **G2 — Design direction v2** — no longer blocked; will produce a
       polish-only mockup plus 1–2 alternate-look mockups (see above).
 - [ ] **G3 — Implementation**
