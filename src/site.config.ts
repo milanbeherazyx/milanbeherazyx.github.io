@@ -29,10 +29,9 @@ export const SITE = {
   /** Umami Cloud website ID (PRD §12.2). Set by Milan 2026-07-29.
    *  Empty string = no analytics script renders at all. */
   umamiWebsiteId: 'd0163c1b-39d9-4e0a-88d2-cf2cf9472553',
-  /** Google Search Console verification token — paste the content value of
-   *  the meta-tag verification method here when Milan registers the site
-   *  (see PROGRESS.md Phase 5 log → SEO action items). Empty = tag omitted. */
-  googleSiteVerification: '',
+  /** Google Search Console verification token (meta-tag method) — supplied
+   *  by Milan 2026-07-28. Empty = tag omitted. */
+  googleSiteVerification: 'KKw-NDR-5o75q6E_f-NaZBiX22WTSTILZsxSg0hCHzA',
 } as const;
 
 /** Homepage proof strip (PRD §3.1) — exactly 3, from content_pack §3 bank.
