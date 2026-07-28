@@ -70,7 +70,7 @@ next phase. No phase begins on its own.
       3 real bugs found and fixed via screenshot testing before showing
       Milan: unclipped glow causing mobile overflow, non-wrapping navs at
       narrow widths, illegible gradient-on-gradient CTA band in dark mode.
-- [ ] **G3 — Implementation** — in progress. Direction C tokens (dark-led:
+- [x] **G3 — Implementation** — done 2026-07-28. Direction C tokens (dark-led:
       console `#0b0c10`, indigo/violet gradient `#6366f1→#a855f7`, cyan
       `#22d3ee` secondary accent, General Sans + Switzer + JetBrains Mono)
       replace Direction A's tokens in `src/styles/global.css` — this is a
@@ -93,8 +93,19 @@ next phase. No phase begins on its own.
         8/8 Playwright checks pass (overflow, axe wcag2a/2aa/21a/21aa,
         console/page errors) across both pages × both themes ×
         desktop/mobile; filter interaction verified against displayed counts.
-  - [ ] **G3-3** — remaining pages (Services, About, Resume, Contact, Blog,
-        404/Thanks) + polish.
+  - [x] **G3-3** — remaining pages. Merged (PR #12). Services: glass cards
+        + rule-draw top accent + beam-bordered "how I ramp" panel. About:
+        gradient-glow photo frame, glass quote cards with hanging quote
+        marks. Resume: gradient timeline spine draw-in. Contact: cyan
+        focus glow, gradient submit + mailto CTAs. Blog/404/Thanks: same
+        system at small scale. Centralized `.rule-draw` into global.css's
+        shared `@layer components` (was duplicated per-page after G3-2).
+        28/28 Playwright checks pass across all 7 pages × both themes ×
+        desktop/mobile. One CI Lighthouse-performance flake on Home
+        (0.83 vs 0.85 floor) — reproduced clean locally and on CI re-run,
+        confirmed runner variance, not a real regression (no changes to
+        `index.astro` in this PR); worth a second look in G4's full pass
+        since the measured baseline (94) leaves less headroom than assumed.
 - [ ] **G4 — QA, merge, release (tag v2.0.0)**
 
 ## Where the detail lives
