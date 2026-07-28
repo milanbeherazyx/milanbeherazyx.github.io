@@ -55,6 +55,34 @@ git push -u origin feature/my-change
 gh pr create --base develop
 ```
 
+## Previewing a branch before merging
+
+**⚠️ The VS Code "Live Preview" extension (Microsoft) cannot preview this
+project directly.** It serves raw files as static content — pointed at a
+`.astro` source file, it shows unrendered source, not the working site.
+Astro needs its own server to compile `.astro`/content collections/routing.
+Use one of these instead, both give live-reload:
+
+**While actively editing (fastest, HMR):**
+```sh
+git checkout feature/whatever   # the branch you're reviewing
+npm install                     # only if package.json changed
+npm run dev                     # Astro dev server → http://localhost:4321
+```
+Then either open `http://localhost:4321` in a normal browser tab, or embed
+it inside VS Code with the built-in **Simple Browser** (no extra extension
+needed): Command Palette → `Simple Browser: Show` → paste the URL. The
+already-installed Live Preview extension can also embed an external URL
+this way (`Live Preview: Show Preview (Internal Browser)`), but Simple
+Browser is built into VS Code core and is the guaranteed-to-work option.
+
+**Final pre-merge check (matches what CI/production actually builds):**
+```sh
+npm run build && npm run preview   # serves the real dist/ output
+```
+Do this once before opening a PR — it's the same static build Lighthouse CI
+grades, so it catches anything dev mode's HMR might paper over.
+
 ## Deploy
 
 Merging a PR into `main` → GitHub Actions builds, runs the Lighthouse CI
