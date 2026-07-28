@@ -1,14 +1,40 @@
 ---
+/**
+ * v2 "Signal" — the mock's bordered-cell proof grid: cells separated by
+ * 1px hairlines (grid gap over a line-colored background), big display
+ * figures, gradient treatment on the first. Digit count-up was considered
+ * (per design/v2/DIRECTION_SPEC.md) but skipped deliberately —
+ * PROOF_METRICS values are approved compound strings ("30% → 43%",
+ * "₹8–9B+"), and parsing them apart to animate digits risks subtly
+ * altering approved copy (PRD §7). FunnelBeforeAfter's plain-integer props
+ * get the real count-up instead.
+ */
 import { PROOF_METRICS } from '../site.config';
 ---
 
-<ul class="grid gap-8 sm:grid-cols-3">
+<ul class="proof-grid grid overflow-hidden rounded-2xl border border-line sm:grid-cols-3">
   {
     PROOF_METRICS.map((m, i) => (
-      <li data-reveal style={`transition-delay:${i * 80}ms`} class="border-t-2 border-fg pt-5">
-        <p class="font-display text-3xl font-semibold tabular sm:text-4xl">{m.value}</p>
+      <li data-reveal style={`transition-delay:${i * 80}ms`} class="proof-cell px-6 py-7">
+        <p class:list={['fig font-display font-bold tabular', i === 0 && 'text-gradient']}>{m.value}</p>
         <p class="mt-2 text-sm text-muted">{m.label}</p>
       </li>
     ))
   }
 </ul>
+
+<style>
+  /* 1px hairline cell separators: the grid's gap exposes a line-colored
+   * background behind bg-colored cells (mock technique). */
+  .proof-grid {
+    gap: 1px;
+    background: var(--line);
+  }
+  .proof-cell {
+    background: var(--bg);
+  }
+  .fig {
+    font-size: clamp(1.9rem, 1rem + 2.2vw, 2.9rem);
+    line-height: 1.15;
+  }
+</style>

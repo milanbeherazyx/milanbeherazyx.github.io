@@ -6,22 +6,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <BaseLayout title="Message sent — Milan Kumar Behera" noindex>
   <section class="mx-auto flex max-w-2xl flex-col items-start px-5 py-24 sm:px-8 sm:py-32">
-    <p class="font-mono text-sm text-accent">status: delivered</p>
+    <p class="font-mono text-sm text-accent-2">status: delivered</p>
     <h1 class="mt-4 text-h2 font-display">Got it — thanks.</h1>
     <p class="mt-4 max-w-[42ch] text-muted">
       Your message is in my inbox. I read everything myself and reply within a day. In the
       meantime, the case studies are the fastest way to see how I work.
     </p>
     <div class="mt-8 flex flex-wrap gap-4 sm:gap-6">
-      <a
-        href="/work/"
-        class="inline-block rounded-full bg-accent px-6 py-3 font-semibold text-accent-contrast"
-      >
+      <a href="/work/" class="btn-gradient inline-block px-6 py-3 font-semibold">
         View case studies
       </a>
-      <a href="/" class="border-b-2 border-fg pb-1 py-2 font-semibold hover:border-accent hover:text-accent">
-        Back to home
-      </a>
+      <a href="/" class="textlink py-2">back_to_home →</a>
     </div>
   </section>
 </BaseLayout>

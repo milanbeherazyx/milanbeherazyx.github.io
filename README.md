@@ -32,9 +32,62 @@ why). Read it before doing content work.
 Raw source assets not needed by the build (recommendation screenshots, spare
 photo crops) are kept outside the repo in `../Portfolio-private-assets/`.
 
+## Branching (binding, since 2026-07-29 — see PROGRESS.md)
+
+Three tiers, in order. **`main` and `develop` are protected on GitHub — no
+direct pushes, PR + a green build/Lighthouse check required to merge, even
+for repo admins.**
+
+1. **`main`** — production. Deploys to Pages on every push (i.e. every
+   merged, checks-passed PR). Only ever updated by merging `develop` in,
+   once `develop` has been fully verified.
+2. **`develop`** — integration branch. No deploy trigger; every PR into it
+   still runs the full build + Lighthouse budget check. Never edited
+   directly — only via merged feature-branch PRs.
+3. **`feature/<name>`** — cut from `develop` for one unit of work. Open a PR
+   back into `develop` when ready; delete the branch after merge.
+
+```sh
+git checkout develop && git pull
+git checkout -b feature/my-change
+# ...edit, commit...
+git push -u origin feature/my-change
+gh pr create --base develop
+```
+
+## Previewing a branch before merging
+
+**⚠️ The VS Code "Live Preview" extension (Microsoft) cannot preview this
+project directly.** It serves raw files as static content — pointed at a
+`.astro` source file, it shows unrendered source, not the working site.
+Astro needs its own server to compile `.astro`/content collections/routing.
+Use one of these instead, both give live-reload:
+
+**While actively editing (fastest, HMR):**
+```sh
+git checkout feature/whatever   # the branch you're reviewing
+npm install                     # only if package.json changed
+npm run dev                     # Astro dev server → http://localhost:4321
+```
+Then either open `http://localhost:4321` in a normal browser tab, or embed
+it inside VS Code with the built-in **Simple Browser** (no extra extension
+needed): Command Palette → `Simple Browser: Show` → paste the URL. The
+already-installed Live Preview extension can also embed an external URL
+this way (`Live Preview: Show Preview (Internal Browser)`), but Simple
+Browser is built into VS Code core and is the guaranteed-to-work option.
+
+**Final pre-merge check (matches what CI/production actually builds):**
+```sh
+npm run build && npm run preview   # serves the real dist/ output
+```
+Do this once before opening a PR — it's the same static build Lighthouse CI
+grades, so it catches anything dev mode's HMR might paper over.
+
 ## Deploy
 
-Push to `main` → GitHub Actions builds and deploys to Pages. No manual steps.
+Merging a PR into `main` → GitHub Actions builds, runs the Lighthouse CI
+budget check, and deploys to Pages. No manual steps — and no direct pushes,
+per the branching model above.
 
 ## Editing content
 

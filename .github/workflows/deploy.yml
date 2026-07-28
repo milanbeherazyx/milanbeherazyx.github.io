@@ -1,10 +1,16 @@
 name: Build & deploy to GitHub Pages
 
+# Branch model (see AGENTS.md / README "Branching"): main = production
+# (protected, deploys), develop = integration (protected, no deploy),
+# feature/* = disposable work branches. This workflow runs the build +
+# Lighthouse budget check on every PR into main or develop, and on every
+# push to either (a push only happens via a merged, checks-passed PR once
+# branch protection is enabled). Only main triggers an actual deploy.
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
   workflow_dispatch:
 
 permissions:

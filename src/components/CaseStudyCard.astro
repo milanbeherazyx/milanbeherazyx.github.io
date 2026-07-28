@@ -1,36 +1,195 @@
 ---
-import Tag from './Tag.astro';
-
+/** v2 "Signal" — matches the mock's .ccard: glass surface, spring lift,
+ * spotlight-follow glow, and a single mono index line ("01 · FUNNEL · SQL")
+ * instead of chip rows (chip rows of varying counts made card tops ragged
+ * across a grid). Card is a flex column with the CTA pinned to the bottom
+ * so "read_case_study" aligns across every card in a row. */
 interface Props {
   href: string;
   title: string;
   summary: string;
   tags: readonly string[];
   metric?: { value: string; label: string };
+  index?: number;
+  /** Stagger the reveal transition (ms) — e.g. i * 60 in a grid loop. */
+  delay?: number;
+  /** Feature treatment (spec: "first card larger") — scales the type up so
+   * the card's content fills its doubled grid area instead of leaving a void. */
+  featured?: boolean;
 }
-const { href, title, summary, tags, metric } = Astro.props;
+const { href, title, summary, tags, metric, index, delay, featured } = Astro.props;
+const idxLine = [index ? String(index).padStart(2, '0') : null, ...tags].filter(Boolean).join(' · ');
 ---
 
 <a
   href={href}
   data-reveal
-  class="group block rounded-2xl border-t-[3px] border-fg pt-6 transition-transform duration-200 hover:-translate-y-1"
+  class:list={['case-card glass lift group flex h-full flex-col', featured ? 'p-8 sm:p-10' : 'p-7']}
+  style={delay ? `transition-delay:${delay}ms` : undefined}
 >
-  <div class="flex flex-wrap gap-2">
-    {tags.map((t) => <Tag label={t} />)}
-  </div>
-  <h3 class="mt-5 max-w-[24ch] font-display text-2xl font-semibold leading-tight tracking-tight sm:text-[1.65rem]">
+  <span class="idx font-mono text-muted">{idxLine}</span>
+  <h3
+    class:list={[
+      'mt-3 max-w-[24ch] font-display font-bold leading-tight tracking-tight',
+      featured ? 'text-3xl sm:text-4xl' : 'text-2xl sm:text-[1.65rem]',
+    ]}
+  >
     {title}
   </h3>
   {
     metric && (
-      <p class="mt-3 font-display text-lg font-semibold tabular text-accent">
+      <p class:list={['mt-3 font-mono font-semibold text-accent-2', featured ? 'text-base' : 'text-sm']}>
         {metric.value} <span class="font-body text-sm font-normal text-muted">{metric.label}</span>
       </p>
     )
   }
-  <p class="mt-3 max-w-[38ch] text-[0.98rem] text-muted">{summary}</p>
-  <span class="mt-5 inline-block border-b-2 border-fg pb-0.5 text-sm font-semibold group-hover:border-accent group-hover:text-accent">
-    Read the case study →
+  <p class:list={['mt-3 text-muted', featured ? 'max-w-[52ch] text-base' : 'max-w-[44ch] text-[0.95rem]']}>{summary}</p>
+  {
+    featured && (
+      <div class="chart-wrap my-4 flex min-h-0 flex-1 items-center" aria-hidden="true">
+        {/* Decorative "reroute" flow — the case study's actual mechanism
+            (owner-approved 2026-07-28): BRE-passed applicants whose offer
+            came in under the 50K minimum used to dead-end at rejected;
+            the low_and_grow policy (10K–40K offers) reroutes them to
+            funded. Facts supplied by the owner for this visual — no
+            invented figures (PRD §7); the qualification numbers stay in
+            the metric line above. */}
+        <svg class="reroute-flow w-full" viewBox="0 0 460 230" fill="none">
+          <rect class="chip" x="10" y="24" width="92" height="30" rx="8" />
+          <text class="chip-t" x="22" y="43">applicants</text>
+          <rect class="chip" x="132" y="24" width="86" height="30" rx="8" />
+          <text class="chip-t" x="146" y="43">bre_pass</text>
+          <rect class="chip" x="248" y="24" width="102" height="30" rx="8" />
+          <text class="chip-t" x="260" y="43">offer ≥ 50K</text>
+          <rect class="chip chip-cy" x="380" y="24" width="72" height="30" rx="8" />
+          <text class="chip-t cy" x="391" y="43">funded ✓</text>
+          <line class="fl" x1="102" y1="39" x2="130" y2="39" />
+          <line class="fl" x1="218" y1="39" x2="246" y2="39" />
+          <line class="fl" x1="350" y1="39" x2="378" y2="39" />
+
+          <g class="was-dead">
+            <path class="fl dead" d="M299 54 V96" />
+            <rect class="chip" x="248" y="98" width="102" height="30" rx="8" />
+            <text class="chip-t dim" x="260" y="117">offer &lt; 50K</text>
+            <path class="fl dead" d="M350 113 H392" />
+            <text class="chip-t red" x="396" y="117">rejected ✗</text>
+          </g>
+
+          <g class="newchip">
+            <rect class="chip chip-cy" x="120" y="172" width="196" height="32" rx="8" />
+            <text class="chip-t cy" x="134" y="192">low_and_grow · 10K–40K</text>
+          </g>
+          <path class="reroute" d="M280 128 C260 158, 220 172, 180 180 M316 188 C380 184, 420 120, 424 58" pathLength="420" />
+        </svg>
+      </div>
+    )
+  }
+  <span class="go mt-auto inline-flex items-center gap-2 pt-5 font-mono text-sm font-semibold group-hover:text-accent-2">
+    read_case_study
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" class="transition-transform duration-200 group-hover:translate-x-1">
+      <path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
   </span>
 </a>
+
+<style>
+  .case-card {
+    position: relative;
+    overflow: hidden;
+  }
+  .idx {
+    font-size: 0.74rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .case-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--accent) 14%, transparent), transparent 65%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .case-card:hover::before {
+    opacity: 1;
+  }
+
+  /* Reroute-flow choreography: the flow chips sit static; the old
+   * rejected branch fades to a ghost while the cyan low_and_grow path
+   * draws in and its chip lights up. All state lives on the card's own
+   * [data-reveal]; `.js` needs :global() (see the G3 scoped-selector bug). */
+  .chip {
+    fill: color-mix(in srgb, var(--fg) 4%, transparent);
+    stroke: var(--line);
+  }
+  .chip-cy {
+    stroke: color-mix(in srgb, var(--accent-2) 55%, transparent);
+  }
+  .chip-t {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    fill: var(--fg);
+  }
+  .chip-t.dim {
+    fill: var(--muted);
+  }
+  .chip-t.cy {
+    fill: var(--accent-2);
+  }
+  .chip-t.red {
+    fill: var(--data-red);
+  }
+  .fl {
+    stroke: color-mix(in srgb, var(--fg) 30%, transparent);
+    stroke-width: 1.5;
+  }
+  .fl.dead {
+    stroke-dasharray: 4 5;
+  }
+  .reroute {
+    stroke: var(--accent-2);
+    stroke-width: 2;
+    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent-2) 50%, transparent));
+    stroke-dasharray: 420;
+    stroke-dashoffset: 420;
+    transition: stroke-dashoffset 1.3s var(--ease-rise) 0.6s;
+  }
+  .was-dead {
+    transition: opacity 0.6s ease 1.6s;
+  }
+  .newchip {
+    opacity: 0;
+    transition: opacity 0.5s ease 1.2s;
+  }
+  :global(.js) [data-reveal].is-revealed .reroute {
+    stroke-dashoffset: 0;
+  }
+  :global(.js) [data-reveal].is-revealed .was-dead {
+    opacity: 0.35;
+  }
+  :global(.js) [data-reveal].is-revealed .newchip {
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reroute {
+      stroke-dashoffset: 0 !important;
+    }
+    .was-dead {
+      opacity: 0.35 !important;
+    }
+    .newchip {
+      opacity: 1 !important;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.case-card').forEach((card) => {
+    card.addEventListener('pointermove', (e) => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', `${e.clientX - r.left}px`);
+      card.style.setProperty('--my', `${e.clientY - r.top}px`);
+    });
+  });
+</script>

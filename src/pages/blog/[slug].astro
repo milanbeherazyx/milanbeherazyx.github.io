@@ -14,7 +14,7 @@ const { Content } = await render(post);
 
 <BaseLayout title={`${post.data.title} — Milan Kumar Behera`} description={post.data.description}>
   <article class="mx-auto max-w-3xl px-5 py-14 sm:px-8 sm:py-20">
-    <a href="/blog/" class="text-sm font-semibold text-muted hover:text-accent">← All posts</a>
+    <a href="/blog/" class="textlink">← all_posts</a>
     <h1 class="mt-6 text-h2 font-display">{post.data.title}</h1>
     <div class="case-content mt-8">
       <Content />
