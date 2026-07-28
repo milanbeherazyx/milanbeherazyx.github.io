@@ -8,9 +8,9 @@
  */
 export const SITE = {
   name: 'Milan Kumar Behera',
-  title: 'Milan Kumar Behera — Data Analyst | Lending & Credit Risk',
+  title: 'Milan Kumar Behera — Data Analyst | Lending & Credit Risk | Freelance & Remote',
   description:
-    'Data analyst turning messy operational data into decisions — funnels, metric definitions, root causes, dashboards. Deepest in lending and credit risk; the domain changes, the method does not.',
+    'Data analyst turning messy operational data into decisions — funnels, root causes, Tableau & Power BI dashboards, Python tools. Deepest in lending and credit risk. Open to freelance projects and remote roles, worldwide.',
   url: 'https://milanbeherazyx.github.io',
   email: 'milanbeherazyx@gmail.com',
   socials: {

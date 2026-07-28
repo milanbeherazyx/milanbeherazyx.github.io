@@ -3,6 +3,7 @@
 // domain" block (directly answers the versatility claim with a process).
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE } from '../../site.config';
 
 const entries = (await getCollection('services', ({ data }) => !data.draft)).sort(
   (a, b) => a.data.order - b.data.order,
@@ -10,6 +11,27 @@ const entries = (await getCollection('services', ({ data }) => !data.draft)).sor
 const offers = await Promise.all(
   entries.map(async (o) => ({ data: o.data, Content: (await render(o)).Content })),
 );
+
+/* SEO (owner directive 2026-07-28): freelance services are offered
+ * remotely, worldwide — surface that as structured data so the page can
+ * match service-intent queries, not just name searches. */
+const servicesSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'OfferCatalog',
+  name: 'Data analytics services — Milan Kumar Behera',
+  url: `${SITE.url}/services/`,
+  itemListElement: offers.map(({ data }) => ({
+    '@type': 'Offer',
+    itemOffered: {
+      '@type': 'Service',
+      name: data.title,
+      description: data.summary,
+      provider: { '@id': `${SITE.url}/#person` },
+      serviceType: 'Data analytics consulting',
+      areaServed: 'Worldwide',
+    },
+  })),
+};
 
 const RAMP_STEPS = [
   { step: '1', label: 'Docs', detail: 'Share what exists — policy docs, schema, dashboards, whatever is already written down.' },
@@ -19,7 +41,11 @@ const RAMP_STEPS = [
 ] as const;
 ---
 
-<BaseLayout title="Services — Milan Kumar Behera" description="Domain-agnostic data analytics services — funnel diagnostics, dashboards & QA, policy analytics, root-cause analysis.">
+<BaseLayout
+  title="Services — Milan Kumar Behera"
+  description="Freelance data analytics services, remote & worldwide — funnel diagnostics, Tableau & Power BI dashboards, policy analytics, root-cause analysis."
+  extraSchema={servicesSchema}
+>
   <section class="mx-auto max-w-6xl px-5 py-14 sm:px-8 sm:py-20">
     <h1 data-rise style="--rise-i:0" class="text-h2 font-display">Services</h1>
     <p data-rise style="--rise-i:1" class="mt-4 max-w-[46ch] text-lead text-muted">
