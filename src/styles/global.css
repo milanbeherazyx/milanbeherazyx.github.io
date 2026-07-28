@@ -40,7 +40,15 @@
   font-display: swap;
 }
 
-/* Semantic palette — light (default) and dark via system preference. */
+/* Semantic palette.
+ * Three states (PRD §4 localStorage exclusion amended by Milan, 2026-07-29,
+ * to allow the theme toggle):
+ *   1. No data-theme attribute → follows the system preference (default).
+ *   2. data-theme="light" / "dark" → visitor's explicit choice via the
+ *      header toggle, persisted in localStorage, applied pre-paint by an
+ *      inline script in BaseLayout so there is never a wrong-theme flash.
+ * ⚠️ The two DARK blocks below must stay byte-identical — one covers
+ * system-dark (auto), the other the forced choice. */
 :root {
   --bg: #f4f5f2; /* document white */
   --surface: #ffffff; /* cards */
@@ -52,8 +60,19 @@
   --line: #d9dcd6; /* borders */
   color-scheme: light;
 }
+:root[data-theme='dark'] {
+  --bg: #101319; /* console blue-black */
+  --surface: #151a22;
+  --fg: #e9e7e1; /* bone */
+  --muted: #8b93a1; /* slate */
+  --accent: #e8b04b; /* EWI amber */
+  --accent-contrast: #16130a;
+  --data-red: #e4574c;
+  --line: #232833;
+  color-scheme: dark;
+}
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --bg: #101319; /* console blue-black */
     --surface: #151a22;
     --fg: #e9e7e1; /* bone */
@@ -114,6 +133,10 @@ body {
   color: var(--fg);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
+  /* smooth theme-toggle crossfade; zeroed by the reduced-motion rule below */
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
 }
 
 /* Ledger figures everywhere numbers carry meaning */
