@@ -16,28 +16,29 @@ const services = (await getCollection('services', ({ data }) => !data.draft)).so
   (a, b) => a.data.order - b.data.order,
 );
 
+// snake_case per the approved c-signal mock's marquee flavor
 const MARQUEE_ITEMS = [
   'SQL',
   'Snowflake',
   'Tableau',
   'Python',
-  'BRE Policy Analytics',
-  'Funnel Diagnostics',
-  'Risk Cohorts',
-  'EWI Tracking',
-  'RCA',
+  'bre_policy_analytics',
+  'funnel_diagnostics',
+  'risk_cohorts',
+  'ewi_tracking',
+  'rca',
 ];
 ---
 
 <BaseLayout>
   <section class="hero-glow relative mx-auto max-w-6xl px-5 pb-16 pt-14 sm:px-8 sm:pt-20 lg:pt-28">
-    <p data-rise style="--rise-i:0" class="signal-dot text-label text-accent-2">Open to leads &amp; roles</p>
+    <p data-rise style="--rise-i:0" class="signal-dot text-label text-accent-2">open_to_leads_&amp;_roles</p>
     <h1 class="mt-5 max-w-[13ch] text-display">
       <span class="line" style="--line-i:0"><span>Messy data,</span></span>
       <span class="line" style="--line-i:1"><span>turned into</span></span>
       <span class="line" style="--line-i:2"><span class="text-gradient">decisions.</span></span>
     </h1>
-    <p data-rise style="--rise-i:3" class="mt-6 max-w-[36rem] text-lead text-muted">
+    <p data-rise style="--rise-i:3" class="mt-6 max-w-xl text-lead text-muted">
       Funnels, metrics, root causes, dashboards. Deepest in lending &amp; credit risk — the domain
       changes; the funnel math doesn't.
     </p>
@@ -46,16 +47,14 @@ const MARQUEE_ITEMS = [
     </p>
     <div data-rise style="--rise-i:4" class="mt-8 flex flex-wrap items-center gap-4 sm:gap-6">
       <a href="/contact/" class="btn-gradient inline-block px-7 py-3.5 text-base">Book a call</a>
-      <a href="/work/" class="border-b-2 border-fg pb-1 text-base font-semibold hover:border-accent-2 hover:text-accent-2">
-        View case studies
-      </a>
+      <a href="/work/" class="textlink">view_case_studies →</a>
     </div>
   </section>
 
   <section class="mx-auto max-w-6xl px-5 py-section sm:px-8">
     <div class="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center lg:gap-16">
       <div data-reveal>
-        <p class="text-label text-muted">The flagship number</p>
+        <p class="text-label text-muted">the_flagship_number</p>
         <h2 class="mt-4 max-w-[16ch] text-h2 font-display">
           One funnel, benchmarked <span class="text-gradient">rule by rule.</span>
         </h2>
@@ -64,11 +63,8 @@ const MARQUEE_ITEMS = [
           monthly borrowers. The lift came from finding exactly which rules turned fundable
           borrowers away.
         </p>
-        <a
-          href="/work/lifting-qualification-30-to-43/"
-          class="mt-6 inline-block border-b-2 border-fg pb-1 text-sm font-semibold hover:border-accent-2 hover:text-accent-2"
-        >
-          How the lift happened →
+        <a href="/work/lifting-qualification-30-to-43/" class="textlink mt-6 inline-block">
+          how_the_lift_happened →
         </a>
       </div>
       <FunnelBeforeAfter
@@ -89,7 +85,7 @@ const MARQUEE_ITEMS = [
           <span>
             {MARQUEE_ITEMS.map((item) => (
               <>
-                {item} <i class="not-italic text-accent-2">·</i>{' '}
+                {item} <i class="mr-13 not-italic text-accent-2">·</i>
               </>
             ))}
           </span>
@@ -106,18 +102,25 @@ const MARQUEE_ITEMS = [
     featured.length > 0 && (
       <section class="mx-auto max-w-6xl px-5 py-section sm:px-8">
         <p data-reveal class="text-label mb-8 text-muted">
-          Selected work
+          selected_work/
         </p>
-        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Feature treatment per DIRECTION_SPEC: first card larger — the
+            mock's 1.35fr/1fr split, with the feature card spanning both
+            rows so the remaining two stack beside it. */}
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-[1.35fr_1fr]">
           {featured.map((cs, i) => (
-            <CaseStudyCard
-              href={`/work/${cs.id}/`}
-              title={cs.data.title}
-              summary={cs.data.summary}
-              tags={cs.data.tags}
-              metric={cs.data.metrics?.[0]}
-              index={i + 1}
-            />
+            <div class:list={[i === 0 && 'sm:max-lg:col-span-2 lg:row-span-2']}>
+              <CaseStudyCard
+                href={`/work/${cs.id}/`}
+                title={cs.data.title}
+                summary={cs.data.summary}
+                tags={cs.data.tags}
+                metric={cs.data.metrics?.[0]}
+                index={i + 1}
+                delay={i * 60}
+                featured={i === 0}
+              />
+            </div>
           ))}
         </div>
       </section>
@@ -128,22 +131,17 @@ const MARQUEE_ITEMS = [
     services.length > 0 && (
       <section class="mx-auto max-w-6xl px-5 py-section sm:px-8">
         <p data-reveal class="text-label mb-8 text-muted">
-          Services
+          services/
         </p>
         <div class="grid gap-6 sm:grid-cols-3">
-          {services.slice(0, 3).map((s) => (
-            <a href="/services/" data-reveal class="glass lift block p-6">
+          {services.slice(0, 3).map((s, i) => (
+            <a href="/services/" data-reveal style={i ? `transition-delay:${i * 60}ms` : undefined} class="glass lift block p-6">
               <h3 class="font-display text-lg font-semibold">{s.data.title}</h3>
               <p class="mt-2 text-sm text-muted">{s.data.summary}</p>
             </a>
           ))}
         </div>
-        <a
-          href="/services/"
-          class="mt-8 inline-block border-b-2 border-fg pb-1 text-sm font-semibold hover:border-accent-2 hover:text-accent-2"
-        >
-          See all services →
-        </a>
+        <a href="/services/" class="textlink mt-8 inline-block">see_all_services →</a>
       </section>
     )
   }
@@ -189,7 +187,9 @@ const MARQUEE_ITEMS = [
     background: var(--accent-2);
     box-shadow: 0 0 12px var(--accent-2);
   }
-  .js .signal-dot::before {
+  /* :global(.js) — plain `.js` here would be scoped with this component's
+   * [data-astro-cid-*] and never match <html class="js"> (G3 bug class). */
+  :global(.js) .signal-dot::before {
     animation: pulse 2.4s ease-in-out infinite;
   }
   @keyframes pulse {

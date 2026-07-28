@@ -98,7 +98,9 @@ const CERTIFICATIONS = [
     transform: scaleY(0);
     transition: transform 1s var(--ease-rise);
   }
-  .js .timeline.is-revealed .timeline-spine {
+  /* :global(.js) — plain `.js` here would be scoped with this component's
+   * [data-astro-cid-*] and never match <html class="js"> (G3 bug class). */
+  :global(.js) .timeline.is-revealed .timeline-spine {
     transform: scaleY(1);
   }
   @media (prefers-reduced-motion: reduce) {
