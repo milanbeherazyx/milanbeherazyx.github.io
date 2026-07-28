@@ -1,23 +1,24 @@
 @import 'tailwindcss';
 
 /*
- * ─── DESIGN TOKENS — LOCKED (Phase 2, approved by Milan 2026-07-28) ───
- * Identity: "Hybrid" — Underwriter's Memo typography, two palettes:
- *   light = document white + ultramarine (stamp ink)
- *   dark  = console blue-black + EWI amber
- * Mode follows the visitor's system preference (prefers-color-scheme).
- * No manual toggle (PRD §4 excludes localStorage-dependent features).
- * Funnel treatment: option 3 "Before/After" (design/iteration-2.html).
- * Red is data semantics ONLY (drop-off / rejection) — never decoration.
+ * ─── DESIGN TOKENS — v2 "Signal" (G2/G3, approved by Milan 2026-07-29) ───
+ * Supersedes the v1 "Hybrid" identity (PRD §2 amendment, logged in
+ * V2_UPLIFT_PLAN.md). Dark dev-tool luxe: gradient (indigo→violet) +
+ * cyan data accent, General Sans + Switzer + JetBrains Mono, glass
+ * surfaces, gradient hairline borders.
+ * Mode mechanism UNCHANGED from v1: no `data-theme` attribute → follows
+ * system preference; `data-theme="light"/"dark"` → visitor's explicit
+ * toggle choice, persisted in localStorage, applied pre-paint (PRD §4
+ * localStorage exclusion amended for the toggle, 2026-07-29).
  * Content editors: NEVER edit this file (AGENTS.md forbidden zones).
  */
 
 /* Self-hosted fonts — zero third-party requests (PRD §4).
-   Clash Display & Switzer: Fontshare (ITF Free Font License).
+   General Sans & Switzer: Fontshare (ITF Free Font License).
    JetBrains Mono: OFL. Files in /public/fonts/. */
 @font-face {
-  font-family: 'Clash Display';
-  src: url('/fonts/ClashDisplay-Variable.woff2') format('woff2');
+  font-family: 'General Sans';
+  src: url('/fonts/GeneralSans-Variable.woff2') format('woff2');
   font-weight: 200 700;
   font-display: swap;
 }
@@ -40,59 +41,68 @@
   font-display: swap;
 }
 
-/* Semantic palette.
- * Three states (PRD §4 localStorage exclusion amended by Milan, 2026-07-29,
- * to allow the theme toggle):
- *   1. No data-theme attribute → follows the system preference (default).
- *   2. data-theme="light" / "dark" → visitor's explicit choice via the
- *      header toggle, persisted in localStorage, applied pre-paint by an
- *      inline script in BaseLayout so there is never a wrong-theme flash.
- * ⚠️ The two DARK blocks below must stay byte-identical — one covers
- * system-dark (auto), the other the forced choice. */
+/* Semantic palette — three states, mechanism unchanged from v1 (see header
+ * comment). ⚠️ The two DARK blocks below must stay byte-identical — one
+ * covers system-dark (auto), the other the forced toggle choice. */
 :root {
-  --bg: #f4f5f2; /* document white */
-  --surface: #ffffff; /* cards */
-  --fg: #14161a; /* ink */
-  --muted: #5a6069; /* secondary text (graphite) */
-  --accent: #2b3fd6; /* ultramarine stamp ink — CTA, links, positive deltas */
-  --accent-contrast: #ffffff; /* text on accent */
-  --data-red: #b42318; /* underwriter's red pen — drop-off data ONLY */
-  --line: #d9dcd6; /* borders */
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --fg: #101116;
+  --muted: #5b6070;
+  /* indigo-700 — verified 7.9:1 white-on-it, 7.57:1 as text-on-bg (WCAG AA
+   * needs 4.5:1). #6366f1 (indigo-500, the mockup's literal value) FAILS
+   * AA in both roles at ~4.3:1 — found via axe during G3 regression,
+   * fixed by darkening for light mode specifically (see the dark-mode
+   * block below for why this can't be one shared value). */
+  --accent: #4338ca;
+  --accent-2: #0e7490; /* cyan-700 — secondary/data-highlight, darkened for light-bg legibility */
+  --accent-contrast: #ffffff;
+  --data-red: #e11d48; /* dormant — kept for future negative-delta use */
+  --line: rgba(16, 17, 22, 0.1);
+  --gradient: linear-gradient(120deg, #6366f1, #a855f7); /* decorative-only; passes axe as used (glass buttons/text, never a flat single-color pairing) */
   color-scheme: light;
 }
 :root[data-theme='dark'] {
-  --bg: #101319; /* console blue-black */
-  --surface: #151a22;
-  --fg: #e9e7e1; /* bone */
-  --muted: #8b93a1; /* slate */
-  --accent: #e8b04b; /* EWI amber */
-  --accent-contrast: #16130a;
-  --data-red: #e4574c;
-  --line: #232833;
+  --bg: #0b0c10;
+  --surface: #12131a;
+  --fg: #ededf0;
+  --muted: #9ba0ab;
+  /* indigo-400 — bright enough for 6.55:1 as text-on-dark-bg; paired with
+   * DARK contrast text below (not white) since white-on-it would fail —
+   * same reason v1's dark mode used dark text on its (light) amber accent. */
+  --accent: #818cf8;
+  --accent-2: #22d3ee; /* full-brightness cyan reads clean on dark */
+  --accent-contrast: #0b0c10;
+  --data-red: #fb7185;
+  --line: rgba(255, 255, 255, 0.09);
+  --gradient: linear-gradient(120deg, #6366f1, #a855f7);
   color-scheme: dark;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --bg: #101319; /* console blue-black */
-    --surface: #151a22;
-    --fg: #e9e7e1; /* bone */
-    --muted: #8b93a1; /* slate */
-    --accent: #e8b04b; /* EWI amber */
-    --accent-contrast: #16130a;
-    --data-red: #e4574c;
-    --line: #232833;
+    --bg: #0b0c10;
+    --surface: #12131a;
+    --fg: #ededf0;
+    --muted: #9ba0ab;
+    --accent: #818cf8;
+    --accent-2: #22d3ee;
+    --accent-contrast: #0b0c10;
+    --data-red: #fb7185;
+    --line: rgba(255, 255, 255, 0.09);
+    --gradient: linear-gradient(120deg, #6366f1, #a855f7);
     color-scheme: dark;
   }
 }
 
 @theme inline {
   /* colors → utilities: bg-bg, bg-surface, text-fg, text-muted, text-accent,
-     text-data-red, border-line, bg-accent, text-accent-contrast */
+     text-accent-2, text-data-red, border-line, bg-accent, text-accent-contrast */
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-fg: var(--fg);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
   --color-accent-contrast: var(--accent-contrast);
   --color-data-red: var(--data-red);
   --color-line: var(--line);
@@ -100,19 +110,19 @@
 
 @theme {
   /* type — utilities: font-display, font-body, font-mono */
-  --font-display: 'Clash Display', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'General Sans', ui-sans-serif, system-ui, sans-serif;
   --font-body: 'Switzer', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
   /* fluid type scale — utilities: text-display, text-h2, text-lead, text-label */
   --text-display: clamp(2.6rem, 1rem + 7.5vw, 7.25rem);
-  --text-display--line-height: 0.92;
-  --text-display--letter-spacing: -0.025em;
-  --text-display--font-weight: 600;
+  --text-display--line-height: 0.94;
+  --text-display--letter-spacing: -0.03em;
+  --text-display--font-weight: 700;
   --text-h2: clamp(1.6rem, 1rem + 2.2vw, 2.6rem);
-  --text-h2--line-height: 1.1;
-  --text-h2--letter-spacing: -0.01em;
-  --text-h2--font-weight: 600;
+  --text-h2--line-height: 1.08;
+  --text-h2--letter-spacing: -0.02em;
+  --text-h2--font-weight: 700;
   --text-lead: clamp(1.05rem, 1rem + 0.4vw, 1.35rem);
   --text-lead--line-height: 1.5;
   --text-label: 0.78rem;
@@ -123,9 +133,9 @@
   /* spacing — utilities: py-section etc. */
   --spacing-section: clamp(5rem, 14vh, 9rem);
 
-  /* motion (spec in design/DESIGN.md): one hero load-in ≤900ms total,
-     scroll reveals 500ms once, micro 150–200ms; Lenis on pointer:fine only */
+  /* motion (spec in design/v2/DIRECTION_SPEC.md) */
   --ease-rise: cubic-bezier(0.2, 0.6, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
 body {
@@ -133,10 +143,193 @@ body {
   color: var(--fg);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  position: relative;
   /* smooth theme-toggle crossfade; zeroed by the reduced-motion rule below */
   transition:
     background-color 0.25s ease,
     color 0.25s ease;
+}
+
+/* Faint chart-grid backdrop — the "system of record" ambiance. Fades out
+ * below the first viewport via mask so it never competes with reading
+ * content further down the page. Decorative only — inert to screen readers
+ * and never the sole carrier of information. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 72px 72px;
+  opacity: 0.35;
+  mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, black 30%, transparent 75%);
+}
+/* Fixed grain overlay — keeps large flat surfaces from reading vector-empty. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* @property must stay outside any @layer (browsers reject it inside one). */
+@property --beam-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+/* Keyframes referenced below — fine unlayered, they don't cascade-conflict. */
+@keyframes beam-rotate {
+  to {
+    --beam-angle: 360deg;
+  }
+}
+@keyframes marquee-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/*
+ * Custom "component" classes — deliberately inside @layer components.
+ * Tailwind v4 emits its own utilities (including responsive/state variants
+ * like `hidden`/`md:inline-block`) into `@layer utilities`, which ALWAYS
+ * wins over unlayered CSS of equal-or-lower specificity, regardless of
+ * source order (CSS cascade-layers spec: layered beats unlayered only when
+ * declared first — Tailwind's layers are declared by the `@import` at the
+ * top of this file, so anything unlayered below it would otherwise always
+ * win instead, silently overriding utilities like `hidden`). Layering
+ * these here restores the expected precedence: a plain Tailwind utility on
+ * an element can still override a property set by one of these classes.
+ * (Real bug found in G3: `.btn-gradient`'s unconditional `display` was
+ * overriding `hidden md:inline-block` on mobile before this fix.)
+ */
+@layer components {
+  /* Gradient text — decorative emphasis (hero em, headline highlights). */
+  .text-gradient {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Glass surface — the signature card treatment (funnel card, feature
+   * panels). Gradient hairline border via the padding-box/border-box
+   * trick, so it plays correctly with border-radius; backdrop-blur for
+   * the glass feel. Falls back gracefully (solid surface, no blur) if
+   * unsupported. */
+  .glass {
+    position: relative;
+    border-radius: 16px;
+    border: 1px solid transparent;
+    background:
+      linear-gradient(var(--surface), var(--surface)) padding-box,
+      linear-gradient(140deg, color-mix(in srgb, var(--fg) 14%, transparent), color-mix(in srgb, var(--fg) 3%, transparent) 40%, color-mix(in srgb, var(--accent) 35%, transparent)) border-box;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 30px -18px color-mix(in srgb, var(--fg) 25%, transparent);
+  }
+
+  /* Border-beam — a slow conic-gradient light tracing the panel's edge.
+   * Reserved for ONE signature element per page (PRD §5 motion budget:
+   * one orchestrated moment, not decoration everywhere). */
+  .beam {
+    position: relative;
+  }
+  .beam::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 17px;
+    padding: 1px;
+    background: conic-gradient(from var(--beam-angle), transparent 0 340deg, var(--accent-2) 355deg, transparent 360deg);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: beam-rotate 5.5s linear infinite;
+    pointer-events: none;
+  }
+
+  /* Spring lift — the shared card-hover physics (spec: translateY + slight
+   * scale, spring easing, visible non-hover resting state per PRD
+   * touch-first rule). Apply alongside an element's own layout classes. */
+  .lift {
+    transition:
+      transform 0.3s var(--ease-spring),
+      box-shadow 0.3s ease;
+  }
+  .lift:hover {
+    transform: translateY(-4px);
+  }
+
+  /* Pausable marquee — tools/keyword strip. The one looping motion allowed
+   * by the PRD §5 budget; pauses on hover/focus, and is fully static under
+   * reduced-motion (rule below). */
+  .marquee {
+    overflow: hidden;
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    gap: 3.2rem;
+    animation: marquee-scroll 36s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee:hover .marquee-track,
+  .marquee:focus-within .marquee-track {
+    animation-play-state: paused;
+  }
+
+  /* Primary CTA — gradient fill, spring lift, one-shot sheen sweep on
+   * hover. Shared across header, hero and CTA-band buttons so the
+   * treatment never drifts between instances. Deliberately no `display`
+   * here — each usage site's own Tailwind utility (inline-block/block/
+   * hidden md:inline-block) controls that, see the layering note above. */
+  .btn-gradient {
+    position: relative;
+    overflow: hidden;
+    background: var(--gradient);
+    color: #fff;
+    font-weight: 600;
+    border-radius: 999px;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.25),
+      0 8px 26px -10px color-mix(in srgb, var(--accent) 70%, transparent);
+    transition:
+      transform 0.25s var(--ease-spring),
+      box-shadow 0.25s ease;
+  }
+  .btn-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.25),
+      0 14px 36px -10px color-mix(in srgb, var(--accent) 85%, transparent);
+  }
+  .btn-gradient::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 55%;
+    height: 100%;
+    background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.55s ease;
+  }
+  .btn-gradient:hover::after {
+    left: 130%;
+  }
 }
 
 /* Ledger figures everywhere numbers carry meaning */
@@ -160,13 +353,17 @@ body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  .beam::after {
+    display: none;
+  }
 }
 
 /*
- * Motion primitives (design/DESIGN.md §Motion spec).
+ * Motion primitives (design/v2/DIRECTION_SPEC.md).
  * Content is visible by default (no-JS / reduced-motion safe). The `.js`
- * class is added by an inline head script only when JS runs, so hidden
- * states never apply without a script able to reveal them.
+ * class is added by motion.ts only once it's actually running (see that
+ * file's header comment for why), so hidden states never apply without a
+ * script able to reveal them.
  */
 [data-reveal],
 [data-rise] {
@@ -197,9 +394,32 @@ body {
     transform: none;
   }
 }
+
+/* Hero headline line-mask reveal — each <span class="line"> clips its
+ * child, which rises from below the mask on load. Stagger via --line-i. */
+.line {
+  display: block;
+  overflow: hidden;
+}
+.line > span {
+  display: inline-block;
+  transform: translateY(0);
+}
+.js .line > span {
+  transform: translateY(115%);
+  animation: line-mask-up 0.85s var(--ease-rise) forwards;
+  animation-delay: calc(var(--line-i, 0) * 110ms);
+}
+@keyframes line-mask-up {
+  to {
+    transform: translateY(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .js [data-reveal],
-  .js [data-rise] {
+  .js [data-rise],
+  .js .line > span {
     opacity: 1 !important;
     transform: none !important;
     animation: none !important;

@@ -64,10 +64,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
         </svg>
       </button>
 
-      <a
-        href="/contact/"
-        class="hidden rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-contrast transition-transform duration-200 hover:-translate-y-0.5 md:inline-block"
-      >
+      <a href="/contact/" class="btn-gradient hidden px-5 py-2.5 text-sm md:inline-block">
         Book a call
       </a>
 
@@ -105,10 +102,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
         ))
       }
       <li class="mt-2">
-        <a
-          href="/contact/"
-          class="block rounded-full bg-accent px-4 py-3 text-center text-base font-semibold text-accent-contrast"
-        >
+        <a href="/contact/" class="btn-gradient block px-4 py-3 text-center text-base">
           Book a call
         </a>
       </li>
@@ -163,7 +157,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
      applies the stored value before CSS renders. */
   const themeBtn = document.getElementById('theme-toggle')!;
   const darkQuery = matchMedia('(prefers-color-scheme: dark)');
-  const THEME_BG = { light: '#f4f5f2', dark: '#101319' } as const;
+  const THEME_BG = { light: '#fafafa', dark: '#0b0c10' } as const;
 
   function effectiveTheme(): 'light' | 'dark' {
     const forced = document.documentElement.dataset.theme;

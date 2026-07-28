@@ -1,4 +1,7 @@
 ---
+/** v2 "Signal" update: glass surface, spring lift, spotlight-follow glow
+ * that tracks the pointer. Falls back to a plain hover lift under
+ * reduced-motion / no pointermove support. */
 import Tag from './Tag.astro';
 
 interface Props {
@@ -7,30 +10,60 @@ interface Props {
   summary: string;
   tags: readonly string[];
   metric?: { value: string; label: string };
+  index?: number;
 }
-const { href, title, summary, tags, metric } = Astro.props;
+const { href, title, summary, tags, metric, index } = Astro.props;
 ---
 
-<a
-  href={href}
-  data-reveal
-  class="group block rounded-2xl border-t-[3px] border-fg pt-6 transition-transform duration-200 hover:-translate-y-1"
->
-  <div class="flex flex-wrap gap-2">
+<a href={href} data-reveal class="case-card glass lift group block p-6">
+  <div class="flex flex-wrap items-center gap-2">
+    {index && <span class="font-mono text-xs text-muted">{String(index).padStart(2, '0')}</span>}
     {tags.map((t) => <Tag label={t} />)}
   </div>
-  <h3 class="mt-5 max-w-[24ch] font-display text-2xl font-semibold leading-tight tracking-tight sm:text-[1.65rem]">
+  <h3 class="mt-5 max-w-[24ch] font-display text-2xl font-bold leading-tight tracking-tight sm:text-[1.65rem]">
     {title}
   </h3>
   {
     metric && (
-      <p class="mt-3 font-display text-lg font-semibold tabular text-accent">
+      <p class="mt-3 font-mono text-sm font-semibold text-accent-2">
         {metric.value} <span class="font-body text-sm font-normal text-muted">{metric.label}</span>
       </p>
     )
   }
   <p class="mt-3 max-w-[38ch] text-[0.98rem] text-muted">{summary}</p>
-  <span class="mt-5 inline-block border-b-2 border-fg pb-0.5 text-sm font-semibold group-hover:border-accent group-hover:text-accent">
-    Read the case study →
+  <span class="go mt-5 inline-flex items-center gap-1.5 text-sm font-semibold group-hover:text-accent-2">
+    Read the case study
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" class="transition-transform duration-200 group-hover:translate-x-1">
+      <path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
   </span>
 </a>
+
+<style>
+  .case-card {
+    position: relative;
+    overflow: hidden;
+  }
+  .case-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--accent) 14%, transparent), transparent 65%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .case-card:hover::before {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.case-card').forEach((card) => {
+    card.addEventListener('pointermove', (e) => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', `${e.clientX - r.left}px`);
+      card.style.setProperty('--my', `${e.clientY - r.top}px`);
+    });
+  });
+</script>

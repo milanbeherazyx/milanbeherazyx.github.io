@@ -55,3 +55,36 @@ export function safeInView(
 }
 
 export { stagger };
+
+/**
+ * Count up a number from 0 to `target` once the element enters view.
+ * Reduced-motion safe: sets the final value immediately instead of
+ * animating. Used for the funnel/proof numerals (G2 direction: Signal).
+ */
+export function countUpOnView(el: HTMLElement, target: number, opts: { duration?: number } = {}) {
+  const { duration = 1100 } = opts;
+  const render = (v: number) => {
+    el.textContent = String(Math.round(v));
+  };
+
+  if (prefersReducedMotion()) {
+    render(target);
+    return;
+  }
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        io.unobserve(el);
+        animate(0, target, {
+          duration: duration / 1000,
+          ease: [0.2, 0.6, 0.2, 1],
+          onUpdate: render,
+        });
+      }
+    },
+    { threshold: 0.4 },
+  );
+  io.observe(el);
+}
