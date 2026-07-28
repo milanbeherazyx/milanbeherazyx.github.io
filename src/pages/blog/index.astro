@@ -9,7 +9,10 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
 );
 ---
 
-<BaseLayout title="Blog — Milan Kumar Behera">
+<BaseLayout
+  title="Blog — Milan Kumar Behera"
+  description="Notes on data analytics, lending and credit risk, and the method behind the case studies — from Milan Kumar Behera."
+>
   <section class="mx-auto max-w-4xl px-5 py-14 sm:px-8 sm:py-20">
     <h1 class="text-h2 font-display">Blog</h1>
     {

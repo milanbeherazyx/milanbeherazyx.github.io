@@ -1,6 +1,6 @@
 # PROGRESS
 
-## Current phase: 6 (QA & launch) — not started. Phase 5 COMPLETE (docs finalized, acceptance test passed).
+## Current phase: LAUNCH-READY. All 6 phases complete. Remaining items are owner actions only (see below) — no more Claude-side phases.
 
 ## Phase checklist (from PRD §8)
 
@@ -23,9 +23,9 @@
 - [x] **Phase 5 — Ops & docs** — COMPLETE 2026-07-28
   - Deliverable: Finished `AGENTS.md` + all skill files ✅, Lighthouse CI budgets ✅, sitemap/robots/JSON-LD ✅, analytics wired ✅ (Umami Cloud, awaiting Milan's account), 404 page ✅ (built Phase 3)
   - Exit criteria: Local-LLM acceptance test (PRD §6) passes ✅ — see log below, run for real via a fresh subagent
-- [ ] **Phase 6 — QA & launch**
-  - Deliverable: Cross-device pass per §5.1 acceptance, a11y audit, link check, perf tuning
-  - Exit criteria: §5.1 device pass green on all pages; success-metric thresholds (§1) met; DNS plan documented for future custom domain
+- [x] **Phase 6 — QA & launch** — COMPLETE 2026-07-29
+  - Deliverable: Cross-device pass per §5.1 acceptance ✅, a11y audit ✅, link check ✅, perf tuning ✅ (no regressions found, one real fix applied)
+  - Exit criteria: §5.1 device pass green on all pages ✅; success-metric thresholds (§1) met ✅ (verified per-page, not just sampled); DNS plan documented ✅ (`DNS.md`)
 
 ## Session log
 
@@ -141,3 +141,15 @@ Before Phase 5 started, Milan manually uploaded `content_pack.md` to the public 
 - **Full-name rename:** "Milan Behera" → **"Milan Kumar Behera"** across all of `src/`, README, page titles, photo alt, and the **regenerated OG image**. Header verified no-overflow at 360/390/768/1024 with the longer name.
 - **Advanced SEO:** site-wide JSON-LD `@graph` (rich `Person` with `knowsAbout`, `worksFor`, `alumniOf`, city-level address + `WebSite`, stable `@id`s) · per-page schemas via a new `extraSchema` layout prop — `Article`+`BreadcrumbList` on every case study, `ProfilePage` on About · `twitter:creator` · `meta author` · `og:locale` · font preloads for the LCP hero (home mobile perf **94 → 95**, now meets PRD §1) · Google Search Console verification slot in config (empty until Milan registers).
 - **SEO actions only Milan can do (the part that actually determines ranking):** (1) register at search.google.com/search-console → URL-prefix property `https://milanbeherazyx.github.io/` → HTML-tag method → paste token into `SITE.googleSiteVerification` → after deploy, verify + submit `sitemap-index.xml`; (2) put the site URL on his LinkedIn profile (website field + featured section), GitHub profile, and X bio — profile backlinks are the strongest signal for name-query ranking; (3) after launch, replace the old gamma.site link everywhere (pack §1 flag); (4) Bing Webmaster Tools (imports from GSC, one click).
+
+### 2026-07-29 — Phase 6 (QA & launch) complete — LAUNCH READY
+Ran every check for real against the built site (preview server + Playwright + real axe-core + real Lighthouse), not by inspection. One genuine bug found and fixed; everything else passed clean on the first or second pass.
+
+- **Device-matrix pass (§5.1):** 15 pages × 6 widths (360/390/768/1024/1440/1920) × 2 color schemes = **180 combinations, zero horizontal overflow** (programmatic check, scrolled through each page before measuring — a naive check without scrolling falsely flagged missing sections twice this session; both times traced to scroll-reveal timing in the screenshot script, not a real bug, and confirmed by rescreenshotting with a proper scroll-through). No physical device was available to test — emulated only, flagged as a limitation.
+- **Accessibility:** real axe-core (WCAG 2.0/2.1 A/AA) injected and run in-browser across all 15 pages × 2 schemes = 30 scans, **zero violations**. Manual keyboard-nav test on top: tab order is logical, focus rings render everywhere, mobile menu opens on Enter and closes on Escape with focus returned to the toggle. **Found and fixed a real bug:** the skip-to-content link pointed at `#main`, but `<main>` had no `tabindex`, so activating it moved the *visual* scroll but left keyboard focus on `<body>` — meaning it didn't actually skip anything for a keyboard or screen-reader user. Added `tabindex="-1"` to `<main>`; verified focus now lands correctly. Re-ran axe after the fix — still zero violations.
+- **Link check:** crawled all 15 pages for every internal link, external link, and mailto. Zero broken internal links (the one apparent failure, `/resume.pdf`, was a Playwright quirk — PDF navigations register as an aborted "download," not a real error; confirmed 200 + correct content-type via raw HTTP). All 4 external profile links (LinkedIn, GitHub, X, The Oven Vibe) resolve live on the real internet. `/rss.xml`, `/sitemap-index.xml`, `/robots.txt` all serve correctly.
+- **Lighthouse, all 15 pages individually** (the CI config only samples 7): performance 95–99, accessibility 98–100, best-practices 100, SEO 100 on every real content page — **PRD §1's targets (≥95/≥95/100 mobile) are met everywhere**, not just on average. The one page below target, `/thanks/` (SEO 66), is **by design**: it's a noindex utility page (Web3Forms redirect target, excluded from the sitemap) and Lighthouse correctly dings noindex pages on its "is-crawlable" SEO check — confirmed that's the exact and only reason. Re-ran the actual committed `.lighthouserc.json` CI config as a final dry run — still green.
+- **Other launch-QA items caught in the same pass:** `/blog/` index had no page-specific meta description (was silently inheriting the homepage's) — fixed. Confirmed exactly 3 case studies are `featured: true` (matches the homepage's 3-card design). Zero `TODO`/`FIXME` markers left in shipped code. Every interactive element (links, buttons, inputs) meets the §5.1 44px touch-target minimum on mobile — checked programmatically across all 8 primary pages, not just eyeballed.
+- **DNS plan documented:** new `DNS.md` — the exact GitHub Pages `A`/`CNAME` records, the repo-settings steps, and the one line that actually needs to change in code (`SITE.url` — everything else, canonical tags, OG images, JSON-LD, sitemap, derives from it). Written for when Milan buys a domain; nothing is active yet, per PRD's "custom domain deferred to post-launch."
+- **Owner actions still outstanding** (all previously logged, not new): the resume/LinkedIn launch-blocker (content-pack §12 — Kinara/GetVantage → Slice/Western Cap, policy count), Google Search Console registration, linking the site from LinkedIn/GitHub/X profiles, removing the old gamma.site link.
+- **All 6 phases of the PRD are now complete.** No further Claude-side phase remains — what's left is entirely Milan's to do on his own schedule (owner actions above) whenever he chooses to formally "launch" (make the repo/site public-facing in his outbound communication, submit to Search Console, etc.). The site has been continuously live at `milanbeherazyx.github.io` since Phase 1.

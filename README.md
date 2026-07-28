@@ -51,3 +51,4 @@ off-limits for content changes.
 | [`CLAUDE.md`](CLAUDE.md) | Working rules for AI sessions |
 | [`AGENTS.md`](AGENTS.md) | Repo map, edit-X→file-Y table, forbidden zones |
 | [`design/DESIGN.md`](design/DESIGN.md) | Locked design system, tokens, motion spec |
+| [`DNS.md`](DNS.md) | Plan for adding a custom domain later (deferred, not active) |
