@@ -71,11 +71,32 @@ const siteGraph = {
         'SQL',
         'Snowflake',
         'Tableau',
+        'Power BI',
         'Python',
+        'Machine Learning',
+        'Data Visualization & Dashboard Development',
+        'A/B Testing',
         'ETL Pipelines & REST API Integration',
         'Regulatory & Compliance Reporting',
       ],
       sameAs: [SITE.socials.linkedin, SITE.socials.github, SITE.socials.x],
+      /* Freelance intent (PRD lead-gen goal): each service offered
+       * remotely, worldwide — names mirror src/content/services titles. */
+      makesOffer: [
+        'Funnel & conversion diagnostics',
+        'Metrics, dashboards & data QA',
+        'Rules & policy analytics',
+        'Root-cause analysis on metric movements',
+      ].map((name) => ({
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name,
+          provider: { '@id': PERSON_ID },
+          serviceType: 'Data analytics consulting',
+          areaServed: 'Worldwide',
+        },
+      })),
     },
     {
       '@type': 'WebSite',

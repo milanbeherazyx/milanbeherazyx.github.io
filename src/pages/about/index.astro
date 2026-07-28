@@ -16,7 +16,7 @@ const recs = (await getCollection('recommendations', ({ data }) => !data.draft))
 const TOOL_GROUPS = [
   { label: 'BI & Languages', tools: ['SQL', 'Python', 'Tableau', 'Power BI', 'Advanced Excel', 'dbt'] },
   { label: 'Platforms', tools: ['Snowflake', 'AWS', 'SQL Server', 'Azure', 'Git / GitHub', 'Jira / Confluence', 'Streamlit', 'Apache Airflow'] },
-  { label: 'Analytics', tools: ['BRE policy logic', 'Approval-rate monitoring', 'Funnel analysis', 'A/B testing', 'Risk cohort analysis', 'EWI tracking', 'RCA'] },
+  { label: 'Analytics', tools: ['BRE policy logic', 'Approval-rate monitoring', 'Funnel analysis', 'A/B testing', 'Machine Learning', 'Risk cohort analysis', 'EWI tracking', 'RCA'] },
   { label: 'Workflow', tools: ['BRE policy configuration', 'REST API integration', 'UAT & sanity checks', 'BRD review', 'Agile / Scrum'] },
 ] as const;
 
