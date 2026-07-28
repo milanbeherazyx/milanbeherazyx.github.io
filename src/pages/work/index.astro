@@ -1,5 +1,7 @@
 ---
 // Case-study index (PRD §3.2) — filterable by tag, vanilla JS (no framework).
+// v2 "Signal": staggered card reveal, gradient-pressed filter chips with
+// press physics + per-tag counts.
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CaseStudyCard from '../../components/CaseStudyCard.astro';
@@ -8,7 +10,9 @@ const studies = (await getCollection('work', ({ data }) => !data.draft)).sort(
   (a, b) => a.data.order - b.data.order,
 );
 const allTags = ['Funnel', 'Policy', 'Risk', 'Dashboard', 'SQL', 'Tooling'] as const;
-const usedTags = allTags.filter((t) => studies.some((s) => s.data.tags.includes(t)));
+const usedTags = allTags
+  .map((t) => ({ tag: t, count: studies.filter((s) => s.data.tags.includes(t)).length }))
+  .filter((t) => t.count > 0);
 ---
 
 <BaseLayout title="Case studies — Milan Kumar Behera" description="Lending and credit-risk analytics case studies, plus proof of range across other domains.">
@@ -27,18 +31,18 @@ const usedTags = allTags.filter((t) => studies.some((s) => s.data.tags.includes(
           {usedTags.length > 0 && (
             <div id="tag-filters" class="mt-8 flex flex-wrap gap-2" role="group" aria-label="Filter by tag">
               <button type="button" data-tag="all" aria-pressed="true" class="filter-btn">
-                All
+                All <span class="count">{studies.length}</span>
               </button>
-              {usedTags.map((t) => (
-                <button type="button" data-tag={t} aria-pressed="false" class="filter-btn">
-                  {t}
+              {usedTags.map(({ tag, count }) => (
+                <button type="button" data-tag={tag} aria-pressed="false" class="filter-btn">
+                  {tag} <span class="count">{count}</span>
                 </button>
               ))}
             </div>
           )}
 
           <div class="mt-10 grid gap-8 sm:grid-cols-2">
-            {studies.map((s) => (
+            {studies.map((s, i) => (
               <div class="case-item" data-tags={s.data.tags.join(',')}>
                 <CaseStudyCard
                   href={`/work/${s.id}/`}
@@ -46,6 +50,8 @@ const usedTags = allTags.filter((t) => studies.some((s) => s.data.tags.includes(
                   summary={s.data.summary}
                   tags={s.data.tags}
                   metric={s.data.metrics?.[0]}
+                  index={i + 1}
+                  delay={i * 60}
                 />
               </div>
             ))}
@@ -58,6 +64,9 @@ const usedTags = allTags.filter((t) => studies.some((s) => s.data.tags.includes(
 
 <style>
   .filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     font-family: var(--font-mono);
     font-size: 0.78rem;
     font-weight: 600;
@@ -66,11 +75,26 @@ const usedTags = allTags.filter((t) => studies.some((s) => s.data.tags.includes(
     border: 1px solid var(--line);
     color: var(--muted);
     min-height: 2.75rem;
+    transition:
+      transform 0.15s var(--ease-spring),
+      background-color 0.2s,
+      border-color 0.2s,
+      color 0.2s;
+  }
+  .filter-btn:active {
+    transform: scale(0.94);
+  }
+  .filter-btn .count {
+    font-size: 0.7rem;
+    opacity: 0.7;
   }
   .filter-btn[aria-pressed='true'] {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--accent-contrast);
+    background: var(--gradient);
+    border-color: transparent;
+    color: #fff;
+  }
+  .filter-btn[aria-pressed='true'] .count {
+    opacity: 0.85;
   }
 </style>
 
