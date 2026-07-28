@@ -11,11 +11,18 @@ interface Props {
   tags: readonly string[];
   metric?: { value: string; label: string };
   index?: number;
+  /** Stagger the reveal transition (ms) — e.g. i * 60 in a grid loop. */
+  delay?: number;
 }
-const { href, title, summary, tags, metric, index } = Astro.props;
+const { href, title, summary, tags, metric, index, delay } = Astro.props;
 ---
 
-<a href={href} data-reveal class="case-card glass lift group block p-6">
+<a
+  href={href}
+  data-reveal
+  class="case-card glass lift group block p-6"
+  style={delay ? `transition-delay:${delay}ms` : undefined}
+>
   <div class="flex flex-wrap items-center gap-2">
     {index && <span class="font-mono text-xs text-muted">{String(index).padStart(2, '0')}</span>}
     {tags.map((t) => <Tag label={t} />)}

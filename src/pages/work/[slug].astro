@@ -3,6 +3,10 @@
 // strict section order (Context → Problem → Approach → What I built →
 // Outcome → Tools); frontmatter supplies header metrics + the closing
 // "Where else this applies" note (never invented — content_pack.md only).
+// v2 "Signal": reading-progress hairline, section-heading slide-reveals,
+// metric rule draw-in (no literal digit count-up — same reasoning as
+// ProofStrip: these are approved compound strings like "30% → 43%" and
+// "200+", and parsing them to animate digits risks altering approved copy).
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Tag from '../../components/Tag.astro';
@@ -49,8 +53,10 @@ const caseStudySchema = {
   description={study.data.summary}
   extraSchema={caseStudySchema}
 >
+  <div id="reading-progress" class="fixed inset-x-0 top-0 z-50 h-0.75 origin-left scale-x-0 bg-fg"></div>
+
   <article class="mx-auto max-w-3xl px-5 py-14 sm:px-8 sm:py-20">
-    <a href="/work/" class="text-sm font-semibold text-muted hover:text-accent">← All case studies</a>
+    <a href="/work/" class="text-sm font-semibold text-muted hover:text-accent-2">← All case studies</a>
 
     <div class="mt-6 flex flex-wrap gap-2">
       {study.data.tags.map((t) => <Tag label={t} />)}
@@ -61,10 +67,11 @@ const caseStudySchema = {
 
     {
       study.data.metrics && study.data.metrics.length > 0 && (
-        <div class="mt-8 flex flex-wrap gap-8 border-t-2 border-fg pt-6">
-          {study.data.metrics.map((m) => (
-            <div>
-              <p class="font-display text-2xl font-semibold tabular text-accent">{m.value}</p>
+        <div class="mt-8 flex flex-wrap gap-8">
+          {study.data.metrics.map((m, i) => (
+            <div data-reveal style={`transition-delay:${i * 90}ms`} class="metric-item relative pt-5">
+              <span class="rule-draw absolute inset-x-0 top-0 h-0.5 origin-left bg-linear-to-r from-accent to-accent-2" />
+              <p class="font-display text-2xl font-bold tabular-nums text-gradient">{m.value}</p>
               <p class="mt-1 text-sm text-muted">{m.label}</p>
             </div>
           ))}
@@ -76,8 +83,8 @@ const caseStudySchema = {
       <Content />
     </div>
 
-    <div class="mt-12 rounded-2xl border border-line p-6">
-      <p class="text-label text-muted">Where else this applies</p>
+    <div data-reveal class="glass beam mt-12 p-6">
+      <p class="text-label text-accent-2">Where else this applies</p>
       <p class="mt-2 text-fg">{study.data.whereElseThisApplies}</p>
     </div>
 
@@ -85,19 +92,41 @@ const caseStudySchema = {
       {study.data.tools.map((t) => <Tag label={t} />)}
     </div>
 
-    <a href="/contact/" class="mt-12 inline-block rounded-full bg-accent px-6 py-3 font-semibold text-accent-contrast">
+    <a href="/contact/" class="btn-gradient mt-12 inline-block px-6 py-3 font-semibold">
       Discuss a similar problem →
     </a>
   </article>
 </BaseLayout>
 
 <style>
+  .rule-draw {
+    transform: scaleX(0);
+    transition: transform 0.9s var(--ease-rise);
+  }
+  .js [data-reveal].is-revealed .rule-draw {
+    transform: scaleX(1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rule-draw {
+      transform: scaleX(1) !important;
+    }
+  }
+
   .case-content :global(h2) {
     font-family: var(--font-display);
-    font-weight: 600;
+    font-weight: 700;
     font-size: 1.4rem;
     margin-top: 2.25rem;
     margin-bottom: 0.75rem;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition:
+      opacity 0.5s var(--ease-rise),
+      transform 0.5s var(--ease-rise);
+  }
+  .case-content :global(h2.heading-revealed) {
+    opacity: 1;
+    transform: none;
   }
   .case-content :global(h2:first-child) {
     margin-top: 0;
@@ -111,7 +140,7 @@ const caseStudySchema = {
     color: var(--muted);
   }
   .case-content :global(a) {
-    color: var(--accent);
+    color: var(--accent-2);
     text-decoration: underline;
   }
   .case-content :global(strong) {
@@ -135,9 +164,65 @@ const caseStudySchema = {
     top: 0.62em;
     width: 0.5rem;
     height: 2px;
-    background: var(--accent);
+    background: var(--gradient);
   }
   .case-content :global(li:last-child) {
     margin-bottom: 0;
   }
+  @media (prefers-reduced-motion: reduce) {
+    .case-content :global(h2) {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
 </style>
+
+<script>
+  // Reading-progress hairline. Self-contained (own rAF-throttled scroll
+  // listener), not tied to the reduced-motion-gated reveal system — it's a
+  // continuous position indicator, not a one-shot animation, so it stays
+  // functional (instantly, no easing) even under reduced-motion.
+  const bar = document.getElementById('reading-progress')!;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce) {
+    bar.style.transition = 'transform 0.1s linear';
+  }
+  let ticking = false;
+  function updateProgress() {
+    const article = document.querySelector('article')!;
+    const total = article.scrollHeight - window.innerHeight;
+    const progress = total > 0 ? Math.min(window.scrollY / total, 1) : 0;
+    bar.style.transform = `scaleX(${progress})`;
+    ticking = false;
+  }
+  document.addEventListener(
+    'scroll',
+    () => {
+      if (!ticking) {
+        requestAnimationFrame(updateProgress);
+        ticking = true;
+      }
+    },
+    { passive: true },
+  );
+  updateProgress();
+
+  // Section-heading slide-reveal — self-contained observer (doesn't depend
+  // on the global motion.ts script's querySelectorAll timing).
+  if (!reduce) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          entry.target.classList.add('heading-revealed');
+          io.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.3, rootMargin: '0px 0px -10% 0px' },
+    );
+    document.querySelectorAll('.case-content h2').forEach((h) => io.observe(h));
+  } else {
+    document.querySelectorAll('.case-content h2').forEach((h) => h.classList.add('heading-revealed'));
+  }
+</script>
