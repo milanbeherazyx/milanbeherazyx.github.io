@@ -70,22 +70,24 @@ const profileSchema = {
           English &amp; Hindi (full professional) · Odia (native) · Bengali (professional working)
         </p>
       </div>
-      <Image
-        src={photo}
-        alt="Milan Kumar Behera"
-        width={320}
-        height={320}
-        class="aspect-square w-full rounded-2xl object-cover"
-      />
+      <div data-reveal class="photo-frame relative">
+        <Image
+          src={photo}
+          alt="Milan Kumar Behera"
+          width={320}
+          height={320}
+          class="relative z-10 aspect-square w-full rounded-2xl object-cover"
+        />
+      </div>
     </div>
 
     <div class="mt-section">
       <p data-reveal class="text-label mb-8 text-muted">Tools</p>
       <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
         {
-          TOOL_GROUPS.map((g) => (
-            <div data-reveal>
-              <h3 class="font-mono text-xs font-semibold uppercase tracking-wide text-accent">{g.label}</h3>
+          TOOL_GROUPS.map((g, i) => (
+            <div data-reveal style={i ? `transition-delay:${i * 70}ms` : undefined}>
+              <h3 class="font-mono text-xs font-semibold uppercase tracking-wide text-accent-2">{g.label}</h3>
               <ul class="mt-3 space-y-1.5 text-sm text-muted">
                 {g.tools.map((t) => <li>{t}</li>)}
               </ul>
@@ -100,10 +102,11 @@ const profileSchema = {
         <div class="mt-section">
           <p data-reveal class="text-label mb-8 text-muted">What people say</p>
           <div class="grid gap-6 lg:grid-cols-2">
-            {recs.map((r) => (
-              <figure data-reveal class="rounded-2xl border-t-[3px] border-fg pt-6">
+            {recs.map((r, i) => (
+              <figure data-reveal style={i % 2 ? 'transition-delay:70ms' : undefined} class="glass lift quote-card relative p-6 pt-10 sm:p-8 sm:pt-12">
+                <span class="quote-mark text-gradient" aria-hidden="true">&ldquo;</span>
                 <blockquote class="text-fg">
-                  <p>&ldquo;{r.body?.trim()}&rdquo;</p>
+                  <p>{r.body?.trim()}</p>
                 </blockquote>
                 <figcaption class="mt-4 text-sm">
                   <span class="font-semibold">{r.data.name}</span>
@@ -114,7 +117,7 @@ const profileSchema = {
                     {r.data.date && ` · ${r.data.date}`}
                   </span>
                   {' · '}
-                  <a href={SITE.socials.linkedin} class="text-accent underline">
+                  <a href={SITE.socials.linkedin} class="text-accent-2 underline">
                     Verify on LinkedIn
                   </a>
                 </figcaption>
@@ -126,3 +129,30 @@ const profileSchema = {
     }
   </section>
 </BaseLayout>
+
+<style>
+  .photo-frame::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 20px;
+    background: var(--gradient);
+    opacity: 0.55;
+    filter: blur(14px);
+    z-index: 0;
+  }
+  .quote-mark {
+    position: absolute;
+    top: -0.15em;
+    left: 1.5rem;
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    line-height: 1;
+    font-weight: 700;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .photo-frame::before {
+      filter: none;
+    }
+  }
+</style>
