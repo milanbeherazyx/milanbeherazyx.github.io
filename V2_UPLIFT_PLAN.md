@@ -18,14 +18,22 @@ PROGRESS.md):**
   scope (motion library choice; the toggle also amended the localStorage
   exclusion — already shipped in the polish round before v1.0.0).
 
-## ⚠️ Open decision — needed before G2 starts
+## Brand direction — resolved 2026-07-29
 
-**Does v2 keep the locked brand (Clash Display + Switzer, ultramarine/amber
-hybrid theme) and spend its whole budget on craft — spacing, depth, motion,
-detail — or is a rebrand on the table?**
+**"Budget" above meant design effort, not money — this site costs nothing
+to run.** Question was: keep the current fonts/colors and spend all the
+effort on craft (spacing, motion, detail), or also consider changing the
+look itself? Milan's answer: **show real options, don't decide blind.**
 
-Recommendation standing: **keep the brand**, spend the budget on execution
-quality. Not yet answered — G2 cannot start until this is.
+**G2 will produce at least three mockups:**
+1. **Polish-only** — current fonts (Clash Display + Switzer) and current
+   colors (blue accent in light mode, gold in dark), refined through
+   spacing, layering, motion and detail. No identity change.
+2–3. **One or two alternate directions** — different fonts and/or accent
+   colors, if G2's research turns up something genuinely stronger.
+
+Milan picks by looking at built mockups, same process as Phase 2's design
+system pick. Nothing here is decided in the abstract.
 
 ## Phases
 
@@ -48,7 +56,8 @@ next phase. No phase begins on its own.
       flow documented in README/AGENTS.md/CLAUDE.md.
 - [ ] **G1 — Foundations** — next. Waiting on Milan to say go (and switch
       model if desired — Sonnet/STANDARD is already active).
-- [ ] **G2 — Design direction v2** — blocked on the open brand decision above.
+- [ ] **G2 — Design direction v2** — no longer blocked; will produce a
+      polish-only mockup plus 1–2 alternate-look mockups (see above).
 - [ ] **G3 — Implementation**
 - [ ] **G4 — QA, merge, release (tag v2.0.0)**
 
