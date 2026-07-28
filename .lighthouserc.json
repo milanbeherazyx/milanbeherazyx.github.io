@@ -11,7 +11,7 @@
         "/resume/index.html",
         "/contact/index.html"
       ],
-      "numberOfRuns": 1
+      "numberOfRuns": 3
     },
     "assert": {
       "assertions": {
