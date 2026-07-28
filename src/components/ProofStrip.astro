@@ -1,14 +1,41 @@
 ---
+/**
+ * v2 "Signal" update: animated rule draw-in on reveal. Digit count-up was
+ * considered (per design/v2/DIRECTION_SPEC.md) but skipped deliberately —
+ * PROOF_METRICS values are approved compound strings ("30% → 43%",
+ * "₹8–9B+"), and parsing them apart to animate digits risks subtly
+ * altering approved copy (PRD §7). FunnelBeforeAfter's plain-integer props
+ * get the real count-up instead.
+ */
 import { PROOF_METRICS } from '../site.config';
 ---
 
 <ul class="grid gap-8 sm:grid-cols-3">
   {
     PROOF_METRICS.map((m, i) => (
-      <li data-reveal style={`transition-delay:${i * 80}ms`} class="border-t-2 border-fg pt-5">
-        <p class="font-display text-3xl font-semibold tabular sm:text-4xl">{m.value}</p>
+      <li data-reveal style={`transition-delay:${i * 80}ms`} class="proof-item relative pt-5">
+        <span class="rule-draw absolute inset-x-0 top-0 h-0.75 origin-left bg-fg" />
+        <p class="font-display text-3xl font-bold tabular sm:text-4xl">{m.value}</p>
         <p class="mt-2 text-sm text-muted">{m.label}</p>
       </li>
     ))
   }
 </ul>
+
+<style>
+  .rule-draw {
+    transform: scaleX(0);
+    transition: transform 0.9s var(--ease-rise);
+  }
+  .proof-item:first-child .rule-draw {
+    background: var(--gradient);
+  }
+  .js [data-reveal].is-revealed .rule-draw {
+    transform: scaleX(1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rule-draw {
+      transform: scaleX(1) !important;
+    }
+  }
+</style>
