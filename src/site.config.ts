@@ -23,7 +23,7 @@ export const SITE = {
   /** Web3Forms access key (public by design — safe to commit). Empty =
    *  contact form hidden, mailto shown instead. Cal.com was CANCELLED by
    *  Milan (2026-07-29, paid product) — scheduling happens over email. */
-  web3formsKey: '',
+  web3formsKey: 'db79de3d-a738-4c37-9104-d4437c2258e6',
   /** Resume PDF path under /public — replaced via skills/replace-resume-pdf.md */
   resumePdf: '/resume.pdf',
   /** Umami Cloud website ID (PRD §12.2). Set by Milan 2026-07-29.
