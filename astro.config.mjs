@@ -8,6 +8,13 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://milanbeherazyx.github.io',
   trailingSlash: 'ignore',
+  markdown: {
+    // dark-plus over the default github-dark: its faintest token (comments,
+    // #6A9955 on #1E1E1E) passes WCAG AA — github-dark's #6A737D fails at
+    // 3.04:1 (caught by axe on the blog method posts). The code panel stays
+    // dark in both site themes deliberately: a console is dark.
+    shikiConfig: { theme: 'dark-plus' },
+  },
   integrations: [
     sitemap({
       // /thanks/ is a noindex utility page (form redirect target)
