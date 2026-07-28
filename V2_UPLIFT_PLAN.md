@@ -77,6 +77,24 @@ next phase. No phase begins on its own.
       real identity change, not additive. Sub-PRs: (1) tokens/fonts +
       shared components (header/footer/funnel/proof/cards) + Home, (2)
       Work index + case study detail, (3) remaining pages + polish.
+  - [x] **G3-1** — tokens/fonts/shared components/Home. Merged (PR #9).
+        2 real bugs caught by verification: a CSS cascade-layer bug where
+        `.btn-gradient`'s unconditional `display` silently overrode
+        Tailwind's `hidden md:inline-block` on the header CTA; a WCAG AA
+        contrast failure on the mockup's literal `#6366f1` (fixed to
+        `#4338ca` light / `#818cf8` dark). Both fixed and re-verified.
+  - [x] **G3-2** — Work index + case study detail. Merged (PR #10).
+        Work index: gradient-pressed filter chips with per-tag counts,
+        press physics, staggered glass-card reveal. Case study detail:
+        reading-progress hairline, section-heading slide-reveals,
+        rule-draw-in metrics (not digit count-up — same reasoning as
+        `ProofStrip`: values are approved compound strings like
+        "30% → 43%"), glass "Where else this applies" box, gradient CTA.
+        8/8 Playwright checks pass (overflow, axe wcag2a/2aa/21a/21aa,
+        console/page errors) across both pages × both themes ×
+        desktop/mobile; filter interaction verified against displayed counts.
+  - [ ] **G3-3** — remaining pages (Services, About, Resume, Contact, Blog,
+        404/Thanks) + polish.
 - [ ] **G4 — QA, merge, release (tag v2.0.0)**
 
 ## Where the detail lives
