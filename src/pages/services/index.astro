@@ -12,26 +12,69 @@ const offers = await Promise.all(
   entries.map(async (o) => ({ data: o.data, Content: (await render(o)).Content })),
 );
 
+/* FAQ (v2.1-S5) — conversion + question-query matching. Every answer from
+ * approved copy or owner-supplied facts (timezone answer picked by Milan
+ * 2026-07-28: "flexible overlap windows"). FAQPage schema included for
+ * non-Google engines and AI crawlers; Google's FAQ rich results are
+ * restricted to gov/health sites since 2023 — that's not the goal here. */
+const FAQS = [
+  {
+    q: 'How do we start?',
+    a: "With a short intro call — 30 minutes, no obligation. Email me two or three slots that work for you and I'll confirm one. We scope the engagement together on that call.",
+  },
+  {
+    q: 'What does an engagement look like?',
+    a: 'Project, retainer, or audit — we pick together on the intro call. Every engagement starts the same way: you share what already exists, we agree metric definitions in writing, one short KT call, and a concrete first finding inside the first week.',
+  },
+  {
+    q: 'What do you charge?',
+    a: "There's no fixed rate card — pricing depends on scope, and we agree it on the intro call before any work starts. Projects, retainers, and audits are priced differently.",
+  },
+  {
+    q: 'Do you work remotely, across timezones?',
+    a: 'Yes — remote-first from Bengaluru (IST) with flexible hours: IST evenings overlap US mornings, and EU working hours overlap my afternoon. Live calls get scheduled in your window, not mine.',
+  },
+  {
+    q: 'Which industries do you work with?',
+    a: "Deepest in lending and credit risk, but the method is domain-agnostic — funnels, metric definitions, root causes, and dashboards apply to any data-generating business. I've built regression models for a construction firm, led waste-management analytics, and run my own D2C bakery on the same methods.",
+  },
+  {
+    q: 'What tools do you work in?',
+    a: 'SQL, Python, Snowflake, Tableau, Power BI, advanced Excel, dbt — plus the workflow around them: Git, UAT and sanity checks, BRE policy configuration, REST API integrations.',
+  },
+] as const;
+
 /* SEO (owner directive 2026-07-28): freelance services are offered
  * remotely, worldwide — surface that as structured data so the page can
  * match service-intent queries, not just name searches. */
-const servicesSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'OfferCatalog',
-  name: 'Data analytics services — Milan Kumar Behera',
-  url: `${SITE.url}/services/`,
-  itemListElement: offers.map(({ data }) => ({
-    '@type': 'Offer',
-    itemOffered: {
-      '@type': 'Service',
-      name: data.title,
-      description: data.summary,
-      provider: { '@id': `${SITE.url}/#person` },
-      serviceType: 'Data analytics consulting',
-      areaServed: 'Worldwide',
-    },
-  })),
-};
+const servicesSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'OfferCatalog',
+    name: 'Data analytics services — Milan Kumar Behera',
+    url: `${SITE.url}/services/`,
+    itemListElement: offers.map(({ data }) => ({
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: data.title,
+        description: data.summary,
+        provider: { '@id': `${SITE.url}/#person` },
+        serviceType: 'Data analytics consulting',
+        areaServed: 'Worldwide',
+      },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQS.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+];
 
 const RAMP_STEPS = [
   { step: '1', label: 'Docs', detail: 'Share what exists — policy docs, schema, dashboards, whatever is already written down.' },
@@ -95,6 +138,25 @@ const RAMP_STEPS = [
         Book a call
       </a>
     </div>
+
+    <div class="mt-section">
+      <p data-reveal class="text-label mb-8 text-muted">faq/</p>
+      <div class="border-y border-line">
+        {
+          FAQS.map((f, i) => (
+            <details data-reveal style={i ? `transition-delay:${i * 40}ms` : undefined} class="faq-item group border-b border-line py-5 last:border-b-0">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg font-semibold">
+                {f.q}
+                <span class="shrink-0 font-mono text-xl text-accent-2 transition-transform duration-200 group-open:rotate-45" aria-hidden="true">
+                  +
+                </span>
+              </summary>
+              <p class="mt-3 max-w-[70ch] text-muted">{f.a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
   </section>
 </BaseLayout>
 
@@ -110,5 +172,9 @@ const RAMP_STEPS = [
   }
   .service-body :global(em) {
     font-style: italic;
+  }
+  /* Safari renders its own disclosure triangle despite list-none */
+  .faq-item summary::-webkit-details-marker {
+    display: none;
   }
 </style>
