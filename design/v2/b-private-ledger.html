@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>V2 Direction B — Private Ledger (serif editorial)</title>
+<!-- Mockup only: fonts via Fontshare CDN; all self-hostable like our current pair. -->
+<link href="https://api.fontshare.com/v2/css?f[]=boska@400,500,700&f[]=switzer@400,500,600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f5f2e9; --surface: #fbf9f3; --fg: #1a1c18; --muted: #5d6156;
+    --accent: #1c4532; --gilt: #a9853b; --data-red: #9c2b23; --line: #ddd8c8;
+    --display: 'Boska', serif; --body: 'Switzer', sans-serif;
+    --mono: ui-monospace, 'SF Mono', Menlo, monospace;
+    --ease: cubic-bezier(0.25, 0.5, 0.25, 1);
+  }
+  [data-theme='dark'] {
+    --bg: #0d1410; --surface: #121a15; --fg: #eae6d9; --muted: #97a08f;
+    --accent: #8fc7a6; --gilt: #c9a24b; --data-red: #d96a5c; --line: #24302a;
+  }
+  * { margin: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--fg); font-family: var(--body);
+    font-size: 1.0625rem; line-height: 1.65; -webkit-font-smoothing: antialiased;
+    transition: background-color .3s, color .3s; overflow-x: hidden;
+  }
+  body::after {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 60; opacity: .05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+  }
+  .wrap { max-width: 70rem; margin-inline: auto; padding-inline: clamp(1.25rem, 4vw, 3rem); }
+  a { color: inherit; text-decoration: none; }
+  .eyebrow { font-size: .74rem; letter-spacing: .22em; text-transform: uppercase; font-weight: 600; color: var(--gilt); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  .bar-note { position: sticky; top: 0; z-index: 50; display: flex; justify-content: space-between; gap: 1rem; align-items: center; padding: .7rem clamp(1.25rem,4vw,3rem); background: var(--surface); border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: .78rem; color: var(--muted); }
+  .toggle { font: inherit; font-weight: 600; cursor: pointer; background: var(--accent); color: var(--bg); border: 0; border-radius: 999px; padding: .45rem 1rem; }
+
+  /* double hairline — the engraved signature */
+  .drule { border: 0; border-top: 1px solid var(--fg); position: relative; margin: 0; }
+  .drule::after { content: ''; position: absolute; top: 3px; left: 0; right: 0; border-top: 1px solid var(--line); }
+
+  nav { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: .6rem 1.5rem; padding-block: 1.6rem; }
+  nav .links { flex-wrap: wrap; }
+  .wordmark { font-family: var(--display); font-weight: 500; font-size: 1.35rem; letter-spacing: .01em; }
+  nav .links { display: flex; gap: 2rem; font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 500; }
+  nav .links a { border-bottom: 1px solid transparent; padding-bottom: 3px; transition: border-color .2s; }
+  nav .links a:hover { border-color: var(--gilt); }
+
+  .hero { padding-block: clamp(4.5rem, 12vh, 8.5rem) clamp(3.5rem, 9vh, 5.5rem); }
+  .hero .eyebrow { display: block; margin-bottom: 1.6rem; }
+  h1 { font-family: var(--display); font-weight: 500; font-size: clamp(2.9rem, 1rem + 7.6vw, 7.4rem); line-height: 1.02; letter-spacing: -0.01em; max-width: 14ch; }
+  h1 em { font-style: italic; color: var(--accent); }
+  h1 .line { display: block; overflow: hidden; }
+  h1 .line > span { display: inline-block; transform: translateY(115%); }
+  .js h1 .line > span { animation: up .9s var(--ease) forwards; }
+  .js h1 .line:nth-child(2) > span { animation-delay: .12s; }
+  .js h1 .line:nth-child(3) > span { animation-delay: .24s; }
+  @keyframes up { to { transform: translateY(0); } }
+  .hero p.lead { font-size: clamp(1.05rem, 1rem + .35vw, 1.28rem); color: var(--muted); max-width: 33rem; margin-top: 2rem; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 1.1rem 1.8rem; margin-top: 2.5rem; align-items: center; }
+  .btn { display: inline-block; background: var(--accent); color: var(--bg); font-weight: 600; padding: 1rem 2rem; border-radius: 2px; letter-spacing: .04em; transition: background .25s, transform .25s var(--ease); }
+  .btn:hover { transform: translateY(-2px); }
+  .textlink { font-weight: 600; border-bottom: 1px solid var(--gilt); padding-bottom: 3px; }
+  .textlink:hover { color: var(--accent); }
+  .rise { opacity: 0; transform: translateY(12px); }
+  .js .rise { animation: fadeup .8s var(--ease) .4s forwards; }
+  @keyframes fadeup { to { opacity: 1; transform: none; } }
+
+  /* LEDGER funnel — dotted leaders, inked-in numerals */
+  .ledger-sec { padding-block: clamp(3.5rem, 10vh, 6.5rem); }
+  .ledger-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: .6rem; margin-bottom: 1rem; }
+  h2 { font-family: var(--display); font-weight: 500; font-size: clamp(1.9rem, 1rem + 2.6vw, 3rem); line-height: 1.08; }
+  .ledger { background: var(--surface); border: 1px solid var(--line); padding: clamp(1.4rem, 3.5vw, 2.6rem); position: relative; }
+  .ledger::before, .ledger::after { content: ''; position: absolute; left: 10px; right: 10px; height: 1px; background: var(--line); }
+  .ledger::before { top: 6px; } .ledger::after { bottom: 6px; }
+  .lrow { display: flex; align-items: baseline; gap: .9rem; padding-block: 1.05rem; }
+  .lrow + .lrow { border-top: 1px solid var(--line); }
+  .lrow .name { font-size: .8rem; letter-spacing: .16em; text-transform: uppercase; font-weight: 600; color: var(--muted); flex-shrink: 0; }
+  .lrow.after .name { color: var(--accent); }
+  .leader { flex: 1; border-bottom: 1.5px dotted var(--line); transform: translateY(-4px); }
+  .lfig { font-family: var(--display); font-weight: 700; font-variant-numeric: tabular-nums; font-size: clamp(1.9rem, 1rem + 2.4vw, 3rem); line-height: 1; filter: blur(6px); opacity: .2; transition: filter 1s var(--ease), opacity 1s var(--ease); }
+  .lrow.after .lfig { color: var(--accent); transition-delay: .3s; }
+  .ledger.on .lfig { filter: blur(0); opacity: 1; }
+  .lfig small { font-size: .45em; color: var(--muted); font-weight: 500; }
+  .lbar { height: 3px; background: var(--accent); width: 0; transition: width 1.2s var(--ease) .2s; margin-top: .6rem; }
+  .lrow.before .lbar { background: var(--muted); }
+  .ledger.on .lrow.before .lbar { width: 30%; }
+  .ledger.on .lrow.after .lbar { width: 43%; }
+  .verdict { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding-top: 1.2rem; margin-top: .3rem; border-top: 2px solid var(--fg); }
+  .verdict .name { font-size: .8rem; letter-spacing: .16em; text-transform: uppercase; font-weight: 700; }
+  .verdict .lfig { color: var(--gilt); font-style: italic; }
+
+  @media (max-width: 42rem) {
+    .lrow { flex-direction: column; align-items: flex-start; gap: .35rem; }
+    .leader { display: none; }
+    .verdict { flex-direction: column; align-items: flex-start; gap: .4rem; }
+  }
+
+  /* PROOF — engraved figures */
+  .proof { display: grid; gap: 2.4rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); padding-block: clamp(3.5rem, 9vh, 5.5rem); }
+  .proof > div { padding-top: 1.2rem; position: relative; }
+  .proof .fig { font-family: var(--display); font-weight: 700; font-variant-numeric: tabular-nums; font-size: clamp(2.1rem, 1rem + 2.6vw, 3.4rem); line-height: 1; }
+  .proof .fig i { font-style: italic; color: var(--gilt); font-weight: 500; }
+  .proof p { color: var(--muted); margin-top: .55rem; font-size: .93rem; max-width: 30ch; }
+
+  /* MARQUEE — small caps roll */
+  .marquee { border-block: 1px solid var(--line); padding-block: .95rem; overflow: hidden; background: var(--surface); }
+  .mtrack { display: flex; gap: 3.4rem; width: max-content; animation: mq 40s linear infinite; font-size: .74rem; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); white-space: nowrap; font-weight: 500; }
+  .mtrack span i { color: var(--gilt); font-style: normal; margin-right: 3.4rem; }
+  .marquee:hover .mtrack { animation-play-state: paused; }
+  @keyframes mq { to { transform: translateX(-50%); } }
+
+  /* CASE index — editorial list rows, not cards */
+  .work { padding-block: clamp(3.5rem, 10vh, 6.5rem); }
+  .wrow { display: grid; grid-template-columns: auto 1fr auto; gap: 1.2rem 2rem; align-items: baseline; padding-block: 1.7rem; border-top: 1px solid var(--line); transition: background .3s; position: relative; }
+  .wrow:last-of-type { border-bottom: 1px solid var(--line); }
+  .wrow:hover { background: var(--surface); }
+  .wrow .no { font-family: var(--display); font-style: italic; font-size: 1.2rem; color: var(--gilt); }
+  .wrow h3 { font-family: var(--display); font-weight: 500; font-size: clamp(1.4rem, 1rem + 1.4vw, 2.1rem); line-height: 1.1; transition: transform .3s var(--ease); }
+  .wrow:hover h3 { transform: translateX(8px); }
+  .wrow .metric { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--accent); font-size: .95rem; white-space: nowrap; }
+  .wrow p.sum { grid-column: 2 / 4; color: var(--muted); font-size: .95rem; max-width: 60ch; margin-top: -.5rem; }
+  @media (max-width: 40rem) { .wrow { grid-template-columns: auto 1fr; } .wrow .metric { grid-column: 2; } .wrow p.sum { grid-column: 1 / -1; } }
+
+  .band { margin-block: 2rem 5rem; border: 1px solid var(--line); outline: 1px solid var(--line); outline-offset: 5px; background: var(--surface); padding: clamp(2rem, 5vw, 3.6rem); text-align: center; }
+  .band h2 { max-width: 22ch; margin-inline: auto; }
+  .band .btn { margin-top: 1.8rem; }
+
+  .reveal { opacity: 0; transform: translateY(14px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+  .reveal.on { opacity: 1; transform: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    h1 .line > span { transform: none !important; }
+    .rise, .reveal { opacity: 1 !important; transform: none !important; }
+    .lfig { filter: none !important; opacity: 1 !important; }
+    .ledger .lrow.before .lbar { width: 30% !important; } .ledger .lrow.after .lbar { width: 43% !important; }
+    .mtrack { animation: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="bar-note">
+  <span>DIRECTION B — “Private Ledger” · serif editorial, racing green &amp; gilt · scroll to see the motion</span>
+  <button class="toggle" id="t">Switch theme</button>
+</div>
+<div class="wrap">
+  <nav>
+    <a class="wordmark" href="#">Milan Kumar Behera</a>
+    <div class="links"><a href="#">Work</a><a href="#">Services</a><a href="#">About</a><a href="#">Contact</a></div>
+  </nav>
+  <hr class="drule" />
+
+  <header class="hero">
+    <span class="eyebrow">Data Analyst — Lending &amp; Credit Risk</span>
+    <h1>
+      <span class="line"><span>Messy data,</span></span>
+      <span class="line"><span>turned into</span></span>
+      <span class="line"><span><em>decisions.</em></span></span>
+    </h1>
+    <p class="lead rise">Funnels, metrics, root causes, dashboards. Deepest in lending &amp; credit risk — the domain changes; the funnel math doesn't.</p>
+    <div class="cta-row rise">
+      <a class="btn" href="#">Book a call</a>
+      <a class="textlink" href="#">View case studies</a>
+    </div>
+  </header>
+
+  <section class="ledger-sec">
+    <div class="ledger-head reveal">
+      <h2>The flagship entry.</h2>
+      <span class="eyebrow">Portfolio qualification · per 100 applications</span>
+    </div>
+    <div class="ledger" id="ledger">
+      <div class="lrow before">
+        <span class="name">Before — rules as first configured</span>
+        <span class="leader"></span>
+        <span class="lfig">30<small>/100</small><div class="lbar"></div></span>
+      </div>
+      <div class="lrow after">
+        <span class="name">After — benchmarked, fixed &amp; monitored</span>
+        <span class="leader"></span>
+        <span class="lfig">43<small>/100</small><div class="lbar"></div></span>
+      </div>
+      <div class="verdict">
+        <span class="name">Net improvement, six lending partners</span>
+        <span class="lfig" style="font-size:clamp(1.6rem,1rem+1.8vw,2.4rem)">+13 points</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="marquee" aria-hidden="true">
+  <div class="mtrack">
+    <span>SQL <i>·</i> Snowflake <i>·</i> Tableau <i>·</i> Python <i>·</i> BRE Policy Analytics <i>·</i> Funnel Diagnostics <i>·</i> Risk Cohorts <i>·</i> EWI Tracking <i>·</i> RCA <i>·</i></span>
+    <span>SQL <i>·</i> Snowflake <i>·</i> Tableau <i>·</i> Python <i>·</i> BRE Policy Analytics <i>·</i> Funnel Diagnostics <i>·</i> Risk Cohorts <i>·</i> EWI Tracking <i>·</i> RCA <i>·</i></span>
+  </div>
+</div>
+
+<div class="wrap">
+  <section class="proof reveal">
+    <div><hr class="drule" /><div class="fig" style="margin-top:1.1rem">30<i>→</i>43%</div><p>portfolio qualification rate lifted across the lender stack</p></div>
+    <div><hr class="drule" /><div class="fig" style="margin-top:1.1rem">₹8–9B<i>+</i></div><p>loan exposure monitored via executive dashboards</p></div>
+    <div><hr class="drule" /><div class="fig" style="margin-top:1.1rem">80<i>%</i></div><p>of manual vendor risk reviews eliminated via API automation</p></div>
+  </section>
+
+  <section class="work">
+    <span class="eyebrow reveal">Selected work</span>
+    <div style="margin-top:1.6rem">
+      <a class="wrow reveal" href="#">
+        <span class="no">No. 01</span>
+        <h3>Lifting portfolio qualification from 30% to 43%</h3>
+        <span class="metric">30% → 43%</span>
+        <p class="sum">Six lending partners, 100K+ monthly borrowers, and a funnel nobody could see inside — rejection-code analysis turned it into a ranked, fixable list.</p>
+      </a>
+      <a class="wrow reveal" href="#">
+        <span class="no">No. 02</span>
+        <h3>Policy as code: 112 rules, 200+ variants</h3>
+        <span class="metric">200+ variants</span>
+        <p class="sum">Six written credit policies, one rules engine — versioned, testable, regression-checked before deploy.</p>
+      </a>
+    </div>
+  </section>
+
+  <div class="band reveal">
+    <span class="eyebrow">Engagements</span>
+    <h2 style="margin-top:1rem">Got a funnel that leaks? Let's find where.</h2>
+    <a class="btn" href="#">Book a call</a>
+  </div>
+</div>
+
+<script>
+  document.documentElement.classList.add('js');
+  const root = document.documentElement, btn = document.getElementById('t');
+  const apply = d => { root.dataset.theme = d ? 'dark' : 'light'; };
+  apply(matchMedia('(prefers-color-scheme: dark)').matches);
+  btn.onclick = () => apply(root.dataset.theme !== 'dark');
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return; e.target.classList.add('on'); io.unobserve(e.target);
+  }), { threshold: 0.3 });
+  document.querySelectorAll('.reveal, .ledger').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
