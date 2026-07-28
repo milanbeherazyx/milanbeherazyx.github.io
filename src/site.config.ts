@@ -20,13 +20,9 @@ export const SITE = {
   },
   /** X handle for twitter:creator/site cards */
   xHandle: '@milanbeherazyx',
-  /** Cal.com username/event slug, e.g. "milanbeherazyx/intro-call" — DEFERRED:
-   *  filled when Milan creates the account (owner-approved deferral, see
-   *  PROGRESS.md). Empty string = contact page shows a mailto fallback. */
-  calcom: '',
-  /** Web3Forms access key — DEFERRED, same as above. Empty = form hidden,
-   *  mailto shown. Public key by design (Web3Forms model), still filled only
-   *  by Milan at the contact-page phase. */
+  /** Web3Forms access key (public by design — safe to commit). Empty =
+   *  contact form hidden, mailto shown instead. Cal.com was CANCELLED by
+   *  Milan (2026-07-29, paid product) — scheduling happens over email. */
   web3formsKey: '',
   /** Resume PDF path under /public — replaced via skills/replace-resume-pdf.md */
   resumePdf: '/resume.pdf',

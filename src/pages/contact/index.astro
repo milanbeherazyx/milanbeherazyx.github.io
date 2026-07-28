@@ -1,70 +1,82 @@
 ---
-// Contact (PRD §3.6). Cal.com inline embed (primary) + Web3Forms fallback +
-// direct email. Both integrations are owner-approved deferrals (PROGRESS.md)
-// — SITE.calcom / SITE.web3formsKey are empty until Milan sets them up, so
-// this page degrades gracefully to a mailto CTA with zero code changes
-// needed later (fill the two config values in site.config.ts to go live).
+// Contact (PRD §3.6, amended 2026-07-29: Cal.com cancelled by Milan — the
+// primary conversion path is the Web3Forms form + direct email; intro calls
+// are scheduled over email). The form renders only when
+// SITE.web3formsKey is set; until then the page degrades to mailto CTAs
+// with zero code changes needed later.
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { SITE } from '../../site.config';
 
-const hasCalcom = SITE.calcom.length > 0;
 const hasForm = SITE.web3formsKey.length > 0;
-const calcomSrc = hasCalcom ? `https://cal.com/${SITE.calcom}?embed=true` : '';
 ---
 
-<BaseLayout title="Contact — Milan Kumar Behera" description="Book a call or send a message — data analytics consulting for lending, credit risk, and any data-generating business.">
+<BaseLayout
+  title="Contact — Milan Kumar Behera"
+  description="Send a message or book a 30-minute intro call over email — data analytics consulting for lending, credit risk, and any data-generating business."
+>
   <section class="mx-auto max-w-4xl px-5 py-14 sm:px-8 sm:py-20">
     <h1 data-rise style="--rise-i:0" class="text-h2 font-display">Let's talk</h1>
     <p data-rise style="--rise-i:1" class="mt-4 max-w-[46ch] text-lead text-muted">
-      Book a 30-minute intro call, or send a message with a bit of context — I read everything
-      myself.
+      Send a message with a bit of context, or email me directly to set up a 30-minute intro call —
+      I read everything myself and reply within a day.
     </p>
 
-    <div class="mt-section grid gap-10 lg:grid-cols-2">
-      <div data-reveal>
-        <p class="text-label mb-4 text-muted">Book a call</p>
-        {
-          hasCalcom ? (
-            <iframe
-              src={calcomSrc}
-              class="h-[36rem] w-full rounded-2xl border border-line"
-              title="Book a call with Milan Kumar Behera"
-              loading="lazy"
-            />
-          ) : (
-            <div class="rounded-2xl border border-dashed border-line p-8 text-center">
-              <p class="text-muted">Online booking is being set up.</p>
-              <a
-                href={`mailto:${SITE.email}?subject=Intro call`}
-                class="mt-4 inline-block rounded-full bg-accent px-6 py-3 font-semibold text-accent-contrast"
-              >
-                Email to schedule a call
-              </a>
-            </div>
-          )
-        }
-      </div>
-
+    <div class="mt-section grid gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
       <div data-reveal>
         <p class="text-label mb-4 text-muted">Send a message</p>
         {
           hasForm ? (
             <form action="https://api.web3forms.com/submit" method="POST" class="space-y-4">
               <input type="hidden" name="access_key" value={SITE.web3formsKey} />
+              <input type="hidden" name="subject" value="New message via milanbeherazyx.github.io" />
+              <input type="hidden" name="from_name" value="Portfolio contact form" />
+              <input type="hidden" name="redirect" value={`${SITE.url}/thanks/`} />
+              <input
+                type="checkbox"
+                name="botcheck"
+                class="hidden"
+                style="display:none"
+                tabindex="-1"
+                aria-hidden="true"
+              />
               <div>
                 <label for="name" class="text-sm font-medium">Name</label>
-                <input id="name" name="name" type="text" required class="mt-1 w-full rounded-lg border border-line bg-surface px-4 py-3" />
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  required
+                  autocomplete="name"
+                  class="mt-1 w-full rounded-lg border border-line bg-surface px-4 py-3"
+                />
               </div>
               <div>
                 <label for="email" class="text-sm font-medium">Email</label>
-                <input id="email" name="email" type="email" required class="mt-1 w-full rounded-lg border border-line bg-surface px-4 py-3" />
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  autocomplete="email"
+                  class="mt-1 w-full rounded-lg border border-line bg-surface px-4 py-3"
+                />
               </div>
               <div>
                 <label for="message" class="text-sm font-medium">Message</label>
-                <textarea id="message" name="message" rows={5} required class="mt-1 w-full rounded-lg border border-line bg-surface px-4 py-3" />
+                <textarea
+                  id="message"
+                  name="message"
+                  rows={6}
+                  required
+                  placeholder="A line about your company, your data stack, and the problem you're looking at."
+                  class="mt-1 w-full rounded-lg border border-line bg-surface px-4 py-3"
+                />
               </div>
-              <button type="submit" class="rounded-full bg-accent px-6 py-3 font-semibold text-accent-contrast">
-                Send
+              <button
+                type="submit"
+                class="rounded-full bg-accent px-7 py-3.5 font-semibold text-accent-contrast transition-transform duration-200 hover:-translate-y-0.5"
+              >
+                Send message
               </button>
             </form>
           ) : (
@@ -79,6 +91,31 @@ const calcomSrc = hasCalcom ? `https://cal.com/${SITE.calcom}?embed=true` : '';
             </div>
           )
         }
+      </div>
+
+      <div data-reveal class="flex flex-col gap-8">
+        <div>
+          <p class="text-label mb-3 text-muted">Book an intro call</p>
+          <p class="text-muted">
+            30 minutes, no obligation. Email me two or three slots that work for you and I'll
+            confirm one.
+          </p>
+          <a
+            href={`mailto:${SITE.email}?subject=Intro call`}
+            class="mt-4 inline-block border-b-2 border-fg pb-1 font-semibold hover:border-accent hover:text-accent"
+          >
+            {SITE.email}
+          </a>
+        </div>
+        <div>
+          <p class="text-label mb-3 text-muted">Elsewhere</p>
+          <ul class="space-y-2 text-muted">
+            <li><a href={SITE.socials.linkedin} class="hover:text-accent">LinkedIn — fastest for recruiters</a></li>
+            <li><a href={SITE.socials.github} class="hover:text-accent">GitHub</a></li>
+            <li><a href={SITE.socials.x} class="hover:text-accent">X</a></li>
+            <li><a href={SITE.resumePdf} class="hover:text-accent">Resume (PDF)</a></li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>

@@ -8,8 +8,15 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://milanbeherazyx.github.io',
   trailingSlash: 'ignore',
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      // /thanks/ is a noindex utility page (form redirect target)
+      filter: (page) => !page.includes('/thanks/'),
+    }),
+  ],
   vite: {
-    plugins: [tailwindcss()],
+    // Cast: @tailwindcss/vite ships its own vite types, which clash with
+    // Astro's bundled vite types at the type level only (runtime is fine).
+    plugins: [/** @type {any} */ (tailwindcss())],
   },
 });

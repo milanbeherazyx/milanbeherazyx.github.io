@@ -13,6 +13,8 @@ interface Props {
   /** Optional page-specific JSON-LD (e.g. Article + breadcrumbs on case
    *  studies, ProfilePage on About). Rendered as a second ld+json script. */
   extraSchema?: Record<string, unknown>;
+  /** Keep utility pages (e.g. /thanks/) out of search results. */
+  noindex?: boolean;
 }
 
 const {
@@ -20,6 +22,7 @@ const {
   description = SITE.description,
   image = '/og-default.jpg',
   extraSchema,
+  noindex = false,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, SITE.url).toString();
@@ -94,6 +97,7 @@ const siteGraph = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content="Milan Kumar Behera" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonicalURL} />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
