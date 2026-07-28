@@ -70,14 +70,15 @@ const profileSchema = {
           English &amp; Hindi (full professional) · Odia (native) · Bengali (professional working)
         </p>
       </div>
-      <div data-reveal class="photo-frame relative">
+      <div data-reveal class="photo-frame relative overflow-hidden rounded-2xl">
         <Image
           src={photo}
           alt="Milan Kumar Behera"
           width={320}
           height={320}
-          class="relative z-10 aspect-square w-full rounded-2xl object-cover"
+          class="aspect-square w-full object-cover"
         />
+        <span class="photo-blend absolute inset-0 rounded-2xl" aria-hidden="true"></span>
       </div>
     </div>
 
@@ -131,15 +132,22 @@ const profileSchema = {
 </BaseLayout>
 
 <style>
-  .photo-frame::before {
-    content: '';
-    position: absolute;
-    inset: -6px;
-    border-radius: 20px;
-    background: var(--gradient);
-    opacity: 0.55;
-    filter: blur(14px);
-    z-index: 0;
+  /* Blend the studio-gray photo into the page instead of ringing it with a
+   * glow blob (owner feedback: the v2 glow read as a harsh, unblended box
+   * on the dark bg). Three quiet layers, all theme-aware: a hairline
+   * border, a page-bg vignette that eats the photo's corners, and a faint
+   * accent wash top-left for palette cohesion. */
+  .photo-frame {
+    border: 1px solid var(--line);
+  }
+  .photo-frame img {
+    filter: saturate(0.94);
+  }
+  .photo-blend {
+    pointer-events: none;
+    background:
+      linear-gradient(160deg, color-mix(in srgb, var(--accent) 10%, transparent), transparent 45%),
+      radial-gradient(130% 130% at 35% 25%, transparent 55%, color-mix(in srgb, var(--bg) 45%, transparent));
   }
   .quote-mark {
     position: absolute;

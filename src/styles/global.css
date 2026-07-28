@@ -47,8 +47,12 @@
 :root {
   --bg: #fafafa;
   --surface: #ffffff;
+  /* glass-panel fill — light mode is an opaque card (mock pairs it with a
+   * soft drop shadow); dark mode is a near-transparent luminance lift so
+   * panels blend with the page glow instead of reading as solid slabs. */
+  --panel: #ffffff;
   --fg: #101116;
-  --muted: #5b6070;
+  --muted: #4d5361; /* darkened from #5b6070 after owner readability feedback (≈7.2:1 on --bg) */
   /* indigo-700 — verified 7.9:1 white-on-it, 7.57:1 as text-on-bg (WCAG AA
    * needs 4.5:1). #6366f1 (indigo-500, the mockup's literal value) FAILS
    * AA in both roles at ~4.3:1 — found via axe during G3 regression,
@@ -65,6 +69,7 @@
 :root[data-theme='dark'] {
   --bg: #0b0c10;
   --surface: #12131a;
+  --panel: rgba(255, 255, 255, 0.028);
   --fg: #ededf0;
   --muted: #9ba0ab;
   /* indigo-400 — bright enough for 6.55:1 as text-on-dark-bg; paired with
@@ -82,6 +87,7 @@
   :root:not([data-theme='light']) {
     --bg: #0b0c10;
     --surface: #12131a;
+    --panel: rgba(255, 255, 255, 0.028);
     --fg: #ededf0;
     --muted: #9ba0ab;
     --accent: #818cf8;
@@ -125,9 +131,9 @@
   --text-h2--font-weight: 700;
   --text-lead: clamp(1.05rem, 1rem + 0.4vw, 1.35rem);
   --text-lead--line-height: 1.5;
-  --text-label: 0.78rem;
+  --text-label: 0.74rem;
   --text-label--line-height: 1.4;
-  --text-label--letter-spacing: 0.08em;
+  --text-label--letter-spacing: 0.1em;
   --text-label--font-weight: 600;
 
   /* spacing — utilities: py-section etc. */
@@ -142,6 +148,8 @@ body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-body);
+  font-size: 1.0625rem; /* mock's 17px base — measurably easier long-form reading */
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
   position: relative;
@@ -230,10 +238,12 @@ body::after {
     border-radius: 16px;
     border: 1px solid transparent;
     background:
-      linear-gradient(var(--surface), var(--surface)) padding-box,
-      linear-gradient(140deg, color-mix(in srgb, var(--fg) 14%, transparent), color-mix(in srgb, var(--fg) 3%, transparent) 40%, color-mix(in srgb, var(--accent) 35%, transparent)) border-box;
+      linear-gradient(var(--panel), var(--panel)) padding-box,
+      linear-gradient(140deg, color-mix(in srgb, var(--fg) 15%, transparent), color-mix(in srgb, var(--fg) 3%, transparent) 40%, color-mix(in srgb, var(--accent) 35%, transparent)) border-box;
     backdrop-filter: blur(12px);
-    box-shadow: 0 10px 30px -18px color-mix(in srgb, var(--fg) 25%, transparent);
+    /* fixed dark shadow: reads as elevation in light mode, disappears
+     * naturally into the dark bg (mock only shadows the light theme) */
+    box-shadow: 0 10px 30px -18px rgba(16, 17, 22, 0.25);
   }
 
   /* Border-beam — a slow conic-gradient light tracing the panel's edge.
@@ -313,13 +323,35 @@ body::after {
    * treatment never drifts between instances. Deliberately no `display`
    * here — each usage site's own Tailwind utility (inline-block/block/
    * hidden md:inline-block) controls that, see the layering note above. */
+  /* Eyebrow identity — the theme's text-label utility carries size/
+   * tracking/weight; the mock's .label is also mono + uppercase. Adding
+   * those two props here (non-conflicting, components layer) makes every
+   * text-label site-wide match the mock's dev-tool eyebrow treatment. */
+  .text-label {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+  }
+
+  /* Mono micro-link — the mock's dev-tool text affordance
+   * ("how_the_lift_happened →"). Muted at rest, full-fg on hover. */
+  .textlink {
+    font-family: var(--font-mono);
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--muted);
+    transition: color 0.15s ease;
+  }
+  .textlink:hover {
+    color: var(--fg);
+  }
+
   .btn-gradient {
     position: relative;
     overflow: hidden;
     background: var(--gradient);
     color: #fff;
     font-weight: 600;
-    border-radius: 999px;
+    border-radius: 10px;
     box-shadow:
       0 1px 2px rgba(0, 0, 0, 0.25),
       0 8px 26px -10px color-mix(in srgb, var(--accent) 70%, transparent);
