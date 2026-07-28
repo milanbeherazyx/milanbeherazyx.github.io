@@ -8,11 +8,34 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { SITE } from '../../site.config';
 
 const hasForm = SITE.web3formsKey.length > 0;
+
+/* FAQ (v2.1-S5) — answers from approved page copy. */
+const FAQS = [
+  {
+    q: 'How quickly will you reply?',
+    a: 'Within a day. I read everything myself.',
+  },
+  {
+    q: 'What happens on the intro call?',
+    a: "Thirty minutes, no obligation. You describe the problem; we work out whether it's a project, a retainer, or an audit — and what a first week of work would look like.",
+  },
+] as const;
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQS.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
 ---
 
 <BaseLayout
   title="Contact — Milan Kumar Behera"
   description="Send a message or book a 30-minute intro call over email — data analytics consulting for lending, credit risk, and any data-generating business."
+  extraSchema={faqSchema}
 >
   <section class="mx-auto max-w-4xl px-5 py-14 sm:px-8 sm:py-20">
     <h1 data-rise style="--rise-i:0" class="text-h2 font-display">Let's talk</h1>
@@ -110,6 +133,24 @@ const hasForm = SITE.web3formsKey.length > 0;
             <li><a href={SITE.resumePdf} class="hover:text-accent-2">Resume (PDF)</a></li>
           </ul>
         </div>
+        <div>
+          <p class="text-label mb-3 text-muted">faq/</p>
+          <div class="border-y border-line">
+            {
+              FAQS.map((f) => (
+                <details class="faq-item group border-b border-line py-4 last:border-b-0">
+                  <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-base font-semibold">
+                    {f.q}
+                    <span class="shrink-0 font-mono text-lg text-accent-2 transition-transform duration-200 group-open:rotate-45" aria-hidden="true">
+                      +
+                    </span>
+                  </summary>
+                  <p class="mt-2 text-sm text-muted">{f.a}</p>
+                </details>
+              ))
+            }
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -125,5 +166,9 @@ const hasForm = SITE.web3formsKey.length > 0;
     outline: none;
     border-color: var(--accent-2);
     box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-2) 20%, transparent);
+  }
+  /* Safari renders its own disclosure triangle despite list-none */
+  .faq-item summary::-webkit-details-marker {
+    display: none;
   }
 </style>

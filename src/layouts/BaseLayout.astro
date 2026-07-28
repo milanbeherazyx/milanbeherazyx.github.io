@@ -11,8 +11,10 @@ interface Props {
    *  shared default (public/og-default.jpg) when omitted. */
   image?: string;
   /** Optional page-specific JSON-LD (e.g. Article + breadcrumbs on case
-   *  studies, ProfilePage on About). Rendered as a second ld+json script. */
-  extraSchema?: Record<string, unknown>;
+   *  studies, ProfilePage on About). An array is valid JSON-LD too
+   *  (multiple top-level items, e.g. OfferCatalog + FAQPage on Services).
+   *  Rendered as a second ld+json script. */
+  extraSchema?: Record<string, unknown> | Record<string, unknown>[];
   /** Keep utility pages (e.g. /thanks/) out of search results. */
   noindex?: boolean;
 }
