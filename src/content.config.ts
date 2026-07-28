@@ -10,9 +10,12 @@ import { glob } from 'astro/loaders';
 // Pattern excludes files whose name starts with "_"
 const md = (base: string) => glob({ pattern: '**/[^_]*.md', base });
 
-/** Case studies → /work/[id]/ (PRD §3.2). Body must follow the strict
- *  section order: Context → Problem → Approach → What I built →
- *  Outcome → Tools → Where else this applies (template enforces headings). */
+/** Case studies → /work/[id]/ (PRD §3.2). Body markdown should use six
+ *  headings in order: Context → Problem → Approach → What I built → Outcome
+ *  → Tools. "Where else this applies" is NOT a body heading — it's the
+ *  `whereElseThisApplies` field below, rendered by the page template in its
+ *  own boxed section after the body. Nothing enforces the heading order
+ *  programmatically; it's a convention, checked by eye, not by Zod. */
 const work = defineCollection({
   loader: md('./src/content/work'),
   schema: z.object({

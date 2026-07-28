@@ -7,9 +7,30 @@ import { SITE } from '../site.config';
 interface Props {
   title?: string;
   description?: string;
+  /** Path under /public for a page-specific OG image. Falls back to the
+   *  shared default (public/og-default.jpg) when omitted. */
+  image?: string;
 }
 
-const { title = SITE.title, description = SITE.description } = Astro.props;
+const { title = SITE.title, description = SITE.description, image = '/og-default.jpg' } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, SITE.url).toString();
+const imageURL = new URL(image, SITE.url).toString();
+
+// JSON-LD: Person + ProfilePage, on every page (PRD §4 SEO row).
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  mainEntity: {
+    '@type': 'Person',
+    name: SITE.name,
+    url: SITE.url,
+    email: `mailto:${SITE.email}`,
+    jobTitle: 'Data Analyst',
+    sameAs: [SITE.socials.linkedin, SITE.socials.github],
+    description: SITE.description,
+  },
+};
 ---
 
 <html lang="en">
@@ -18,10 +39,40 @@ const { title = SITE.title, description = SITE.description } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="theme-color" content="#f4f5f2" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#101319" media="(prefers-color-scheme: dark)" />
-    <!-- Full SEO wiring (OG images, JSON-LD) lands in Phase 5 -->
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={imageURL} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageURL} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+
+    <!-- Umami Cloud analytics (PRD §12.2) — DEFERRED until Milan signs up;
+         site.config.ts `umamiWebsiteId` empty = no script renders at all. -->
+    {
+      SITE.umamiWebsiteId && (
+        <script
+          defer
+          src="https://cloud.umami.is/script.js"
+          data-website-id={SITE.umamiWebsiteId}
+        />
+      )
+    }
   </head>
   <body class="min-h-dvh bg-bg font-body text-fg antialiased">
     <a

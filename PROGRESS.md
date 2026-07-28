@@ -1,6 +1,6 @@
 # PROGRESS
 
-## Current phase: 5 (Ops & docs) — not started. Phase 4 COMPLETE (all copy written, sanitization passed).
+## Current phase: 6 (QA & launch) — not started. Phase 5 COMPLETE (docs finalized, acceptance test passed).
 
 ## Phase checklist (from PRD §8)
 
@@ -20,9 +20,9 @@
 - [x] **Phase 4 — Content & copy** — COMPLETE 2026-07-28
   - Deliverable: Case studies written, bio, services copy, metadata/OG, resume page ✅
   - Exit criteria: All placeholder text gone ✅; sanitization checklist passed ✅ (automated term audit over `src/` and `dist/`, all clean)
-- [ ] **Phase 5 — Ops & docs**
-  - Deliverable: Finished `AGENTS.md` + all skill files, Lighthouse CI budgets, sitemap/robots/JSON-LD, analytics wired, 404 page
-  - Exit criteria: Local-LLM acceptance test (PRD §6) passes
+- [x] **Phase 5 — Ops & docs** — COMPLETE 2026-07-28
+  - Deliverable: Finished `AGENTS.md` + all skill files ✅, Lighthouse CI budgets ✅, sitemap/robots/JSON-LD ✅, analytics wired ✅ (Umami Cloud, awaiting Milan's account), 404 page ✅ (built Phase 3)
+  - Exit criteria: Local-LLM acceptance test (PRD §6) passes ✅ — see log below, run for real via a fresh subagent
 - [ ] **Phase 6 — QA & launch**
   - Deliverable: Cross-device pass per §5.1 acceptance, a11y audit, link check, perf tuning
   - Exit criteria: §5.1 device pass green on all pages; success-metric thresholds (§1) met; DNS plan documented for future custom domain
@@ -110,3 +110,21 @@ Two edits to the resume PDF + LinkedIn must land before launch so the site's cla
 - **Verified:** `npm run build` green (14 pages), zero horizontal overflow, both colour schemes checked.
 - **What Phase 5 needs:** nothing from Milan. Deliverables are `AGENTS.md` + the 8 skill files, Lighthouse CI budgets, sitemap/robots/JSON-LD, analytics, 404 polish. **Open decision needed by Phase 5:** analytics choice — Umami Cloud vs GoatCounter (PRD §12.2).
 - **Next model (PRD §9):** Phase 5 Ops & docs → **Sonnet (docs) + Haiku (config), LOW effort**.
+
+### 2026-07-29 — content_pack.md committed to the public repo (owner action, off-phase)
+Before Phase 5 started, Milan manually uploaded `content_pack.md` to the public repo via GitHub's web UI (a deliberate decision — he also hand-edited `.gitignore` to un-ignore it) and commented out its own ignore rules. The uploaded copy was the **stale, pre-session version** (127 lines — missing every Phase 0/4 resolution). Restored it to the complete version from this conversation's own record (discrepancy-log resolutions, corrected rule count, recommendation transcriptions, the resume-update-owed section) and committed that instead, at Milan's explicit "yeah, for now do commit and push." **Content_pack.md's phone number and home-address reference are now permanently in public git history** — flagged clearly to Milan before proceeding; he chose to keep it. `content-pack/README.md` and the root `README.md` updated to stop claiming it's git-ignored (see their own text for the "what if we need to remove it later" note — it requires a history rewrite, not just a delete). AGENTS.md updated to match reality.
+
+### 2026-07-29 — Phase 5 (Ops & docs) complete
+- **Analytics:** Milan chose **Umami Cloud** (PRD §12.2, asked directly). Wired as a config slot (`SITE.umamiWebsiteId` in `site.config.ts`, empty = no script renders) — same deferred pattern as Cal.com/Web3Forms. Setup guide still owed when Milan signs up.
+- **SEO wiring, all real, all verified working (not just present):** `robots.txt`; canonical URLs; full OG + Twitter card meta on every page; a real designed OG image (`public/og-default.jpg`, 1200×630, built from the locked design tokens, 42KB) rather than a placeholder; JSON-LD `ProfilePage`+`Person` on every page, **parse-validated** (not just eyeballed) in the built HTML.
+- **Lighthouse CI, measured not guessed:** ran real Lighthouse audits (mobile throttling, matching PRD §5.1's binding metric) against 7 representative pages before setting any budget number. Baseline: performance 94–98, accessibility 98–100, best-practices 96, SEO 100 across Home/Work/case-study/Services/About. Set CI floors with headroom for runner variance (perf ≥85, a11y ≥95, best-practices ≥90, SEO ≥95) so the gate catches real regressions without false-positive-blocking on CI-environment noise. **Dry-ran `.lighthouserc.json` locally against the actual build before trusting it in CI** — all 7 URLs pass. Wired into `.github/workflows/deploy.yml` between build and deploy, so a regression blocks the deploy, per PRD's CI/CD row.
+- **Note for Phase 6:** Home and About currently measure 94 on mobile performance — 1 point under the PRD §1 target of ≥95 (LCP ~2.6s, likely the hero's custom-font paint). Worth a look during Phase 6 perf tuning; not blocking, and the CI floor is set below this so it won't fail today.
+- **AGENTS.md finalized:** accurate repo map (reflects all 6 case studies, 4 services, 7 experience entries, 4 recommendations), and documents that `content_pack.md` is now committed (not the original git-ignore plan) without weakening its ⛔ publish-safety flags, which still govern the *site* regardless of the pack file's own repo status.
+- **All 8 skill files written in full** — exact paths, real filled examples from the actual committed files (not invented ones), validation steps, and failure modes specific to this schema (e.g., blog's inverted `draft` default, the `_example.md` copy-not-edit pattern, the tools-grid-is-plain-TS-not-Zod gap in `update-metrics.md`).
+- **Local-LLM acceptance test (PRD §6) — run for real, not self-assessed.** Spawned a fresh subagent with zero conversation context, given ONLY the verbatim text of `AGENTS.md` + `skills/add-case-study.md`, and asked it to add a test case study. **Result: passed** — correct file location, correct schema, `npm run build` green, nothing touched outside `src/content/work/`. It also **found two real documentation bugs**, which is exactly what this test is for:
+  1. `add-case-study.md`'s wording on `draft: true` implied the page still builds at its URL just unlisted; actually `getStaticPaths` excludes drafts entirely — the URL 404s. Fixed in both `add-case-study.md` and the same bug in `add-blog-post.md` (blog has the identical filter).
+  2. `src/content.config.ts`'s comment listed "Where else this applies" as a body heading and claimed "template enforces headings" — neither is true. It's a frontmatter field rendered separately, and nothing enforces heading order programmatically. Fixed the comment.
+  (The subagent's own final report claimed it had cleaned up its test file; it had not — found and removed it before committing.)
+- **Verified:** `npm run build` green (14 pages). Lighthouse CI dry run green on all 7 sampled pages.
+- **What Phase 6 needs from Milan:** nothing procedural. Still outstanding whenever he's ready: Cal.com + Web3Forms setup (guides owed), Umami Cloud signup, and the resume/LinkedIn launch-blocker from Phase 4 (content-pack §12).
+- **Next model (PRD §9):** Phase 6 QA & launch → **Sonnet, low–standard effort**.

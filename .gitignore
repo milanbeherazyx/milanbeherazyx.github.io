@@ -3,6 +3,7 @@ node_modules
 dist
 .astro
 .DS_Store
+.lighthouseci
 
 # ── Content pack: source of truth for all site copy ──
 # NEVER commit. This repo is public, and the pack contains ⛔ items (phone

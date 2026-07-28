@@ -24,10 +24,10 @@ including the `.claude/skills/` used by AI sessions, the design system in
 npm install && npm run build   # should pass
 ```
 
-**One file is deliberately missing:** `content-pack/content_pack.md`, the source
-of truth for site facts. It cannot live in a public repo — see
-[`content-pack/README.md`](content-pack/README.md) for why and how to restore
-it. The site builds fine without it; restore it before doing content work.
+`content-pack/content_pack.md` is the source of truth for site facts and is
+committed to this repo (Milan's explicit decision — see
+[`content-pack/README.md`](content-pack/README.md) for what that means and
+why). Read it before doing content work.
 
 Raw source assets not needed by the build (recommendation screenshots, spare
 photo crops) are kept outside the repo in `../Portfolio-private-assets/`.

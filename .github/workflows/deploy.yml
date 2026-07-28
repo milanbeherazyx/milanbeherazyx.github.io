@@ -27,7 +27,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      # Phase 5 adds a Lighthouse CI budget check here (blocks regressions at PR time)
+      - name: Lighthouse CI budget check
+        run: npx lhci autorun --config=./.lighthouserc.json
       - uses: actions/upload-pages-artifact@v3
         if: github.ref == 'refs/heads/main'
         with:

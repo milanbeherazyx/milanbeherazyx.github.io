@@ -27,6 +27,11 @@ export const SITE = {
   web3formsKey: '',
   /** Resume PDF path under /public — replaced via skills/replace-resume-pdf.md */
   resumePdf: '/resume.pdf',
+  /** Umami Cloud website ID (PRD §12.2, decided 2026-07-28) — DEFERRED:
+   *  Milan signs up at cloud.umami.is, creates a website entry for
+   *  milanbeherazyx.github.io, and pastes the generated website ID here.
+   *  Empty string = no analytics script renders at all. */
+  umamiWebsiteId: '',
 } as const;
 
 /** Homepage proof strip (PRD §3.1) — exactly 3, from content_pack §3 bank.
