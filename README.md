@@ -32,9 +32,34 @@ why). Read it before doing content work.
 Raw source assets not needed by the build (recommendation screenshots, spare
 photo crops) are kept outside the repo in `../Portfolio-private-assets/`.
 
+## Branching (binding, since 2026-07-29 — see PROGRESS.md)
+
+Three tiers, in order. **`main` and `develop` are protected on GitHub — no
+direct pushes, PR + a green build/Lighthouse check required to merge, even
+for repo admins.**
+
+1. **`main`** — production. Deploys to Pages on every push (i.e. every
+   merged, checks-passed PR). Only ever updated by merging `develop` in,
+   once `develop` has been fully verified.
+2. **`develop`** — integration branch. No deploy trigger; every PR into it
+   still runs the full build + Lighthouse budget check. Never edited
+   directly — only via merged feature-branch PRs.
+3. **`feature/<name>`** — cut from `develop` for one unit of work. Open a PR
+   back into `develop` when ready; delete the branch after merge.
+
+```sh
+git checkout develop && git pull
+git checkout -b feature/my-change
+# ...edit, commit...
+git push -u origin feature/my-change
+gh pr create --base develop
+```
+
 ## Deploy
 
-Push to `main` → GitHub Actions builds and deploys to Pages. No manual steps.
+Merging a PR into `main` → GitHub Actions builds, runs the Lighthouse CI
+budget check, and deploys to Pages. No manual steps — and no direct pushes,
+per the branching model above.
 
 ## Editing content
 

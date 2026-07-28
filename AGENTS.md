@@ -5,6 +5,14 @@ This is a static Astro 5 site deployed to GitHub Pages at
 `src/site.config.ts`. Never edit components/layouts/pages/config for a content
 change — see Forbidden zones below.
 
+## Branching (binding, since 2026-07-29)
+
+**Never commit directly to `main` or `develop` — both are branch-protected on
+GitHub (no direct pushes, PR + green CI required, enforced even for admins).**
+Always: `git checkout -b feature/<name>` from `develop` → commit → push → PR
+into `develop`. `main` only ever receives `develop` via a reviewed PR once
+`develop` is verified. Full detail in README.md → "Branching".
+
 ## Repo map
 
 | Path | What it is |
