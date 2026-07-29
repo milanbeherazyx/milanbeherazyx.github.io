@@ -5,21 +5,25 @@ description: Release-manager workflow for this repo — cutting feature/hotfix b
 
 # Git Workflow (release manager)
 
-The canonical, complete workflow lives at **`skills/release-manager.md`**
-in the repo root — read that file now and follow it exactly. It covers:
+The canonical workflow lives in the repo root, split in two — read the one
+matching the situation and follow it exactly:
 
-1. Branch model (protected `main`/`develop`, `feature/*`, `hotfix/*`)
-2. Cutting branches from fresh `origin/develop` (or `origin/main` for hotfixes)
-3. The `npm run build` hard gate + owner-approval gate for visual changes
-4. Conventional commits + PROGRESS.md session-log rule
-5. PR → develop: create, poll CI (auto-merge is disabled), merge-commit
-6. Release PR develop → main (the only thing that deploys) + semver tagging
-7. CI/CD behavior (`.github/workflows/deploy.yml`) and the hotfix path
-8. Rebase policy (`--force-with-lease`, feature branches only) and edge
-   cases: dirty tree, stale branch, PR conflicts, Lighthouse CI flakes,
-   blocked merges, stray preview servers
-9. Rollback: revert-via-hotfix-PR, roll back to a tag, emergencies
+- **`skills/release-manager.md`** — the normal flow: branch model
+  (protected `main`/`develop`), cutting `feature/*` from fresh
+  `origin/develop` (`hotfix/*` from `origin/main`), the hard gates
+  (`npm run build` before any commit; owner approval on visual changes;
+  `scripts/agent/sanitize.sh` before commit), conventional commits +
+  PROGRESS.md rule, PR → develop with CI polling (auto-merge is disabled;
+  the build check must EXIST before trusting "no pending"), the
+  develop→main release PR (the only thing that deploys), and semver
+  tagging via `scripts/agent/release.sh`.
+- **`skills/release-recovery.md`** — when things go wrong: rebase policy
+  (`--force-with-lease`, own feature branches only), edge cases (dirty
+  trees, PR conflicts, Lighthouse CI flakes, blocked merges, stray
+  preview servers), and rollback (revert-via-hotfix-PR, restore to a tag,
+  emergencies).
 
-Do not improvise around it — every rule in that file is binding, including
-the two hard gates (build must pass before commit; owner approves visual
-changes before PRs are raised).
+Wider agent operating rules (session bootstrap, task routing, memory)
+live in `agent/` — start at `agent/bootstrap.md`.
+
+Do not improvise around these files — every rule is binding.

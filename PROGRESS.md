@@ -211,7 +211,7 @@ with a hard stop for his approval.
 - **Next model (per the phase table):** G1 Foundations → **Sonnet, standard effort**.
 
 ### 2026-07-28 — G1→G4 (v2 uplift) complete, v2.0.0 shipped
-Full log lives in V2_UPLIFT_PLAN.md (per-phase status with bug details);
+Full log lives in docs/V2_UPLIFT_PLAN.md (per-phase status with bug details);
 this is the release summary.
 - **G1 Foundations**: `motion` installed; `ui-ux-pro-max` skill vetted &
   installed (6 unrequested bundled skills removed after owner approval);
@@ -278,3 +278,45 @@ this is the release summary.
   rollback via revert-hotfix PRs. Written so any LLM can run releases.
 - Thin `.claude/skills/git-workflow/SKILL.md` wrapper so Claude Code
   auto-loads it before git operations.
+
+### 2026-07-29 — agent OS: run the repo from a small local LLM
+- Owner is moving maintenance to a local small model (Qwen-class) soon;
+  built a deterministic "agent OS" so routine ops don't depend on model
+  judgment.
+- New `agent/`: prompt.md (master + task-starter prompts), bootstrap.md
+  (5-step session ritual), router.md (task→skill table + always-on
+  gates), memory.md (3-layer memory rules: STATE ≤60 lines rewritten,
+  PROGRESS tail-only + 400-line rotation to docs/progress-archive/,
+  skills ≤150 lines), STATE.md (working memory snapshot).
+- New `scripts/agent/`: status.sh (one-screen situational awareness),
+  verify.sh (build→preview→11 screenshots→link check, RESULT: PASS/FAIL),
+  sanitize.sh (⛔ tokens extracted from the content pack at runtime —
+  never hardcoded; caught the deliberate root-level content_pack.md copy
+  on first run, now excluded per commit 977f8e2), release.sh (semver
+  bump + annotated tag with on-main/clean/synced guards).
+- New skills: verify-site, troubleshoot-build (error→fix table),
+  dependency-update (majors are owner-only), write-progress (session-end
+  ritual). Split release-manager.md (313→133 lines) + new
+  release-recovery.md (edge cases §E, rollback §R) per the 150-line rule.
+- Wired: AGENTS.md header points to agent/, .gitignore ignores
+  .agent-out/, .claude wrapper updated.
+- Verified: all 4 scripts executed for real (sanitize negative-tested
+  with a staged leak); cross-reference check — every path referenced in
+  agent/+skills/ exists; dry-run walkthrough of a metrics-update task
+  using only the docs.
+
+### 2026-07-29 — repo cleanup + one-command setup
+- Deleted the duplicate root `content_pack.md` (byte-identical to
+  `content-pack/content_pack.md`, which every path reference uses;
+  originally arrived via GitHub web upload). Owner-approved.
+- Moved planning docs out of root: `PRD_portfolio_website.md`,
+  `V2_UPLIFT_PLAN.md`, `DNS.md` → `docs/`; updated references in
+  README/CLAUDE.md/PROGRESS. Root keeps only tool-convention files
+  (README, CLAUDE.md, AGENTS.md, PROGRESS.md).
+- New `scripts/setup.sh`: one-command fresh-clone setup (prereq checks,
+  npm ci, playwright chromium, smoke-test build). README quickstart
+  updated. Added `playwright` as a devDependency — its CLI refuses
+  `install` on machines where it isn't a project dep, which would have
+  broken verify.sh on the owner's new laptop.
+- Verified: setup.sh full run PASS (incl. npm ci from scratch),
+  verify.sh PASS after the dependency change.

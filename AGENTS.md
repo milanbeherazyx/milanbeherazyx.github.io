@@ -1,5 +1,11 @@
 # AGENTS.md — machine entry point
 
+**Start every session with `agent/bootstrap.md`** — it orients you (state,
+recent history, task routing via `agent/router.md`) and points to the
+deterministic scripts in `scripts/agent/` (status, verify, sanitize,
+release). Session-starter prompts for any coding agent: `agent/prompt.md`.
+Memory rules (STATE.md / PROGRESS.md / skill-size limits): `agent/memory.md`.
+
 This is a static Astro 5 site deployed to GitHub Pages at
 `https://milanbeherazyx.github.io`. Content changes = edit markdown or
 `src/site.config.ts`. Never edit components/layouts/pages/config for a content

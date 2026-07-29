@@ -6,6 +6,8 @@ dist
 .lighthouseci
 __pycache__/
 *.pyc
+# scripts/agent/verify.sh output (screenshots + logs)
+.agent-out/
 
 # ── Content pack: source of truth for all site copy ──
 # NEVER commit. This repo is public, and the pack contains ⛔ items (phone
