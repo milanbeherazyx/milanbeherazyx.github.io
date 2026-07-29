@@ -4,22 +4,21 @@ Last rewritten: 2026-07-29
 
 ## Production (main)
 
-- Live at https://milanbeherazyx.github.io — last release: mobile hero
-  declutter (PR #30) + release-manager skill (PR #32). Deploy verified.
-- Last tag: v2.1.0 (SEO content sprint). The two releases after it are
-  untagged (small fix + docs — no milestone).
+- Live at https://milanbeherazyx.github.io — last release: v2.2.0, the
+  agent OS (PR #33: agent/, scripts/agent/, new skills, repo cleanup,
+  scripts/setup.sh) — plus earlier same-day: mobile hero declutter
+  (PR #30) and release-manager skill (PR #32).
 
 ## In flight
 
-- `feature/agent-os` — the agent OS build-out (agent/, scripts/agent/,
-  new skills, release-manager split). This file is part of it.
+- (none)
 
 ## Next tasks
 
-1. Finish + ship feature/agent-os (PR → develop → release → main).
-2. Owner switches to personal laptop soon (early Aug 2026); local LLM
-   (Qwen-class) takes over routine maintenance using agent/prompt.md.
-3. Blog: 4 posts live; more long-tail posts remain the biggest organic
+1. Owner switches to personal laptop soon (early Aug 2026); local LLM
+   (Qwen-class) takes over routine maintenance — first message per
+   agent/prompt.md "Your very first message to the model".
+2. Blog: 4 posts live; more long-tail posts remain the biggest organic
    SEO lever (see PROGRESS.md 2026-07-29 entry).
 
 ## Blocked / needs owner
