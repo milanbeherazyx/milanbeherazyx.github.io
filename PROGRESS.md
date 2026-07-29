@@ -258,3 +258,13 @@ this is the release summary.
   single-sample false failures (0.83/0.76 on shared runners vs 94–95
   locally, identical builds).
 - Releases: PRs #19–#25, tags on main; all live-verified post-deploy.
+
+### 2026-07-29 — mobile hero declutter
+- Owner flagged (mobile screenshot): hero eyebrow too long + the two
+  paragraphs under the headline read cluttered (both started "Deepest
+  in…", only mt-3 apart).
+- Fixes (owner-approved via option pick): eyebrow →
+  `open_to_leads_&_roles`; mono toolkit line de-duplicated (dropped
+  "Deepest in: Lending & Credit Risk" prefix, added Power BI with
+  `&nbsp;` to prevent mid-name wrap); gap mt-3 → mt-5.
+- Verified: build + Playwright screenshots at 390×844 (dark).
