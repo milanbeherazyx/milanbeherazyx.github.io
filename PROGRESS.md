@@ -278,3 +278,29 @@ this is the release summary.
   rollback via revert-hotfix PRs. Written so any LLM can run releases.
 - Thin `.claude/skills/git-workflow/SKILL.md` wrapper so Claude Code
   auto-loads it before git operations.
+
+### 2026-07-29 — agent OS: run the repo from a small local LLM
+- Owner is moving maintenance to a local small model (Qwen-class) soon;
+  built a deterministic "agent OS" so routine ops don't depend on model
+  judgment.
+- New `agent/`: prompt.md (master + task-starter prompts), bootstrap.md
+  (5-step session ritual), router.md (task→skill table + always-on
+  gates), memory.md (3-layer memory rules: STATE ≤60 lines rewritten,
+  PROGRESS tail-only + 400-line rotation to docs/progress-archive/,
+  skills ≤150 lines), STATE.md (working memory snapshot).
+- New `scripts/agent/`: status.sh (one-screen situational awareness),
+  verify.sh (build→preview→11 screenshots→link check, RESULT: PASS/FAIL),
+  sanitize.sh (⛔ tokens extracted from the content pack at runtime —
+  never hardcoded; caught the deliberate root-level content_pack.md copy
+  on first run, now excluded per commit 977f8e2), release.sh (semver
+  bump + annotated tag with on-main/clean/synced guards).
+- New skills: verify-site, troubleshoot-build (error→fix table),
+  dependency-update (majors are owner-only), write-progress (session-end
+  ritual). Split release-manager.md (313→133 lines) + new
+  release-recovery.md (edge cases §E, rollback §R) per the 150-line rule.
+- Wired: AGENTS.md header points to agent/, .gitignore ignores
+  .agent-out/, .claude wrapper updated.
+- Verified: all 4 scripts executed for real (sanitize negative-tested
+  with a staged leak); cross-reference check — every path referenced in
+  agent/+skills/ exists; dry-run walkthrough of a metrics-update task
+  using only the docs.
