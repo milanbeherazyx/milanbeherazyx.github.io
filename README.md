@@ -21,7 +21,8 @@ including the `.claude/skills/` used by AI sessions, the design system in
 `design/`, and the task guides in `skills/`. After cloning:
 
 ```sh
-npm install && npm run build   # should pass
+bash scripts/setup.sh   # one-command setup: checks prerequisites, npm ci,
+                        # playwright browser, smoke-test build
 ```
 
 `content-pack/content_pack.md` is the source of truth for site facts and is
@@ -99,9 +100,9 @@ off-limits for content changes.
 
 | File | What it is |
 |---|---|
-| [`PRD_portfolio_website.md`](PRD_portfolio_website.md) | Binding requirements |
+| [`docs/PRD_portfolio_website.md`](docs/PRD_portfolio_website.md) | Binding requirements |
 | [`PROGRESS.md`](PROGRESS.md) | Phase status + session log |
 | [`CLAUDE.md`](CLAUDE.md) | Working rules for AI sessions |
 | [`AGENTS.md`](AGENTS.md) | Repo map, edit-X→file-Y table, forbidden zones |
 | [`design/DESIGN.md`](design/DESIGN.md) | Locked design system, tokens, motion spec |
-| [`DNS.md`](DNS.md) | Plan for adding a custom domain later (deferred, not active) |
+| [`docs/DNS.md`](docs/DNS.md) | Plan for adding a custom domain later (deferred, not active) |

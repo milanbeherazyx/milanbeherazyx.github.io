@@ -211,7 +211,7 @@ with a hard stop for his approval.
 - **Next model (per the phase table):** G1 Foundations → **Sonnet, standard effort**.
 
 ### 2026-07-28 — G1→G4 (v2 uplift) complete, v2.0.0 shipped
-Full log lives in V2_UPLIFT_PLAN.md (per-phase status with bug details);
+Full log lives in docs/V2_UPLIFT_PLAN.md (per-phase status with bug details);
 this is the release summary.
 - **G1 Foundations**: `motion` installed; `ui-ux-pro-max` skill vetted &
   installed (6 unrequested bundled skills removed after owner approval);
@@ -304,3 +304,19 @@ this is the release summary.
   with a staged leak); cross-reference check — every path referenced in
   agent/+skills/ exists; dry-run walkthrough of a metrics-update task
   using only the docs.
+
+### 2026-07-29 — repo cleanup + one-command setup
+- Deleted the duplicate root `content_pack.md` (byte-identical to
+  `content-pack/content_pack.md`, which every path reference uses;
+  originally arrived via GitHub web upload). Owner-approved.
+- Moved planning docs out of root: `PRD_portfolio_website.md`,
+  `V2_UPLIFT_PLAN.md`, `DNS.md` → `docs/`; updated references in
+  README/CLAUDE.md/PROGRESS. Root keeps only tool-convention files
+  (README, CLAUDE.md, AGENTS.md, PROGRESS.md).
+- New `scripts/setup.sh`: one-command fresh-clone setup (prereq checks,
+  npm ci, playwright chromium, smoke-test build). README quickstart
+  updated. Added `playwright` as a devDependency — its CLI refuses
+  `install` on machines where it isn't a project dep, which would have
+  broken verify.sh on the owner's new laptop.
+- Verified: setup.sh full run PASS (incl. npm ci from scratch),
+  verify.sh PASS after the dependency change.

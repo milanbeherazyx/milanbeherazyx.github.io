@@ -35,11 +35,10 @@ fi
 [ ${#DENY[@]} -eq 0 ] && { echo "RESULT: FAIL — denylist came out empty; refusing to pass vacuously"; exit 1; }
 
 # --- Scan --------------------------------------------------------------------
-# Tracked files + staged-but-new files; skip the pack (tracked at TWO
-# locations — root copy is deliberate, commit 977f8e2), binaries, this
-# script's output dir, and lockfiles (hash noise).
+# Tracked files + staged-but-new files; skip the pack itself, binaries,
+# this script's output dir, and lockfiles (hash noise).
 files=$( (git ls-files; git diff --cached --name-only) | sort -u \
-  | grep -vE '^content-pack/|^content_pack\.md$|\.pdf$|\.png$|\.jpg$|\.ico$|\.woff2?$|package-lock\.json$|^\.agent-out/' )
+  | grep -vE '^content-pack/|\.pdf$|\.png$|\.jpg$|\.ico$|\.woff2?$|package-lock\.json$|^\.agent-out/' )
 
 hits=0
 for token in "${DENY[@]}"; do
