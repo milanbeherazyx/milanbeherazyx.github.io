@@ -34,7 +34,7 @@ into `develop`. `main` only ever receives `develop` via a reviewed PR once
 | `src/components/`, `src/layouts/`, `src/pages/`, `src/styles/`, `src/scripts/` | **Forbidden zone** for content changes |
 | `public/resume.pdf` | Downloadable resume — binary replace only, see `skills/replace-resume-pdf.md` |
 | `public/og-default.jpg` | Shared social-preview image (1200×630) |
-| `src/assets/milan-photo.png` | About-page photo, optimized at build time via `astro:assets` |
+| `src/assets/milan-profile-{bold,light}.png` | About-page portraits — one per theme (bold = dark mode, light = light mode); both render, CSS shows one. Optimized at build time via `astro:assets` |
 | `skills/` | Task-scoped how-to files — read the one matching your task before editing |
 | `content-pack/content_pack.md` | Source of truth for all facts. **Committed to this repo** (Milan's explicit decision, 2026-07-28 — see the file's own §12 for why this deviates from the original git-ignore plan). Still: never invent a fact not in it. |
 | `.lighthouserc.json` | Lighthouse CI budget — forbidden zone |
