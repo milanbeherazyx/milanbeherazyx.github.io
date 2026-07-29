@@ -107,8 +107,13 @@ it, and **auto-merge is DISABLED on this repo** (`gh pr merge --auto` fails
 with "Auto merge is not allowed"). Poll until checks finish, then merge:
 
 ```bash
-# Poll (run in background; build takes ~4–5 min)
-until [ "$(gh pr checks <N> --json bucket -q 'all(.[]; .bucket != "pending")')" = "true" ]; do sleep 20; done
+# Poll (run in background; build takes ~4–5 min).
+# EDGE CASE: for ~a minute after PR creation the "build" check hasn't
+# registered yet — a naive "no pending checks" poll passes vacuously with
+# only GitGuardian visible. Require the build check to EXIST too:
+until gh pr checks <N> --json name,bucket \
+  -q 'any(.[]; .name=="build") and all(.[]; .bucket != "pending")' \
+  | grep -q true; do sleep 20; done
 gh pr checks <N>     # confirm build=pass ("deploy: skipping" on non-main PRs is normal)
 
 # Merge — always a MERGE COMMIT (repo convention), never squash/rebase-merge:
