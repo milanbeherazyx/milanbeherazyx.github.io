@@ -268,3 +268,13 @@ this is the release summary.
   "Deepest in: Lending & Credit Risk" prefix, added Power BI with
   `&nbsp;` to prevent mid-name wrap); gap mt-3 → mt-5.
 - Verified: build + Playwright screenshots at 390×844 (dark).
+
+### 2026-07-29 — release-manager skill
+- New `skills/release-manager.md`: the full version-control workflow as an
+  agent-runnable guide — branch model, cutting feature/hotfix branches,
+  build + owner-approval gates, conventional commits, PR→develop,
+  develop→main release, semver tagging, CI/CD deploy behavior, rebase
+  policy, edge cases (CI flakes, blocked merges, dirty trees), and
+  rollback via revert-hotfix PRs. Written so any LLM can run releases.
+- Thin `.claude/skills/git-workflow/SKILL.md` wrapper so Claude Code
+  auto-loads it before git operations.
