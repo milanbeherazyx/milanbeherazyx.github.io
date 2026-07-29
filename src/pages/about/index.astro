@@ -7,7 +7,10 @@ import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { SITE } from '../../site.config';
-import photo from '../../assets/milan-photo.png';
+/* Theme-matched portraits (2026-07-29): each has a background designed for
+ * one mode. Both render; CSS shows one — no JS, so no wrong-image flash. */
+import photoDark from '../../assets/milan-profile-bold.png';
+import photoLight from '../../assets/milan-profile-light.png';
 
 const recs = (await getCollection('recommendations', ({ data }) => !data.draft)).sort(
   (a, b) => a.data.order - b.data.order,
@@ -72,13 +75,22 @@ const profileSchema = {
       </div>
       <div data-reveal class="photo-frame relative overflow-hidden rounded-2xl">
         <Image
-          src={photo}
+          src={photoLight}
           alt="Milan Kumar Behera"
-          width={320}
-          height={320}
-          class="aspect-square w-full object-cover"
+          width={360}
+          height={360}
+          densities={[1, 2]}
+          class="photo-light aspect-square w-full object-cover"
         />
-        <span class="photo-blend absolute inset-0 rounded-2xl" aria-hidden="true"></span>
+        <Image
+          src={photoDark}
+          alt=""
+          width={360}
+          height={360}
+          densities={[1, 2]}
+          aria-hidden="true"
+          class="photo-dark absolute inset-0 aspect-square w-full object-cover"
+        />
       </div>
     </div>
 
@@ -140,14 +152,36 @@ const profileSchema = {
   .photo-frame {
     border: 1px solid var(--line);
   }
-  .photo-frame img {
-    filter: saturate(0.94);
+  /* Theme-matched portraits: both render, one is shown. The selectors
+     mirror global.css's mode mechanism exactly — explicit `data-theme`
+     wins, otherwise the system preference decides. Crossfade so the
+     header toggle doesn't hard-cut the image. */
+  .photo-light,
+  .photo-dark {
+    transition: opacity 0.25s ease;
   }
-  .photo-blend {
-    pointer-events: none;
-    background:
-      linear-gradient(160deg, color-mix(in srgb, var(--accent) 10%, transparent), transparent 45%),
-      radial-gradient(130% 130% at 35% 25%, transparent 55%, color-mix(in srgb, var(--bg) 45%, transparent));
+  .photo-dark {
+    opacity: 0;
+  }
+  :root[data-theme='dark'] .photo-light {
+    opacity: 0;
+  }
+  :root[data-theme='dark'] .photo-dark {
+    opacity: 1;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .photo-light {
+      opacity: 0;
+    }
+    :root:not([data-theme='light']) .photo-dark {
+      opacity: 1;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .photo-light,
+    .photo-dark {
+      transition: none;
+    }
   }
   .quote-mark {
     position: absolute;
