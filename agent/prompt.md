@@ -4,6 +4,19 @@ Copy-paste one of these into your coding agent (Aider / OpenCode / Cline /
 Qwen-Code / anything). The MASTER PROMPT is enough on its own — the
 task-starters just save typing for common jobs.
 
+## Your very first message to the model
+
+Paste the MASTER PROMPT below, replacing `<DESCRIBE YOUR TASK HERE>` with
+your task. That's it — bootstrap pulls in AGENTS.md, the router, and the
+right skill in order; don't mention those files yourself.
+
+- Always write full paths ("agent/bootstrap.md", never just "bootstrap") —
+  small models take paths literally and guess badly.
+- Harnesses that auto-load AGENTS.md (Aider, OpenCode, Qwen-Code) are
+  already pointed at bootstrap by its first line, so a bare
+  "My task: <task>" often works — but pasting the MASTER PROMPT is the
+  reliable path for a small model. When in doubt, paste it.
+
 ---
 
 ## MASTER PROMPT (always works)
