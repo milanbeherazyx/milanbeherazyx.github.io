@@ -320,3 +320,25 @@ this is the release summary.
   broken verify.sh on the owner's new laptop.
 - Verified: setup.sh full run PASS (incl. npm ci from scratch),
   verify.sh PASS after the dependency change.
+
+### 2026-07-29 — theme-aware About portrait (v2.3.0)
+- Owner supplied two portraits (one background per mode). Implemented as a
+  CSS-only swap in `src/pages/about/index.astro`: both `<Image>`s render,
+  opacity picks one, selectors mirror global.css's mode mechanism exactly
+  (explicit `data-theme` wins, else `prefers-color-scheme`). No JS → no
+  wrong-image flash; 0.25s crossfade on toggle, disabled under
+  `prefers-reduced-motion`.
+- Retina fix found while verifying: image displayed at 348px CSS on mobile
+  but generated only 320px (upscaled, soft on any 2–3x phone). Now
+  `width={360}` + `densities={[1,2]}` → 1x/2x srcset. All four image
+  variants total 43KB.
+- Dropped the `.photo-blend` gradient overlay and `saturate(0.94)` filter —
+  both existed to blend a plain photo into the page; the new portraits have
+  designed backgrounds already matched to the site accents.
+- Deleted now-unused `src/assets/milan-photo.png` (1.7MB); AGENTS.md repo
+  map updated to describe the two-portrait setup.
+- a11y: light portrait carries the alt text, dark one is `aria-hidden` — no
+  duplicate screen-reader announcement.
+- Verified: all 4 theme paths asserted programmatically (system dark/light
+  × before/after toggle) — not eyeballed; verify.sh PASS; owner approved on
+  localhost.
